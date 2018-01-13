@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements"/>
+
         <activity
             android:name=".features.projects.ProjectActivity"
             android:label="Projects"
@@ -32,7 +36,7 @@
             android:parentActivityName=".features.projects.ProjectActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.projects.ProjectActivity" />
+                android:value=".features.projects.ProjectActivity"/>
         </activity>
 
         <activity
@@ -43,12 +47,37 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.builds.BuildActivity" />
+                android:value=".features.builds.BuildActivity"/>
         </activity>
 
         <activity
             android:name=".features.entertoken.EnterTokenActivity"
             android:label="Grant Access"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="com.davidmedenjak.indiana"
+                    android:pathPattern="/.*/.*"
+                    android:pathPrefix="/bitrise"
+                    android:scheme="indiana"/>
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="indiana.davidmedenjak.com"
+                    android:path="/bitrise"
+                    android:pathPattern="/bitrise/.*"
+                    android:scheme="https"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

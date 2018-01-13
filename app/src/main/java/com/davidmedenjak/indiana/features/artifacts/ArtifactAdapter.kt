@@ -1,9 +1,7 @@
 package com.davidmedenjak.indiana.features.artifacts
 
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
@@ -14,7 +12,6 @@ import com.davidmedenjak.indiana.api.Artifact
 import com.davidmedenjak.indiana.api.BitriseApi
 import com.davidmedenjak.indiana.di.PerActivity
 import javax.inject.Inject
-
 
 @PerActivity
 class ArtifactAdapter @Inject constructor(val api: BitriseApi) : RecyclerView.Adapter<ArtifactViewHolder>() {
@@ -57,30 +54,7 @@ class ArtifactAdapter @Inject constructor(val api: BitriseApi) : RecyclerView.Ad
                                     .setTitle(it.data.title)
 
                             val downloadId = downloadManager.enqueue(request)
-                            context.registerReceiver(object : BroadcastReceiver() {
-                                override fun onReceive(p0: Context, data: Intent) {
-
-                                    val id = data.getLongExtra("extra_download_id", -1)
-
-                                    if (id == downloadId) {
-                                        context.unregisterReceiver(this)
-
-                                        val query = DownloadManager.Query()
-                                        query.setFilterById(id)
-                                        val cursor = downloadManager.query(query)
-
-                                        if (cursor.moveToFirst()) {
-                                            val uriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
-                                            val localUri = Uri.parse(cursor.getString(uriIndex))
-
-                                            val intent = Intent(Intent.ACTION_VIEW)
-                                            intent.setDataAndType(localUri, "application/vnd.android.package-archive")
-                                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                            context.startActivity(intent)
-                                        }
-                                    }
-                                }
-                            }, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+                            context.registerReceiver(DownloadBroadcastReceiver(downloadId), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
                         }
                     }, {
 

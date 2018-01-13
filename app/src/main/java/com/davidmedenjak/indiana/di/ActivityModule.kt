@@ -1,5 +1,6 @@
 package com.davidmedenjak.indiana.di
 
+import com.davidmedenjak.indiana.features.about.AboutActivity
 import com.davidmedenjak.indiana.features.artifacts.ArtifactActivity
 import com.davidmedenjak.indiana.features.builds.BuildActivity
 import com.davidmedenjak.indiana.features.entertoken.EnterTokenActivity
@@ -25,6 +26,10 @@ interface ActivityModule {
     @PerActivity
     @ContributesAndroidInjector
     fun provideArtifactActivity(): ArtifactActivity
+
+    @PerActivity
+    @ContributesAndroidInjector
+    fun provideAboutActivity(): AboutActivity
 
 }
 

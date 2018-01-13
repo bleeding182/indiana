@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.davidmedenjak.indiana",
+    "sha256_cert_fingerprints":
+    ["E5:51:F3:74:D5:39:9E:D1:92:FD:99:16:39:4D:5F:CF:97:F6:3A:95:CD:CE:21:63:0C:0F:B7:23:2F:E7:2C:BA"]
+  }
+}]

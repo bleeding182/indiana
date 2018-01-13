@@ -11,6 +11,7 @@ import android.view.MenuItem
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.api.BitriseApi
 import com.davidmedenjak.indiana.base.BaseActivity
+import com.davidmedenjak.indiana.features.about.AboutActivity
 import com.davidmedenjak.indiana.features.entertoken.EnterTokenActivity
 import com.davidmedenjak.indiana.features.entertoken.UserSettings
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -53,12 +54,14 @@ class ProjectActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
+        menuInflater.inflate(R.menu.menu_about, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.clear_token -> onClearTokenClicked()
+            R.id.menu_about -> startActivity(Intent(this, AboutActivity::class.java))
         }
         return super.onOptionsItemSelected(item)
     }

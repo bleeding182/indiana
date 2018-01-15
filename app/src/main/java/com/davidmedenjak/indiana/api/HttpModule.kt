@@ -32,7 +32,7 @@ class HttpModule {
     @Singleton
     @Provides
     fun provideMoshi() = Moshi.Builder()
-            .add(Date::class.java, Rfc3339DateJsonAdapter())
+            .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
             .add(KotlinJsonAdapterFactory())
             .build()
 

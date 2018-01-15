@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="?listPreferredItemHeight"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingEnd="?android:listPreferredItemPaddingEnd"
+    android:paddingLeft="?listPreferredItemPaddingLeft"
+    android:paddingRight="?listPreferredItemPaddingRight"
+    android:paddingStart="?android:listPreferredItemPaddingStart"
+    android:paddingTop="8dp">
+
+    <ImageView
+        android:id="@+id/status"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/status"
+        android:layout_toLeftOf="@+id/progress"
+        android:layout_toRightOf="@+id/status"
+        android:layout_toStartOf="@+id/progress"
+        tools:text="#42 master"/>
+
+    <TextView
+        android:id="@+id/info"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_toEndOf="@+id/status"
+        android:layout_toLeftOf="@+id/progress"
+        android:layout_toRightOf="@+id/status"
+        android:layout_toStartOf="@+id/progress"
+        tools:text="Triggered at 10:00"/>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:padding="8dp"/>
+
+</RelativeLayout>

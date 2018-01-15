@@ -8,6 +8,7 @@ import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.api.Artifact
 import com.davidmedenjak.indiana.api.BitriseApi
 import com.davidmedenjak.indiana.di.PerActivity
@@ -29,13 +30,13 @@ class ArtifactAdapter @Inject constructor(val api: BitriseApi) : RecyclerView.Ad
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtifactViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
+        val view = inflater.inflate(R.layout.item_artifact, parent, false)
         return ArtifactViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ArtifactViewHolder, position: Int) {
         val artifact = artifacts[position]
-        holder.text.text = artifact.title
+        holder.title.text = artifact.title
 
         holder.itemView.setOnClickListener {
             api.fetchArtifact(projectSlug, buildSlug, artifact.slug)

@@ -2,12 +2,14 @@ package com.davidmedenjak.indiana.features.projects
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.api.BitriseApi
 import com.davidmedenjak.indiana.base.BaseActivity
@@ -39,12 +41,23 @@ class ProjectActivity : BaseActivity() {
         recycler_view.adapter = adapter
         recycler_view.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
+        swipe_refresh.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent),
+                ContextCompat.getColor(this, R.color.colorPrimary))
+        swipe_refresh.setOnRefreshListener {
+            loadData()
+        }
+        loadData()
+    }
+
+    private fun loadData() {
         api.fetchMyApps()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     adapter.projects = it.data
-                },
-                        { Log.wtf("Project", "failed", it) })
+                }, {
+                    Log.wtf("Project", "failed", it)
+                    Toast.makeText(this, "Loading projects failed", Toast.LENGTH_SHORT).show()
+                })
     }
 
     private fun showRequestToken() {

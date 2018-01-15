@@ -3,9 +3,11 @@ package com.davidmedenjak.indiana.features.builds;
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.widget.Toast
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.api.BitriseApi
 import com.davidmedenjak.indiana.base.BaseActivity
@@ -41,12 +43,25 @@ class BuildActivity : BaseActivity() {
 
         adapter.projectSlug = appSlug
 
+        swipe_refresh.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent),
+                ContextCompat.getColor(this, R.color.colorPrimary))
+        swipe_refresh.setOnRefreshListener {
+            loadData(appSlug)
+        }
+        loadData(appSlug)
+    }
+
+    private fun loadData(appSlug: String) {
         api.fetchAppBuilds(appSlug)
+                .doOnSubscribe { swipe_refresh.isRefreshing = true }
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate { swipe_refresh.isRefreshing = false }
                 .subscribe({
                     adapter.builds = it.data
-                },
-                        { Log.wtf("Project", "failed", it) })
+                }, {
+                    Log.wtf("Build", "failed", it)
+                    Toast.makeText(this, "Loading builds failed", Toast.LENGTH_SHORT).show()
+                })
     }
 
     companion object {

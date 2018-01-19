@@ -51,7 +51,9 @@ class ProjectActivity : BaseActivity() {
 
     private fun loadData() {
         api.fetchMyApps()
+                .doOnSubscribe { swipe_refresh.isRefreshing = true }
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate { swipe_refresh.isRefreshing = false }
                 .subscribe({
                     adapter.projects = it.data
                 }, {

@@ -9,6 +9,7 @@ _The app is currently a minimal MVP in open Beta_
 
 * Browse your apps built with Bitrise
 * Download and install your built Android artifacts
+* Use App Links on Android for quick setup on multiple devices
 
 ## Quickstart
 
@@ -16,7 +17,11 @@ _The app is currently a minimal MVP in open Beta_
 2. Open the app and input your token
 3. Browse your apps.
 
-Alternatively you can create and share an applink that will install and setup the token for you. Replace the `{{API_TOKEN}}` in the following and open the link on your Android phone.
+### App Links (if you got multiple devices)
+
+Alternatively you can create and share an applink that will install and setup the token for you. This makes it easier if you want to onboard multiple devices at once.
+
+Replace `{{API_TOKEN}}` in the following link, then share and open it on your Android phone.
 
     https://g2xp4.app.goo.gl/?link=https://indiana.davidmedenjak.com/bitrise/{{API_TOKEN}}&apn=com.davidmedenjak.indiana
     

@@ -1,10 +1,13 @@
 package com.davidmedenjak.indiana.api
 
+import android.support.annotation.StringDef
 import com.squareup.moshi.Json
 import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
+import retrofit2.http.Query
+import se.ansman.kotshi.JsonSerializable
 import java.util.*
 
 interface BitriseApi {
@@ -13,7 +16,7 @@ interface BitriseApi {
     fun fetchMe(@Header("Authorization") tokenHeader: String): Flowable<UserData>
 
     @GET("v0.1/me/apps")
-    fun fetchMyApps(): Flowable<ProjectData>
+    fun fetchMyApps(@ProjectSort.Type @Query("sort_by") sortedBy : String = ProjectSort.LAST_BUILD_AT): Flowable<ProjectData>
 
     @GET("v0.1/apps/{appSlug}/builds")
     fun fetchAppBuilds(@Path("appSlug") appSlug: String): Flowable<BuildData>
@@ -26,6 +29,15 @@ interface BitriseApi {
 
 }
 
+object ProjectSort {
+    const val CREATED_AT = "created_at"
+    const val LAST_BUILD_AT = "last_build_at"
+
+    @StringDef(CREATED_AT, LAST_BUILD_AT)
+    annotation class Type
+}
+
+@JsonSerializable
 data class Project(
         @Json(name = "is_disabled") val isDisabled: Boolean,
         @Json(name = "project_type") val projectType: String,
@@ -37,6 +49,7 @@ data class Project(
         @Json(name = "title") val title: String
 )
 
+@JsonSerializable
 data class Build(
         @Json(name = "branch") val branch: String,
         @Json(name = "build_number") val buildNumber: Int,
@@ -52,22 +65,23 @@ data class Build(
         @Json(name = "triggered_at") val triggeredAt: Date
 )
 
-
+@JsonSerializable
 data class Artifact(
         @Json(name = "title") val title: String,
         @Json(name = "slug") val slug: String
 )
 
+@JsonSerializable
 data class ArtifactDetails(
         @Json(name = "title") val title: String,
         @Json(name = "slug") val slug: String,
         @Json(name = "expiring_download_url") val downloadUrl: String
 )
 
-data class UserData(val data: User)
-data class ProjectData(val data: List<Project>)
-data class BuildData(val data: List<Build>)
-data class ArtifactData(val data: List<Artifact>)
-data class ArtifactDetailsData(val data: ArtifactDetails)
+@JsonSerializable data class UserData(val data: User)
+@JsonSerializable data class ProjectData(val data: List<Project>)
+@JsonSerializable data class BuildData(val data: List<Build>)
+@JsonSerializable data class ArtifactData(val data: List<Artifact>)
+@JsonSerializable data class ArtifactDetailsData(val data: ArtifactDetails)
 
-data class User(val username: String)
+@JsonSerializable data class User(val username: String)

@@ -13,8 +13,8 @@ android {
         applicationId "com.davidmedenjak.indiana"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 4
-        versionName "0.2.3"
+        versionCode 5
+        versionName "0.3.0"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -63,7 +63,9 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
 
     implementation "com.squareup.moshi:moshi-adapters:$moshiVersion"
-    implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
+
+    implementation 'se.ansman.kotshi:api:1.0.3'
+    kapt 'se.ansman.kotshi:compiler:1.0.3'
 
     implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
     implementation 'io.reactivex.rxjava2:rxjava:2.1.12'

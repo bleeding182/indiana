@@ -1,7 +1,6 @@
 package com.davidmedenjak.indiana.api
 
 import com.davidmedenjak.indiana.BuildConfig
-import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Rfc3339DateJsonAdapter
 import dagger.Module
@@ -33,7 +32,7 @@ class HttpModule {
     @Provides
     fun provideMoshi() = Moshi.Builder()
             .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
-            .add(KotlinJsonAdapterFactory())
+            .add(ApplicationJsonAdapterFactory.INSTANCE)
             .build()
 
     @Singleton

@@ -29,17 +29,17 @@ android {
 }
 
 ext {
-    supportLibVersion = "27.0.2"
+    supportLibVersion = "27.1.1"
     daggerVersion = "2.14.1"
     retrofitVersion = "2.3.0"
     okhttpVersion = "3.9.1"
-    firebaseVersion = "11.8.0"
+    firebaseVersion = "15.0.0"
     moshiVersion = "1.5.0"
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibVersion"
@@ -66,14 +66,14 @@ dependencies {
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
 
     implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.8'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.12'
 
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

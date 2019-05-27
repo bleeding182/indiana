@@ -45,6 +45,8 @@ class BuildAdapter @Inject constructor() : RecyclerView.Adapter<BuildViewHolder>
         holder.title.text = "${build.buildNumber} ${build.branch}"
         holder.info.text = "Triggered $formattedStartTime"
         holder.workflow.text = build.workflow
+        holder.tag.text = build.tag
+        holder.tag.visibility = if (build.tag == null) View.GONE else View.VISIBLE
         holder.status.setImageDrawable(getBuildDrawable(context, build))
 
         holder.progress.visibility = if (build.status == 0 && !build.isOnHold) View.VISIBLE else View.GONE

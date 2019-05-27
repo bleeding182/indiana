@@ -32,7 +32,7 @@ class ProjectAdapter @Inject constructor() : RecyclerView.Adapter<ProjectViewHol
         holder.type.text = project.projectType
 
         holder.itemView.setOnClickListener {
-            it.context.startActivity(BuildActivity.newIntent(it.context, project.slug))
+            it.context.startActivity(BuildActivity.newIntent(it.context, project.slug, project.title))
         }
     }
 

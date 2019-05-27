@@ -43,6 +43,7 @@ class BuildActivity : BaseActivity() {
         recycler_view.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         val appSlug = intent.getStringExtra(EXTRA_APP_SLUG)
+        title = intent.getStringExtra(EXTRA_TITLE)
 
         adapter.projectSlug = appSlug
 
@@ -71,10 +72,12 @@ class BuildActivity : BaseActivity() {
 
     companion object {
         private const val EXTRA_APP_SLUG = "app_slug"
+        private const val EXTRA_TITLE = "title"
 
-        fun newIntent(context: Context, slug: String) = Intent(context, BuildActivity::class.java).apply {
-            putExtra(EXTRA_APP_SLUG, slug)
-        }
+        fun newIntent(context: Context, slug: String, title: String): Intent =
+            Intent(context, BuildActivity::class.java)
+                .putExtra(EXTRA_APP_SLUG, slug)
+                .putExtra(EXTRA_TITLE, title)
     }
 
 }

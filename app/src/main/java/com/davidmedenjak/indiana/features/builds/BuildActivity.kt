@@ -46,6 +46,7 @@ class BuildActivity : BaseActivity() {
         title = intent.getStringExtra(EXTRA_TITLE)
 
         adapter.projectSlug = appSlug
+        adapter.projectTitle = intent.getStringExtra(EXTRA_TITLE)
 
         swipe_refresh.setColorSchemeColors(
             ContextCompat.getColor(this, R.color.colorAccent),

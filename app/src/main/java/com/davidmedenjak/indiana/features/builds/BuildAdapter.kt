@@ -17,6 +17,7 @@ import javax.inject.Inject
 @PerActivity
 class BuildAdapter @Inject constructor() : RecyclerView.Adapter<BuildViewHolder>() {
     var projectSlug: String = ""
+    var projectTitle: String = ""
     var builds: List<Build> = emptyList()
         set(value) {
             field = value
@@ -49,7 +50,12 @@ class BuildAdapter @Inject constructor() : RecyclerView.Adapter<BuildViewHolder>
         holder.progress.visibility = if (build.status == 0 && !build.isOnHold) View.VISIBLE else View.GONE
 
         holder.itemView.setOnClickListener {
-            it.context.startActivity(ArtifactActivity.newIntent(it.context, projectSlug, build.slug))
+            val info = "${build.buildNumber} ${build.branch} (${build.workflow})"
+            it.context.startActivity(
+                ArtifactActivity.newIntent(
+                    it.context, projectSlug, build.slug, projectTitle, info
+                )
+            )
         }
     }
 

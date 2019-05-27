@@ -49,6 +49,8 @@ class ArtifactActivity : BaseActivity() {
 
         adapter.projectSlug = projectSlug
         adapter.buildSlug = buildSlug
+        title = intent.getStringExtra(EXTRA_TITLE)
+        supportActionBar?.subtitle = intent.getStringExtra(EXTRA_BUILD_INFO)
 
         api.fetchBuildArtifacts(projectSlug, buildSlug)
             .observeOn(AndroidSchedulers.mainThread())
@@ -77,13 +79,15 @@ class ArtifactActivity : BaseActivity() {
     companion object {
         private const val EXTRA_APP_SLUG = "app_slug"
         private const val EXTRA_BUILD_SLUG = "build_slug"
+        private const val EXTRA_TITLE = "title"
+        private const val EXTRA_BUILD_INFO = "subtitle"
 
-        fun newIntent(context: Context, appSlug: String, buildSlug: String) =
-            Intent(context, ArtifactActivity::class.java).apply {
-                putExtra(EXTRA_APP_SLUG, appSlug)
-                putExtra(EXTRA_BUILD_SLUG, buildSlug)
-            }
+        fun newIntent(context: Context, appSlug: String, buildSlug: String, title: String, buildInfo: String): Intent =
+            Intent(context, ArtifactActivity::class.java)
+                .putExtra(EXTRA_APP_SLUG, appSlug)
+                .putExtra(EXTRA_BUILD_SLUG, buildSlug)
+                .putExtra(EXTRA_TITLE, title)
+                .putExtra(EXTRA_BUILD_INFO, buildInfo)
     }
-
 }
 

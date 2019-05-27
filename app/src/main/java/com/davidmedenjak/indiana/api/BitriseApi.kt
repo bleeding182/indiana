@@ -62,7 +62,8 @@ data class Build(
     @Json(name = "finished_at") val finishedAt: Date?,
     @Json(name = "status") val status: Int,
     @Json(name = "tag") val tag: String?,
-    @Json(name = "triggered_at") val triggeredAt: Date
+    @Json(name = "triggered_at") val triggeredAt: Date,
+    @Json(name = "triggered_workflow") val workflow: String
 )
 
 @JsonSerializable

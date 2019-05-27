@@ -13,5 +13,6 @@ class BuildViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val info: TextView = view.info
     val progress: ProgressBar = view.progress
     val status: ImageView = view.status
+    val workflow: TextView = view.workflow
 
 }

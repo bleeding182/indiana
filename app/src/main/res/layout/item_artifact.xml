@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:gravity="center_vertical"
     android:minHeight="?android:listPreferredItemHeightSmall"
-    android:paddingBottom="8dp"
-    android:paddingEnd="?android:listPreferredItemPaddingEnd"
-    android:paddingLeft="?listPreferredItemPaddingLeft"
-    android:paddingRight="?listPreferredItemPaddingRight"
     android:paddingStart="?android:listPreferredItemPaddingStart"
-    android:paddingTop="8dp">
+    android:paddingLeft="?listPreferredItemPaddingLeft"
+    android:paddingTop="8dp"
+    android:paddingEnd="?android:listPreferredItemPaddingEnd"
+    android:paddingRight="?listPreferredItemPaddingRight"
+    android:paddingBottom="8dp">
 
     <TextView
         android:id="@+id/title"
@@ -20,6 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        tools:text="My Project"/>
+        tools:text="My Project" />
 
 </FrameLayout>

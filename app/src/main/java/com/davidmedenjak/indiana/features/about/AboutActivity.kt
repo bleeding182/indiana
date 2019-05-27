@@ -5,9 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_about.*
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-
+import kotlinx.android.synthetic.main.activity_about.*
 
 
 class AboutActivity : BaseActivity() {

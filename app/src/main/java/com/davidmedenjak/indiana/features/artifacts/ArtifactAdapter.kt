@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.api.Artifact
 import com.davidmedenjak.indiana.api.BitriseApi
@@ -40,26 +40,29 @@ class ArtifactAdapter @Inject constructor(val api: BitriseApi) : RecyclerView.Ad
 
         holder.itemView.setOnClickListener {
             api.fetchArtifact(projectSlug, buildSlug, artifact.slug)
-                    .subscribe({
-                        val context = holder.itemView.context
-                        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                .subscribe({
+                    val context = holder.itemView.context
+                    val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !context.packageManager.canRequestPackageInstalls()) {
-                            val request = DownloadManager.Request(Uri.parse(it.data.downloadUrl))
-                                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                                    .setTitle(it.data.title)
-                            downloadManager.enqueue(request)
-                        } else {
-                            val request = DownloadManager.Request(Uri.parse(it.data.downloadUrl))
-                                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                                    .setTitle(it.data.title)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !context.packageManager.canRequestPackageInstalls()) {
+                        val request = DownloadManager.Request(Uri.parse(it.data.downloadUrl))
+                            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                            .setTitle(it.data.title)
+                        downloadManager.enqueue(request)
+                    } else {
+                        val request = DownloadManager.Request(Uri.parse(it.data.downloadUrl))
+                            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                            .setTitle(it.data.title)
 
-                            val downloadId = downloadManager.enqueue(request)
-                            context.registerReceiver(DownloadBroadcastReceiver(downloadId), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-                        }
-                    }, {
+                        val downloadId = downloadManager.enqueue(request)
+                        context.registerReceiver(
+                            DownloadBroadcastReceiver(downloadId),
+                            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+                        )
+                    }
+                }, {
 
-                    })
+                })
         }
     }
 

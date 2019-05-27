@@ -1,8 +1,8 @@
 package com.davidmedenjak.indiana.features.artifacts
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_artifact.view.*
 
 class ArtifactViewHolder(view: View) : RecyclerView.ViewHolder(view) {

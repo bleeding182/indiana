@@ -3,11 +3,11 @@ package com.davidmedenjak.indiana.features.builds
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.util.Log
-import android.widget.Toast
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.api.BitriseApi
 import com.davidmedenjak.indiana.base.BaseActivity
@@ -19,10 +19,13 @@ import javax.inject.Inject
 
 class BuildActivity : BaseActivity() {
 
-    @Inject lateinit var settings: UserSettings
-    @Inject lateinit var api: BitriseApi
+    @Inject
+    lateinit var settings: UserSettings
+    @Inject
+    lateinit var api: BitriseApi
 
-    @Inject lateinit var adapter: BuildAdapter
+    @Inject
+    lateinit var adapter: BuildAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +46,10 @@ class BuildActivity : BaseActivity() {
 
         adapter.projectSlug = appSlug
 
-        swipe_refresh.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent),
-                ContextCompat.getColor(this, R.color.colorPrimary))
+        swipe_refresh.setColorSchemeColors(
+            ContextCompat.getColor(this, R.color.colorAccent),
+            ContextCompat.getColor(this, R.color.colorPrimary)
+        )
         swipe_refresh.setOnRefreshListener {
             loadData(appSlug)
         }
@@ -53,15 +58,15 @@ class BuildActivity : BaseActivity() {
 
     private fun loadData(appSlug: String) {
         api.fetchAppBuilds(appSlug)
-                .doOnSubscribe { swipe_refresh.isRefreshing = true }
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate { swipe_refresh.isRefreshing = false }
-                .subscribe({
-                    adapter.builds = it.data
-                }, {
-                    Log.wtf("Build", "failed", it)
-                    Toast.makeText(this, "Loading builds failed", Toast.LENGTH_SHORT).show()
-                })
+            .doOnSubscribe { swipe_refresh.isRefreshing = true }
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnTerminate { swipe_refresh.isRefreshing = false }
+            .subscribe({
+                adapter.builds = it.data
+            }, {
+                Log.wtf("Build", "failed", it)
+                Toast.makeText(this, "Loading builds failed", Toast.LENGTH_SHORT).show()
+            })
     }
 
     companion object {

@@ -11,10 +11,10 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(app : App) = PreferenceManager.getDefaultSharedPreferences(app)
+    fun provideSharedPreferences(app: App) = PreferenceManager.getDefaultSharedPreferences(app)
 
     @Provides
     @Singleton
-    fun provideAnalytics(app : App) = FirebaseAnalytics.getInstance(app)
+    fun provideAnalytics(app: App) = FirebaseAnalytics.getInstance(app)
 
 }

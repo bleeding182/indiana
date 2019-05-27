@@ -6,10 +6,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.api.BitriseApi
 import com.davidmedenjak.indiana.base.BaseActivity
@@ -21,10 +21,13 @@ import javax.inject.Inject
 
 class ArtifactActivity : BaseActivity() {
 
-    @Inject lateinit var settings: UserSettings
-    @Inject lateinit var api: BitriseApi
+    @Inject
+    lateinit var settings: UserSettings
+    @Inject
+    lateinit var api: BitriseApi
 
-    @Inject lateinit var adapter: ArtifactAdapter
+    @Inject
+    lateinit var adapter: ArtifactAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,11 +51,11 @@ class ArtifactActivity : BaseActivity() {
         adapter.buildSlug = buildSlug
 
         api.fetchBuildArtifacts(projectSlug, buildSlug)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    adapter.artifacts = it.data
-                },
-                        { Log.wtf("Project", "failed", it) })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                adapter.artifacts = it.data
+            },
+                { Log.wtf("Project", "failed", it) })
     }
 
     override fun onStart() {
@@ -61,8 +64,10 @@ class ArtifactActivity : BaseActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !packageManager.canRequestPackageInstalls()) {
             unknown_sources_layout.visibility = View.VISIBLE
             action_unknown_sources.setOnClickListener {
-                startActivity(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:$packageName"))
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                startActivity(
+                    Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:$packageName"))
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                )
             }
         } else {
             unknown_sources_layout.visibility = View.GONE
@@ -73,10 +78,11 @@ class ArtifactActivity : BaseActivity() {
         private const val EXTRA_APP_SLUG = "app_slug"
         private const val EXTRA_BUILD_SLUG = "build_slug"
 
-        fun newIntent(context: Context, appSlug: String, buildSlug: String) = Intent(context, ArtifactActivity::class.java).apply {
-            putExtra(EXTRA_APP_SLUG, appSlug)
-            putExtra(EXTRA_BUILD_SLUG, buildSlug)
-        }
+        fun newIntent(context: Context, appSlug: String, buildSlug: String) =
+            Intent(context, ArtifactActivity::class.java).apply {
+                putExtra(EXTRA_APP_SLUG, appSlug)
+                putExtra(EXTRA_BUILD_SLUG, buildSlug)
+            }
     }
 
 }

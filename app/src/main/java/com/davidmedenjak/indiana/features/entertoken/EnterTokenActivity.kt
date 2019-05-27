@@ -20,9 +20,12 @@ import javax.inject.Inject
 
 class EnterTokenActivity : BaseActivity() {
 
-    @Inject lateinit var api: BitriseApi
-    @Inject lateinit var userSettings: UserSettings
-    @Inject lateinit var analytics: FirebaseAnalytics
+    @Inject
+    lateinit var api: BitriseApi
+    @Inject
+    lateinit var userSettings: UserSettings
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,12 +72,12 @@ class EnterTokenActivity : BaseActivity() {
 
     private fun tryToken(token: String) {
         api.fetchMe("token $token")
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    onTokenSuccess(it.data, token)
-                }, {
-                    Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show()
-                })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                onTokenSuccess(it.data, token)
+            }, {
+                Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show()
+            })
     }
 
     fun onTokenSuccess(user: User, token: String) {

@@ -1,8 +1,8 @@
 package com.davidmedenjak.indiana.features.projects
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.api.Project
 import com.davidmedenjak.indiana.di.PerActivity

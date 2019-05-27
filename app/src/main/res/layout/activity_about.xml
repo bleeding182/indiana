@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="16dp"
-    android:paddingTop="16dp">
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
 
     <TextView
         style="@style/TextAppearance.AppCompat.Body1"
@@ -13,11 +12,11 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="?listPreferredItemHeightSmall"
-        android:paddingEnd="?android:listPreferredItemPaddingEnd"
-        android:paddingLeft="?listPreferredItemPaddingLeft"
-        android:paddingRight="?listPreferredItemPaddingRight"
         android:paddingStart="?android:listPreferredItemPaddingStart"
-        android:text="This app is open source. The source code can be found on GitHub and is licensed under the MIT License."/>
+        android:paddingLeft="?listPreferredItemPaddingLeft"
+        android:paddingEnd="?android:listPreferredItemPaddingEnd"
+        android:paddingRight="?listPreferredItemPaddingRight"
+        android:text="This app is open source. The source code can be found on GitHub and is licensed under the MIT License." />
 
     <Button
         android:id="@+id/action_source"
@@ -26,7 +25,7 @@
         android:layout_gravity="end"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="Show me"/>
+        android:text="Show me" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,11 +44,11 @@
             android:background="?selectableItemBackground"
             android:gravity="center_vertical"
             android:minHeight="?listPreferredItemHeightSmall"
-            android:paddingEnd="?android:listPreferredItemPaddingEnd"
-            android:paddingLeft="?listPreferredItemPaddingLeft"
-            android:paddingRight="?listPreferredItemPaddingRight"
             android:paddingStart="?android:listPreferredItemPaddingStart"
-            android:text="Open Source Licenses"/>
+            android:paddingLeft="?listPreferredItemPaddingLeft"
+            android:paddingEnd="?android:listPreferredItemPaddingEnd"
+            android:paddingRight="?listPreferredItemPaddingRight"
+            android:text="Open Source Licenses" />
 
         <TextView
             android:id="@+id/action_privacy_policy"
@@ -59,11 +58,11 @@
             android:background="?selectableItemBackground"
             android:gravity="center_vertical"
             android:minHeight="?listPreferredItemHeightSmall"
-            android:paddingEnd="?android:listPreferredItemPaddingEnd"
-            android:paddingLeft="?listPreferredItemPaddingLeft"
-            android:paddingRight="?listPreferredItemPaddingRight"
             android:paddingStart="?android:listPreferredItemPaddingStart"
-            android:text="Privacy Policy"/>
+            android:paddingLeft="?listPreferredItemPaddingLeft"
+            android:paddingEnd="?android:listPreferredItemPaddingEnd"
+            android:paddingRight="?listPreferredItemPaddingRight"
+            android:text="Privacy Policy" />
     </LinearLayout>
 
 </LinearLayout>

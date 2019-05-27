@@ -15,8 +15,8 @@ class ApiTokenAuthInterceptor @Inject constructor(val settings: UserSettings) : 
         }
 
         val authenticatedRequest = request.newBuilder()
-                .header("Authorization", "token ${settings.apiToken}")
-                .build()
+            .header("Authorization", "token ${settings.apiToken}")
+            .build()
 
         return chain.proceed(authenticatedRequest)
     }

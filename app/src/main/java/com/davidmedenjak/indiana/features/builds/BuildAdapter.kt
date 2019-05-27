@@ -2,12 +2,12 @@ package com.davidmedenjak.indiana.features.builds
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.api.Build
 import com.davidmedenjak.indiana.di.PerActivity
@@ -35,10 +35,12 @@ class BuildAdapter @Inject constructor() : RecyclerView.Adapter<BuildViewHolder>
         val build = builds[position]
         val context = holder.itemView.context
 
-        val formattedStartTime = DateUtils.getRelativeDateTimeString(context,
-                build.triggeredAt.time,
-                DateUtils.MINUTE_IN_MILLIS, DateUtils.HOUR_IN_MILLIS,
-                0)
+        val formattedStartTime = DateUtils.getRelativeDateTimeString(
+            context,
+            build.triggeredAt.time,
+            DateUtils.MINUTE_IN_MILLIS, DateUtils.HOUR_IN_MILLIS,
+            0
+        )
         holder.title.text = "${build.buildNumber} ${build.branch}"
         holder.info.text = "Triggered $formattedStartTime"
         holder.status.setImageDrawable(getBuildDrawable(context, build))

@@ -1,6 +1,6 @@
 package com.davidmedenjak.indiana.api
 
-import android.support.annotation.StringDef
+import androidx.annotation.StringDef
 import com.squareup.moshi.Json
 import io.reactivex.Flowable
 import retrofit2.http.GET

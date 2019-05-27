@@ -2,10 +2,10 @@ package com.davidmedenjak.indiana.features.projects
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -85,10 +85,10 @@ class ProjectActivity : BaseActivity() {
         AlertDialog.Builder(this)
                 .setTitle("Clear API Token")
                 .setMessage("Your token will be deleted and you need to add a new one to use this app.")
-                .setPositiveButton(android.R.string.ok, { _, _ ->
+                .setPositiveButton(android.R.string.ok) { _, _ ->
                     settings.apiToken = null
                     showRequestToken()
-                })
+                }
                 .setNegativeButton(android.R.string.cancel, null)
                 .show()
     }

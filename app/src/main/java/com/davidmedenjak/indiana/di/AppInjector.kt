@@ -3,9 +3,9 @@ package com.davidmedenjak.indiana.di
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 
 import com.davidmedenjak.indiana.app.App
 
@@ -39,7 +39,7 @@ object AppInjector {
             AndroidInjection.inject(activity)
         }
         (activity as FragmentActivity).supportFragmentManager?.registerFragmentLifecycleCallbacks(
-                object : FragmentManager.FragmentLifecycleCallbacks() {
+                object : androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
                     override fun onFragmentCreated(fm: FragmentManager, f: Fragment, savedInstanceState: Bundle?) {
                         if (f is Injectable) {
                             AndroidSupportInjection.inject(f)

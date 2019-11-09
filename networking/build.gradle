@@ -1,0 +1,11 @@
+apply plugin: 'BuildPlugin'
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    implementation Dependencies.Moshi
+    kapt Dependencies.MoshiCodegen
+
+    implementation Dependencies.KotlinStdLib
+}

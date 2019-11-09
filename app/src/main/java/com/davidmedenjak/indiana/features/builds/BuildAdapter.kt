@@ -9,9 +9,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.davidmedenjak.indiana.R
-import com.davidmedenjak.indiana.api.Build
 import com.davidmedenjak.indiana.di.PerActivity
 import com.davidmedenjak.indiana.features.artifacts.ArtifactActivity
+import com.davidmedenjak.indiana.networking.Build
 import javax.inject.Inject
 
 @PerActivity
@@ -71,5 +71,4 @@ class BuildAdapter @Inject constructor() : RecyclerView.Adapter<BuildViewHolder>
         }
         return VectorDrawableCompat.create(context.resources, resourceId, context.theme)!!
     }
-
 }

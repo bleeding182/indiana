@@ -9,9 +9,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.davidmedenjak.indiana.R
-import com.davidmedenjak.indiana.api.Artifact
 import com.davidmedenjak.indiana.api.BitriseApi
 import com.davidmedenjak.indiana.di.PerActivity
+import com.davidmedenjak.indiana.networking.Artifact
 import javax.inject.Inject
 
 @PerActivity
@@ -65,5 +65,4 @@ class ArtifactAdapter @Inject constructor(val api: BitriseApi) : RecyclerView.Ad
                 })
         }
     }
-
 }

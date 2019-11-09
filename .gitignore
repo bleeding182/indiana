@@ -14,7 +14,7 @@
 /.idea/markdown-navigator.xml
 /.idea/vcs.xml
 
-build/
+/build/
 
 .gradle/
 local.properties

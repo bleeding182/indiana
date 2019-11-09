@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.davidmedenjak.indiana.R
-import com.davidmedenjak.indiana.api.Project
 import com.davidmedenjak.indiana.di.PerActivity
 import com.davidmedenjak.indiana.features.builds.BuildActivity
+import com.davidmedenjak.indiana.networking.Project
 import javax.inject.Inject
 
 @PerActivity
@@ -32,8 +32,13 @@ class ProjectAdapter @Inject constructor() : RecyclerView.Adapter<ProjectViewHol
         holder.type.text = project.projectType
 
         holder.itemView.setOnClickListener {
-            it.context.startActivity(BuildActivity.newIntent(it.context, project.slug, project.title))
+            it.context.startActivity(
+                BuildActivity.newIntent(
+                    it.context,
+                    project.slug,
+                    project.title
+                )
+            )
         }
     }
-
 }

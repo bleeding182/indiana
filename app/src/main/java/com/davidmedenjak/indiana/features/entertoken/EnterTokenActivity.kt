@@ -8,11 +8,11 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.api.BitriseApi
-import com.davidmedenjak.indiana.api.User
 import com.davidmedenjak.indiana.base.BaseActivity
 import com.davidmedenjak.indiana.features.about.AboutActivity
 import com.davidmedenjak.indiana.features.about.PrivacyActivity
 import com.davidmedenjak.indiana.features.projects.ProjectActivity
+import com.davidmedenjak.indiana.networking.User
 import com.google.firebase.analytics.FirebaseAnalytics
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_enter_token.*
@@ -38,7 +38,7 @@ class EnterTokenActivity : BaseActivity() {
 
         val data = intent.data
         if (data != null) {
-            val token = data.lastPathSegment
+            val token = data.lastPathSegment!!
             api_key.setText(token)
             tryToken(token)
         }
@@ -90,4 +90,3 @@ class EnterTokenActivity : BaseActivity() {
         })
     }
 }
-

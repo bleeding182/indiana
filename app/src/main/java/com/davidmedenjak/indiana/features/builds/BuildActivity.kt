@@ -80,6 +80,4 @@ class BuildActivity : BaseActivity() {
                 .putExtra(EXTRA_APP_SLUG, slug)
                 .putExtra(EXTRA_TITLE, title)
     }
-
 }
-

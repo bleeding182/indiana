@@ -16,6 +16,7 @@ import com.davidmedenjak.indiana.base.BaseActivity
 import com.davidmedenjak.indiana.features.about.AboutActivity
 import com.davidmedenjak.indiana.features.entertoken.EnterTokenActivity
 import com.davidmedenjak.indiana.features.entertoken.UserSettings
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_list.*
 import javax.inject.Inject
@@ -87,7 +88,7 @@ class ProjectActivity : BaseActivity() {
     }
 
     private fun onClearTokenClicked() {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("Clear API Token")
             .setMessage("Your token will be deleted and you need to add a new one to use this app.")
             .setPositiveButton(android.R.string.ok) { _, _ ->

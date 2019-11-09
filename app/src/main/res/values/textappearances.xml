@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextAppearance.Widget.ActionBar.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="fontFamily">?fontHeadline</item>
+    </style>
+
+    <style name="TextAppearance.Widget.ActionBar.Subtitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+        <item name="fontFamily">?fontHeadline</item>
+    </style>
+
+</resources>

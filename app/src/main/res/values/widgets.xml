@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.ActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="titleTextStyle">@style/TextAppearance.Widget.ActionBar.Title</item>
+        <item name="subtitleTextStyle">@style/TextAppearance.Widget.ActionBar.Subtitle</item>
+    </style>
+
+    <style name="Widget.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.Widget.ActionBar.Title</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.Widget.ActionBar.Subtitle</item>
+    </style>
+
+</resources>

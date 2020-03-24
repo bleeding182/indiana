@@ -6,8 +6,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.davidmedenjak.indiana.R
@@ -16,9 +16,12 @@ import com.davidmedenjak.indiana.base.BaseActivity
 import com.davidmedenjak.indiana.features.about.AboutActivity
 import com.davidmedenjak.indiana.features.entertoken.EnterTokenActivity
 import com.davidmedenjak.indiana.features.entertoken.UserSettings
+import com.davidmedenjak.indiana.networking.ProjectData
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_list.*
+import kotlinx.android.synthetic.main.activity_list.recycler_view
+import kotlinx.android.synthetic.main.activity_list.swipe_refresh
+import kotlinx.android.synthetic.main.activity_projects.*
 import javax.inject.Inject
 
 class ProjectActivity : BaseActivity() {
@@ -30,6 +33,7 @@ class ProjectActivity : BaseActivity() {
 
     @Inject
     lateinit var adapter: ProjectAdapter
+    lateinit var filterController: FilterController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +43,14 @@ class ProjectActivity : BaseActivity() {
             return
         }
 
-        setContentView(R.layout.activity_list)
+        setContentView(R.layout.activity_projects)
+        setSupportActionBar(toolbar)
+
+        filterController = FilterController()
+
+        project_filters.layoutManager = LinearLayoutManager(this)
+        project_filters.adapter = filterController.adapter
+        filterController.requestModelBuild()
 
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.adapter = adapter
@@ -83,6 +94,7 @@ class ProjectActivity : BaseActivity() {
         when (item.itemId) {
             R.id.clear_token -> onClearTokenClicked()
             R.id.menu_about -> startActivity(Intent(this, AboutActivity::class.java))
+            R.id.filter -> project_filters.isVisible = !project_filters.isVisible
         }
         return super.onOptionsItemSelected(item)
     }

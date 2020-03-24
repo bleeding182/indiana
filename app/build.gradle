@@ -20,6 +20,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            minifyEnabled true
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -37,6 +41,7 @@ dependencies {
     implementation Dependencies.KotlinStdLib
 
     implementation Dependencies.AndroidXAppCompat
+    implementation Dependencies.AndroidXCoreKtx
     implementation Dependencies.AndroidXConstraintLayout
     implementation Dependencies.AndroidXSwipeRefreshLayout
 
@@ -52,6 +57,8 @@ dependencies {
     implementation Dependencies.DaggerAndroidSupport
     kapt Dependencies.DaggerCompiler
     kapt Dependencies.DaggerCompilerAndroid
+
+    implementation Dependencies.Epoxy
 
     implementation Dependencies.Retrofit
     implementation Dependencies.RetrofitAdapterRxJava2

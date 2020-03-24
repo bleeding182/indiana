@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Indiana</string>
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"https://indiana.davidmedenjak.com\",\n  }\n}]</string>
+    <string name="project_type_android">Android</string>
+    <string name="project_type_fastlane">Fastlane</string>
+    <string name="project_type_react_native">React Native</string>
+    <string name="project_type_ionic">Ionic</string>
+    <string name="project_type_macos">macOS</string>
+    <string name="project_type_xamarin">Xamarin</string>
+    <string name="project_type_other">Other</string>
+    <string name="project_type_cordova">Cordova</string>
+    <string name="project_type_ios">iOS</string>
 </resources>

@@ -21,7 +21,7 @@ object Dependencies {
     const val AndroidXMultiDex = "androidx.multidex:multidex:2.0.1"
     const val AndroidXRecyclerView = "androidx.recyclerview:recyclerview:1.0.0"
     const val AndroidXCardView = "androidx.cardview:cardview:1.0.0"
-    const val AndroidXConstraintLayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta1"
+    const val AndroidXConstraintLayout = "androidx.constraintlayout:constraintlayout:1.1.3"
     const val AndroidXSwipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     const val AndroidArchLifecycle = "android.arch.lifecycle:extensions:${Versions.LifecycleVersion}"

@@ -1,104 +1,108 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.davidmedenjak.indiana">
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    package="com.davidmedenjak.indiana">
 
     <application
-            android:name=".app.App"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme">
-
-        <meta-data
-                android:name="asset_statements"
-                android:resource="@string/asset_statements"/>
+        android:name=".app.App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
 
         <activity
-                android:name=".features.projects.ProjectActivity"
-                android:launchMode="singleTop">
+            android:name=".features.projects.ProjectActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter android:label="@string/app_name">
-                <category android:name="android.intent.category.LAUNCHER"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-                android:name=".features.builds.BuildActivity"
-                android:label="Builds"
-                android:launchMode="singleTop"
-                android:parentActivityName=".features.projects.ProjectActivity">
+            android:name=".features.builds.BuildActivity"
+            android:label="Builds"
+            android:launchMode="singleTop"
+            android:parentActivityName=".features.projects.ProjectActivity">
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".features.projects.ProjectActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".features.projects.ProjectActivity" />
         </activity>
 
         <activity
-                android:name=".features.artifacts.ArtifactActivity"
-                android:label="Artifacts"
-                android:launchMode="singleTop"
-                android:parentActivityName=".features.builds.BuildActivity">
+            android:name=".features.artifacts.ArtifactActivity"
+            android:label="Artifacts"
+            android:launchMode="singleTop"
+            android:parentActivityName=".features.builds.BuildActivity">
 
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".features.builds.BuildActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".features.builds.BuildActivity" />
         </activity>
 
         <activity
-                android:name=".features.entertoken.EnterTokenActivity"
-                android:label="Grant Access"
-                android:launchMode="singleTop">
+            android:name=".features.entertoken.EnterTokenActivity"
+            android:exported="true"
+            android:label="Grant Access"
+            android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                        android:host="com.davidmedenjak.indiana"
-                        android:pathPattern="/.*/.*"
-                        android:pathPrefix="/bitrise"
-                        android:scheme="indiana"/>
+                    android:host="com.davidmedenjak.indiana"
+                    android:pathPattern="/.*/.*"
+                    android:pathPrefix="/bitrise"
+                    android:scheme="indiana" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                        android:host="indiana.davidmedenjak.com"
-                        android:path="/bitrise"
-                        android:pathPattern="/bitrise/.*"
-                        android:scheme="https"/>
+                    android:host="indiana.davidmedenjak.com"
+                    android:path="/bitrise"
+                    android:pathPattern="/bitrise/.*"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
         <activity
-                android:name=".features.about.PrivacyActivity"
-                android:label="Privacy Policy"
-                android:launchMode="singleTop"
-                android:parentActivityName=".features.about.AboutActivity">
+            android:name=".features.about.PrivacyActivity"
+            android:label="Privacy Policy"
+            android:launchMode="singleTop"
+            android:parentActivityName=".features.about.AboutActivity">
 
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".features.about.AboutActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".features.about.AboutActivity" />
         </activity>
 
         <activity
-                android:name=".features.about.AboutActivity"
-                android:label="About"
-                android:launchMode="singleTop"
-                android:parentActivityName=".features.projects.ProjectActivity">
+            android:name=".features.about.AboutActivity"
+            android:label="About"
+            android:launchMode="singleTop"
+            android:parentActivityName=".features.projects.ProjectActivity">
 
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".features.projects.ProjectActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".features.projects.ProjectActivity" />
         </activity>
+
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
     </application>
+
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

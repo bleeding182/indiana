@@ -38,7 +38,7 @@ class EnterTokenActivity : BaseActivity() {
 
         val data = intent.data
         if (data != null) {
-            val token = data.lastPathSegment
+            val token = data.lastPathSegment!!
             api_key.setText(token)
             tryToken(token)
         }

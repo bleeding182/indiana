@@ -42,11 +42,11 @@ class BuildActivity : BaseActivity() {
         recycler_view.adapter = adapter
         recycler_view.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
-        val appSlug = intent.getStringExtra(EXTRA_APP_SLUG)
-        title = intent.getStringExtra(EXTRA_TITLE)
+        val appSlug = intent.getStringExtra(EXTRA_APP_SLUG)!!
+        title = intent.getStringExtra(EXTRA_TITLE)!!
 
         adapter.projectSlug = appSlug
-        adapter.projectTitle = intent.getStringExtra(EXTRA_TITLE)
+        adapter.projectTitle = intent.getStringExtra(EXTRA_TITLE)!!
 
         swipe_refresh.setColorSchemeColors(
             ContextCompat.getColor(this, R.color.colorAccent),

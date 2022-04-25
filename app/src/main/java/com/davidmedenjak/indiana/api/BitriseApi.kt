@@ -40,7 +40,7 @@ object ProjectSort {
 @JsonSerializable
 data class Project(
     @Json(name = "is_disabled") val isDisabled: Boolean,
-    @Json(name = "project_type") val projectType: String,
+    @Json(name = "project_type") val projectType: String?,
     @Json(name = "provider") val provider: String,
     @Json(name = "repo_owner") val repoOwner: String,
     @Json(name = "repo_slug") val repoSlug: String,

@@ -44,8 +44,8 @@ class ArtifactActivity : BaseActivity() {
         recycler_view.adapter = adapter
         recycler_view.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
-        val projectSlug = intent.getStringExtra(EXTRA_APP_SLUG)
-        val buildSlug = intent.getStringExtra(EXTRA_BUILD_SLUG)
+        val projectSlug = intent.getStringExtra(EXTRA_APP_SLUG)!!
+        val buildSlug = intent.getStringExtra(EXTRA_BUILD_SLUG)!!
 
         adapter.projectSlug = projectSlug
         adapter.buildSlug = buildSlug

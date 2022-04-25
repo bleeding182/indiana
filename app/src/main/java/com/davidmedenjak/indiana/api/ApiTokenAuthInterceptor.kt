@@ -10,7 +10,7 @@ class ApiTokenAuthInterceptor @Inject constructor(val settings: UserSettings) : 
 
         val request = chain.request()
 
-        if (request.url().pathSegments().last() == "me") {
+        if (request.url.pathSegments.last() == "me") {
             return chain.proceed(request)
         }
 

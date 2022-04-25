@@ -7,7 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.widget.Toast
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.File
 
 class DownloadBroadcastReceiver(val downloadId: Long) : BroadcastReceiver() {
@@ -44,7 +44,8 @@ class DownloadBroadcastReceiver(val downloadId: Long) : BroadcastReceiver() {
                     context.startActivity(intent)
                 } else {
                     Toast.makeText(context, "Could not open file ${uri.lastPathSegment}", Toast.LENGTH_SHORT).show()
-                    Crashlytics.logException(IllegalStateException("Could not open file."))
+                    FirebaseCrashlytics.getInstance()
+                        .recordException(IllegalStateException("Could not open file."))
                 }
             }
         }

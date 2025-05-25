@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "983319620695",
+    "firebase_url": "https://indiana-artifact-hunter.firebaseio.com",
+    "project_id": "indiana-artifact-hunter",
+    "storage_bucket": "indiana-artifact-hunter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983319620695:android:854ca73298094fca",
+        "android_client_info": {
+          "package_name": "com.davidmedenjak.indiana"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983319620695-ma82kl6g41qinkdq63r3m88te85n90ir.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvG33gQ70pMjdUR6FzCZptbOP87m_i2Ys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983319620695-ma82kl6g41qinkdq63r3m88te85n90ir.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983319620695:android:d37ae1e78ca9a8e4944712",
+        "android_client_info": {
+          "package_name": "com.davidmedenjak.indiana.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983319620695-9ifnlc9kc4q3q35kab0ju4cvk4h2elpk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.davidmedenjak.indiana.debug",
+            "certificate_hash": "ab5754a3b093d4caa14ca5dfeaa17351a0985c76"
+          }
+        },
+        {
+          "client_id": "983319620695-ma82kl6g41qinkdq63r3m88te85n90ir.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvG33gQ70pMjdUR6FzCZptbOP87m_i2Ys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983319620695-ma82kl6g41qinkdq63r3m88te85n90ir.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

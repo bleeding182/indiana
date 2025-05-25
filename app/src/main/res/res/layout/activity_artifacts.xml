@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/unknown_sources_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:paddingStart="?android:listPreferredItemPaddingStart"
+        android:paddingLeft="?listPreferredItemPaddingLeft"
+        android:paddingTop="8dp"
+        android:paddingEnd="?android:listPreferredItemPaddingEnd"
+        android:paddingRight="?listPreferredItemPaddingRight"
+        android:paddingBottom="8dp">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:text="Enable unknown sources for this app to immediately install apps after download" />
+
+        <Button
+            android:id="@+id/action_unknown_sources"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show me" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

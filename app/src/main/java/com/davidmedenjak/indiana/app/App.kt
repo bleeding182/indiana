@@ -1,19 +1,12 @@
 package com.davidmedenjak.indiana.app
 
-import com.davidmedenjak.indiana.di.AppInjector
-import dagger.android.AndroidInjector
-import dagger.android.support.DaggerApplication
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-class App : DaggerApplication() {
-
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.builder().app(this).build()
-    }
+@HiltAndroidApp
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        AppInjector.init(this)
     }
 }
-

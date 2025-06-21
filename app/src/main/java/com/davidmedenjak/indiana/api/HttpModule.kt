@@ -1,6 +1,7 @@
 package com.davidmedenjak.indiana.api
 
 import com.davidmedenjak.indiana.BuildConfig
+import com.davidmedenjak.indiana.session.SessionManager
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -21,12 +22,21 @@ class HttpModule {
 
     @Singleton
     @Provides
-    fun providerOkHttp() = OkHttpClient.Builder()
+    fun providerOkHttp(
+        sessionManager: SessionManager,
+    ) = OkHttpClient.Builder()
         .apply {
             if (BuildConfig.DEBUG) {
                 addInterceptor(HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
                 })
+            }
+            addInterceptor { chain ->
+                val result = chain.proceed(chain.request())
+                if (result.code == 401) {
+                    sessionManager.logout()
+                }
+                result
             }
         }
         .build()

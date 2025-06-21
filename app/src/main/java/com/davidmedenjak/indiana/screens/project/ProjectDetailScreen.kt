@@ -45,7 +45,10 @@ import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Surface
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
-import com.davidmedenjak.indiana.theme.ui.atoms.loading
+import com.davidmedenjak.indiana.theme.ui.atoms.contentError
+import com.davidmedenjak.indiana.theme.ui.atoms.contentLoading
+import com.davidmedenjak.indiana.theme.ui.atoms.pageError
+import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlinx.coroutines.flow.Flow
@@ -84,8 +87,18 @@ fun ProjectDetailScreen(
             ),
             modifier = Modifier.fillMaxSize(),
         ) {
-            if (builds.loadState.refresh == LoadState.Loading && builds.itemCount == 0) {
-                loading("refresh")
+            when (builds.loadState.refresh) {
+                LoadState.Loading -> {
+                    if (builds.itemCount == 0) {
+                        contentLoading("refresh")
+                    }
+                }
+
+                is LoadState.Error -> {
+                    contentError("contentError", onRetryClicked = builds::retry)
+                }
+
+                is LoadState.NotLoading -> {}
             }
 
             val itemModifier = Modifier.fillMaxWidth()
@@ -97,8 +110,16 @@ fun ProjectDetailScreen(
                 Build(item, modifier = itemModifier.clickable { onBuildSelected(item) })
             }
 
-            if (builds.loadState.append == LoadState.Loading) {
-                loading("append")
+            when (builds.loadState.append) {
+                LoadState.Loading -> {
+                    pageLoading("append")
+                }
+
+                is LoadState.Error -> {
+                    pageError("pageError", onRetryClicked = builds::retry)
+                }
+
+                is LoadState.NotLoading -> {}
             }
         }
     }

@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material.icons.filled.FilePresent
 import androidx.compose.material.icons.filled.InstallMobile
 import androidx.compose.runtime.Composable
@@ -45,7 +44,10 @@ import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
-import com.davidmedenjak.indiana.theme.ui.atoms.loading
+import com.davidmedenjak.indiana.theme.ui.atoms.contentError
+import com.davidmedenjak.indiana.theme.ui.atoms.contentLoading
+import com.davidmedenjak.indiana.theme.ui.atoms.pageError
+import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlinx.coroutines.flow.Flow
@@ -115,8 +117,18 @@ fun BuildDetailScreen(
                 }
             }
 
-            if (projects.loadState.refresh == LoadState.Loading && projects.itemCount == 0) {
-                loading("refresh")
+            when (projects.loadState.refresh) {
+                LoadState.Loading -> {
+                    if (projects.itemCount == 0) {
+                        contentLoading("refresh")
+                    }
+                }
+
+                is LoadState.Error -> {
+                    contentError("contentError", onRetryClicked = projects::retry)
+                }
+
+                is LoadState.NotLoading -> {}
             }
 
             val itemModifier = Modifier.fillMaxWidth()
@@ -128,8 +140,16 @@ fun BuildDetailScreen(
                 Artifact(item, modifier = itemModifier.clickable { onArtifactSelected(item) })
             }
 
-            if (projects.loadState.append == LoadState.Loading) {
-                loading("append")
+            when (projects.loadState.append) {
+                LoadState.Loading -> {
+                    pageLoading("append")
+                }
+
+                is LoadState.Error -> {
+                    pageError("pageError", onRetryClicked = projects::retry)
+                }
+
+                is LoadState.NotLoading -> {}
             }
         }
     }

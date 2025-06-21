@@ -36,6 +36,7 @@ import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.atoms.loading
+import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlinx.coroutines.flow.Flow
 
@@ -47,7 +48,13 @@ fun BuildDetailScreen(
     onNavigateUp: () -> Unit,
     onArtifactSelected: (V0ArtifactListElementResponseModel) -> Unit,
 ) {
+    val projects = artifacts.collectAsLazyPagingItems()
+    val pullToRefreshState = rememberPullToRefreshState(
+        isRefreshing = projects.loadState.refresh == LoadState.Loading && projects.itemCount > 0,
+        onRefresh = projects::refresh
+    )
     Scaffold(
+        pullToRefreshState = pullToRefreshState,
         topBar = {
             LargeFlexible(
                 title = { Text(buildName) },
@@ -57,8 +64,6 @@ fun BuildDetailScreen(
             )
         }, modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
-        val projects = artifacts.collectAsLazyPagingItems()
-
         var showPermissionInfo by remember { mutableStateOf(false) }
         val context = LocalContext.current
         LifecycleStartEffect(Unit) {
@@ -77,7 +82,8 @@ fun BuildDetailScreen(
                 innerPadding.calculateTopPadding() + 16.dp,
                 innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                 innerPadding.calculateBottomPadding() + 16.dp,
-            )
+            ),
+            modifier = Modifier.fillMaxSize(),
         ) {
             if (showPermissionInfo) {
                 item(key = "permission", contentType = "permission") {
@@ -99,7 +105,7 @@ fun BuildDetailScreen(
                 }
             }
 
-            if (projects.loadState.refresh == LoadState.Loading) {
+            if (projects.loadState.refresh == LoadState.Loading && projects.itemCount == 0) {
                 loading("refresh")
             }
 

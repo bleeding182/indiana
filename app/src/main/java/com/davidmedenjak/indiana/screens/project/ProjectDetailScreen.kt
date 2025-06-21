@@ -37,13 +37,13 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
-import com.davidmedenjak.indiana.theme.ui.atoms.IconButton
 import com.davidmedenjak.indiana.theme.ui.atoms.IndeterminateProgressCircular
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Surface
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.atoms.loading
+import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
@@ -56,7 +56,13 @@ fun ProjectDetailScreen(
     onNavigateUp: () -> Unit,
     onBuildSelected: (V0BuildResponseItemModel) -> Unit,
 ) {
+    val builds = builds.collectAsLazyPagingItems()
+    val pullToRefreshState = rememberPullToRefreshState(
+        isRefreshing = builds.loadState.refresh == LoadState.Loading && builds.itemCount > 0,
+        onRefresh = builds::refresh
+    )
     Scaffold(
+        pullToRefreshState = pullToRefreshState,
         topBar = {
             LargeFlexible(
                 title = { Text(projectName) },
@@ -66,29 +72,29 @@ fun ProjectDetailScreen(
             )
         }, modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
-        val projects = builds.collectAsLazyPagingItems()
         LazyColumn(
             contentPadding = PaddingValues(
                 innerPadding.calculateStartPadding(LocalLayoutDirection.current),
                 innerPadding.calculateTopPadding() + 16.dp,
                 innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                 innerPadding.calculateBottomPadding() + 16.dp,
-            )
+            ),
+            modifier = Modifier.fillMaxSize(),
         ) {
-            if (projects.loadState.refresh == LoadState.Loading) {
+            if (builds.loadState.refresh == LoadState.Loading && builds.itemCount == 0) {
                 loading("refresh")
             }
 
             val itemModifier = Modifier.fillMaxWidth()
             items(
-                count = projects.itemCount,
-                key = { projects.peek(it)?.slug!! },
+                count = builds.itemCount,
+                key = { builds.peek(it)?.slug!! },
                 contentType = { "project" }) { index ->
-                val item = projects[index]!!
+                val item = builds[index]!!
                 Build(item, modifier = itemModifier.clickable { onBuildSelected(item) })
             }
 
-            if (projects.loadState.append == LoadState.Loading) {
+            if (builds.loadState.append == LoadState.Loading) {
                 loading("append")
             }
         }

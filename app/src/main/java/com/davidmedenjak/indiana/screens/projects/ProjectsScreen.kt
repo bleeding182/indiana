@@ -43,6 +43,7 @@ import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.atoms.loading
+import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlinx.coroutines.flow.Flow
 
@@ -54,7 +55,13 @@ fun ProjectsScreen(
     onPrivacySelected: () -> Unit,
     onLogoutSelected: () -> Unit,
 ) {
+    val projects = projects.collectAsLazyPagingItems()
+    val pullToRefreshState = rememberPullToRefreshState(
+        isRefreshing = projects.loadState.refresh == LoadState.Loading && projects.itemCount > 0,
+        onRefresh = projects::refresh
+    )
     Scaffold(
+        pullToRefreshState = pullToRefreshState,
         topBar = {
             LargeFlexible(
                 title = { Text("Projects") },
@@ -94,16 +101,16 @@ fun ProjectsScreen(
             )
         }, modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
-        val projects = projects.collectAsLazyPagingItems()
         LazyColumn(
             contentPadding = PaddingValues(
                 innerPadding.calculateStartPadding(LocalLayoutDirection.current),
                 innerPadding.calculateTopPadding() + 16.dp,
                 innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                 innerPadding.calculateBottomPadding() + 16.dp,
-            )
+            ),
+            modifier = Modifier.fillMaxSize(),
         ) {
-            if (projects.loadState.refresh == LoadState.Loading) {
+            if (projects.loadState.refresh == LoadState.Loading && projects.itemCount == 0) {
                 loading("refresh")
             }
 

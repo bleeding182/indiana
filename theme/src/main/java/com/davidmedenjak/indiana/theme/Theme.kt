@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -101,6 +102,8 @@ class ColorScheme(val colorScheme: M3ColorScheme) {
     val surfaceContainerHighest: Color = colorScheme.surfaceContainerHighest
     val surfaceContainerLow: Color = colorScheme.surfaceContainerLow
     val surfaceContainerLowest: Color = colorScheme.surfaceContainerLowest
+
+    fun contentColorFor(backgroundColor: Color) = colorScheme.contentColorFor(backgroundColor)
 }
 
 

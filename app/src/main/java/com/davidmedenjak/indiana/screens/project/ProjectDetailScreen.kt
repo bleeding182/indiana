@@ -1,6 +1,7 @@
 package com.davidmedenjak.indiana.screens.project
 
 import android.text.format.DateUtils
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,10 +26,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -123,12 +126,18 @@ private fun Build(build: V0BuildResponseItemModel, modifier: Modifier = Modifier
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        val backgroundColor = buildBackgroundColor(build.status)
         Icon(
             buildDrawable(build.status),
             contentDescription = build.status.toString(), // fixme
+            tint = IndianaTheme.colorScheme.contentColorFor(backgroundColor),
             modifier = Modifier
+                .background(
+                    color = backgroundColor,
+                    shape = IndianaTheme.shapes.medium
+                )
                 .size(40.dp)
-                .padding(4.dp)
+                .padding(8.dp)
         )
         Column(modifier = Modifier.weight(1f)) {
             Row {
@@ -193,29 +202,43 @@ private fun buildDrawable(status: Int?): VectorPainter {
     return rememberVectorPainter(icon)
 }
 
+@Composable
+private fun buildBackgroundColor(status: Int?): Color = when (status) {
+    0 -> IndianaTheme.colorScheme.primaryContainer
+    1 -> IndianaTheme.colorScheme.primaryContainer
+    2 -> IndianaTheme.colorScheme.surfaceContainer
+    3 -> IndianaTheme.colorScheme.surfaceContainer
+    else -> IndianaTheme.colorScheme.tertiaryContainer
+}
+
+@PreviewDynamicColors
 @PreviewLightDark
 @Composable
 private fun Preview() {
     PreviewSurface {
-        Build(
-            V0BuildResponseItemModel(
-                abortReason = "Aborted",
-                branch = "Branch",
-                buildNumber = 14,
-                commitHash = "affe12341234",
-                commitMessage = "Did stuff",
-                commitViewUrl = "foo",
-                tag = "1.0.0",
-                triggeredAt = Instant.now().toString(),
-                triggeredWorkflow = "release",
-                creditCost = 3,
-                environmentPrepareFinishedAt = null,
-                finishedAt = null,
-                isOnHold = null,
-                isProcessed = null,
-                isStatusSent = null,
-                status = 1
-            )
-        )
+        Column {
+            (0..4).forEach { status ->
+                Build(
+                    V0BuildResponseItemModel(
+                        abortReason = "Aborted",
+                        branch = "Branch",
+                        buildNumber = 14,
+                        commitHash = "affe12341234",
+                        commitMessage = "Did stuff",
+                        commitViewUrl = "foo",
+                        tag = "1.0.0",
+                        triggeredAt = Instant.now().toString(),
+                        triggeredWorkflow = "release",
+                        creditCost = 3,
+                        environmentPrepareFinishedAt = null,
+                        finishedAt = null,
+                        isOnHold = null,
+                        isProcessed = null,
+                        isStatusSent = null,
+                        status = status
+                    )
+                )
+            }
+        }
     }
 }

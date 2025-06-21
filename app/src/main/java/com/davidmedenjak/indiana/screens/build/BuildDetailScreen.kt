@@ -188,20 +188,19 @@ private fun Artifact(artifact: V0ArtifactListElementResponseModel, modifier: Mod
                 Column(modifier = Modifier.weight(1f)) {
                     val title = listOfNotNull(
                         app_name,
-                        product_flavour,
-                        build_type,
                         version_name
                     )
                         .filter { it.toString().isNotBlank() }
-                        .joinToString()
+                        .joinToString(separator = " ")
                         .takeIf(String::isNotBlank)
                     val subTitle = listOfNotNull(
-                        package_name
+                        package_name,
+                        product_flavour,
                     )
                         .filter { it.toString().isNotBlank() }
-                        .joinToString()
+                        .joinToString(separator = " ")
                         .takeIf(String::isNotBlank)
-                    val rows = listOfNotNull(title, subTitle, artifact.title, artifact.artifactType)
+                    val rows = listOfNotNull(title, subTitle, artifact.title)
                     rows.getOrNull(0)?.let {
                         Text(
                             text = it,

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -100,6 +101,7 @@ fun AuthScreen(
 
             Card(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 16.dp)
             ) {
                 Column(
@@ -108,7 +110,12 @@ fun AuthScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     var text by remember { mutableStateOf(TextFieldValue("")) }
-                    TextField(text, onValueChange = { text = it }, label = { Text("API Token") })
+                    TextField(
+                        text,
+                        modifier = Modifier.fillMaxSize(),
+                        onValueChange = { text = it },
+                        label = { Text("API Token") }
+                    )
                     Button(
                         modifier = Modifier
                             .align(Alignment.End)

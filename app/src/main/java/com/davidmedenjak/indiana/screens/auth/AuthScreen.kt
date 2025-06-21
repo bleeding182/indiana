@@ -94,7 +94,7 @@ fun AuthScreen(
                     .align(Alignment.End)
                     .padding(end = 8.dp),
                 onClick = {
-                    val uri = "https://www.bitrise.io/me/profile#/security".toUri()
+                    val uri = "https://app.bitrise.io/me/account/security".toUri()
                     val intent = Intent(Intent.ACTION_VIEW, uri)
                     context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 })

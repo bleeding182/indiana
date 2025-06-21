@@ -146,7 +146,13 @@ private fun Project(project: V0AppResponseItemModel, modifier: Modifier = Modifi
                 .clip(IndianaTheme.shapes.small)
                 .background(IndianaTheme.colorScheme.surfaceVariant),
             contentScale = ContentScale.Inside,
-            error = rememberVectorPainter(Icons.Default.Image),
+            error = {
+                Icon(
+                    painter = rememberVectorPainter(Icons.Default.Image),
+                    tint = IndianaTheme.colorScheme.onSurfaceVariant,
+                    contentDescription = null,
+                )
+            },
             contentDescription = null,
         )
         Text(project.title ?: "<unknown>")

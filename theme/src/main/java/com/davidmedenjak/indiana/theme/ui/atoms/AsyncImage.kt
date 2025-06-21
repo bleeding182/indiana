@@ -1,6 +1,10 @@
 package com.davidmedenjak.indiana.theme.ui.atoms
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -9,7 +13,8 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.drawscope.DrawScope.Companion.DefaultFilterQuality
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import coil3.compose.AsyncImage as CoilAsyncImage
+import coil3.compose.AsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 
 @Composable
 fun AsyncImage(
@@ -17,8 +22,7 @@ fun AsyncImage(
     contentDescription: String?,
     modifier: Modifier = Modifier,
     placeholder: Painter? = null,
-    error: Painter? = null,
-    fallback: Painter? = error,
+    error: @Composable () -> Unit,
 //    onLoading: ((State.Loading) -> Unit)? = null,
 //    onSuccess: ((State.Success) -> Unit)? = null,
 //    onError: ((State.Error) -> Unit)? = null,
@@ -28,20 +32,34 @@ fun AsyncImage(
     colorFilter: ColorFilter? = null,
     filterQuality: FilterQuality = DefaultFilterQuality,
     clipToBounds: Boolean = true,
-) = CoilAsyncImage(
-    model = model,
-    contentDescription = contentDescription,
-    modifier = modifier,
-    placeholder = placeholder,
-    error = error,
-    fallback = fallback,
-//    onLoading = onLoading,
-//    onSuccess = onSuccess,
-//    onError = onError,
-    alignment = alignment,
-    contentScale = contentScale,
-    alpha = alpha,
-    colorFilter = colorFilter,
-    filterQuality = filterQuality,
-    clipToBounds = clipToBounds,
-)
+) {
+    val painter = rememberAsyncImagePainter(model = model)
+    val state by painter.state.collectAsState()
+
+    when (state) {
+        is AsyncImagePainter.State.Empty,
+        is AsyncImagePainter.State.Loading -> {
+            placeholder?.let {
+                Image(
+                    modifier = modifier,
+                    painter = placeholder,
+                    contentDescription = null,
+                )
+            } ?: Box(modifier = modifier)
+        }
+
+        is AsyncImagePainter.State.Success -> {
+            Image(
+                modifier = modifier,
+                painter = painter,
+                contentDescription = null,
+            )
+        }
+
+        is AsyncImagePainter.State.Error -> {
+            Box(modifier = modifier, contentAlignment = Alignment.Center) {
+                error()
+            }
+        }
+    }
+}

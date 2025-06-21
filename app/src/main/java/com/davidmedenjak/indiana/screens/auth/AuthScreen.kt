@@ -56,11 +56,17 @@ fun AuthScreen(
                     ) {
                         DropdownMenuItem(
                             text = { Text("About") },
-                            onClick = onAboutSelected,
+                            onClick = {
+                                expanded = false
+                                onAboutSelected()
+                            },
                         )
                         DropdownMenuItem(
                             text = { Text("Privacy Policy") },
-                            onClick = onPrivacySelected,
+                            onClick = {
+                                expanded = false
+                                onPrivacySelected()
+                            },
                         )
                     }
 

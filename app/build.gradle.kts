@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose.hilt)
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.material.icons)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.playservices.auth)
 
     implementation(libs.dagger)
     implementation(libs.dagger.hilt)

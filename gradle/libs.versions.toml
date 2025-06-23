@@ -11,14 +11,14 @@ activityCompose = "1.10.1"
 composeBom = "2025.06.00"
 appcompat = "1.7.1"
 material = "1.12.0"
-foundationAndroid = "1.8.2"
-nav3Core = "1.0.0-alpha03"
+foundationAndroid = "1.8.3"
+nav3Core = "1.0.0-alpha04"
 nav3Material = "1.0.0-SNAPSHOT"
 nav3Lifecycle = "1.0.0-alpha01"
 kotlinxSerializationCore = "1.8.1"
 paging = "3.3.6"
 coil = "3.2.0"
-uiTooling = "1.8.2"
+uiTooling = "1.8.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +38,8 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version = "1.6.0-alpha03" }
+androidx-credentials-playservices-auth = "com.google.android.gms:play-services-auth:21.3.0"
 
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }

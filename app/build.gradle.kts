@@ -70,6 +70,9 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.playservices.auth)
 
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
     implementation(libs.dagger)
     implementation(libs.dagger.hilt)
     implementation(libs.androidx.foundation.android)

@@ -19,6 +19,7 @@ kotlinxSerializationCore = "1.8.1"
 paging = "3.3.6"
 coil = "3.2.0"
 uiTooling = "1.8.3"
+androidx-room = "2.7.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +41,9 @@ androidx-material-icons = { group = "androidx.compose.material", name = "materia
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version = "1.6.0-alpha03" }
 androidx-credentials-playservices-auth = "com.google.android.gms:play-services-auth:21.3.0"
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidx-room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
 
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }

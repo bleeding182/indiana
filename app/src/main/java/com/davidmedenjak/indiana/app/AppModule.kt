@@ -1,6 +1,7 @@
 package com.davidmedenjak.indiana.app
 
 import android.app.Application
+import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import androidx.room.Room
 import com.davidmedenjak.indiana.db.AppDatabase
@@ -20,7 +21,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(app: Application) =
+    fun provideSharedPreferences(app: Application): SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(app)
 
     @Provides

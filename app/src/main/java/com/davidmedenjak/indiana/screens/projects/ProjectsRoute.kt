@@ -26,6 +26,8 @@ fun ProjectsRoute(
     ProjectsScreen(
         projects = viewModel.pagedProjects,
         recents = viewModel.recents,
+        projectTypes = viewModel.projectTypes,
+        filteredProjectTypes = viewModel.filteredProjectTypes,
         onProjectSelected = {
             navigateToProject(it)
             viewModel.updateRecents(it)
@@ -33,5 +35,6 @@ fun ProjectsRoute(
         onAboutSelected = onAboutSelected,
         onPrivacySelected = onPrivacySelected,
         onLogoutSelected = onLogoutSelected,
+        toggleFilterProjectType = viewModel::setFilterProjectType,
     )
 }

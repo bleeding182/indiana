@@ -2,6 +2,7 @@
 
 package com.davidmedenjak.indiana.theme.ui.atoms
 
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,6 +31,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.material3.Scaffold as M3Scaffold
@@ -69,6 +71,24 @@ fun TopBarScope.LargeFlexible(
     windowInsets = windowInsets,
     scrollBehavior = scrollBehavior,
 )
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBarScope.Sticky(
+    modifier: Modifier = Modifier,
+    content: @Composable (() -> Unit)
+) {
+    val appBarContainerColor = lerp(
+        TopAppBarDefaults.topAppBarColors().containerColor,
+        TopAppBarDefaults.topAppBarColors().scrolledContainerColor,
+        FastOutLinearInEasing.transform(scrollBehavior.state.collapsedFraction),
+    )
+    Surface(
+        modifier = modifier,
+        color = appBarContainerColor,
+        content = content
+    )
+}
 
 @Stable
 class PullToRefreshState(

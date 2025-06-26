@@ -9,16 +9,22 @@ import androidx.paging.PagingState
 import androidx.paging.cachedIn
 import com.davidmedenjak.indiana.api.ApplicationApi
 import com.davidmedenjak.indiana.api.ApplicationApi.SortByAppList
+import com.davidmedenjak.indiana.app.UserSettings
 import com.davidmedenjak.indiana.db.AppDatabase
 import com.davidmedenjak.indiana.db.ProjectEntity
 import com.davidmedenjak.indiana.db.ProjectLastViewed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Instant
@@ -28,6 +34,7 @@ import javax.inject.Inject
 class ProjectsViewModel @Inject constructor(
     private val api: ApplicationApi,
     private val database: AppDatabase,
+    private val userSettings: UserSettings,
 ) : ViewModel() {
     fun updateRecents(project: Project) {
         viewModelScope.launch {
@@ -53,16 +60,36 @@ class ProjectsViewModel @Inject constructor(
             }
         }
         .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = null)
-    val pagedProjects = Pager(
-        PagingConfig(pageSize = 50, initialLoadSize = 50)
-    ) {
-        ProjectsPagingSource(api, database)
-    }.flow.cachedIn(viewModelScope)
+
+    val filteredProjectTypes: MutableStateFlow<String?> =
+        MutableStateFlow(userSettings.projectFiler)
+
+    val projectTypes: StateFlow<List<String>?> = database.projects().projectTypes()
+        .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = null)
+
+    fun setFilterProjectType(projectType: String) {
+        userSettings.projectFiler = projectType
+        filteredProjectTypes.update {
+            if (it == projectType) {
+                null
+            } else {
+                projectType
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pagedProjects = filteredProjectTypes.flatMapLatest { filter ->
+        Pager(PagingConfig(pageSize = 50, initialLoadSize = 50)) {
+            ProjectsPagingSource(api, database, filter)
+        }.flow
+    }.cachedIn(viewModelScope)
 }
 
 class ProjectsPagingSource(
     val api: ApplicationApi,
     private val database: AppDatabase,
+    private val filter: String?,
 ) : PagingSource<String, Project>() {
 
     override suspend fun load(
@@ -72,7 +99,8 @@ class ProjectsPagingSource(
             val response = api.appList(
                 sortBy = SortByAppList.last_build_at,
                 next = params.key,
-                limit = params.loadSize
+                limit = params.loadSize,
+                projectType = filter
             )
             coroutineScope {
                 launch(Dispatchers.IO) {

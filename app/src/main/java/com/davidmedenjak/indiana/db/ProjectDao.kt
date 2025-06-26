@@ -13,11 +13,22 @@ interface ProjectDao {
     @Upsert
     suspend fun updateLastViewed(projectLastViewed: ProjectLastViewed)
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM project_last_viewed
             LEFT JOIN project ON project_id = id 
             WHERE last_viewed IS NOT NULL
             ORDER BY last_viewed DESC LIMIT :limit
-        """)
+        """
+    )
     fun lastViewed(limit: Int): Flow<List<ProjectEntity>>
+
+    @Query(
+        """
+        SELECT DISTINCT project_type from project
+            WHERE project_type IS NOT NULL
+            ORDER BY project_type
+    """
+    )
+    fun projectTypes(): Flow<List<String>>
 }

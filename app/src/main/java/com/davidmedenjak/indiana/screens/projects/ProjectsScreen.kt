@@ -3,6 +3,7 @@ package com.davidmedenjak.indiana.screens.projects
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,10 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,12 +41,14 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.AsyncImage
+import com.davidmedenjak.indiana.theme.ui.atoms.Chip
 import com.davidmedenjak.indiana.theme.ui.atoms.DropdownMenu
 import com.davidmedenjak.indiana.theme.ui.atoms.DropdownMenuItem
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.IconButton
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
+import com.davidmedenjak.indiana.theme.ui.atoms.Sticky
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.atoms.contentError
 import com.davidmedenjak.indiana.theme.ui.atoms.contentLoading
@@ -52,21 +57,28 @@ import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun ProjectsScreen(
     projects: Flow<PagingData<Project>>,
     recents: Flow<List<Project>?>,
-    onProjectSelected: (project: Project) -> Unit,
+    projectTypes: StateFlow<List<String>?>,
+    filteredProjectTypes: MutableStateFlow<String?>,
+    onProjectSelected: (Project) -> Unit,
     onAboutSelected: () -> Unit,
     onPrivacySelected: () -> Unit,
     onLogoutSelected: () -> Unit,
+    toggleFilterProjectType: (String) -> Unit,
 ) {
     val projects = projects.collectAsLazyPagingItems()
     val recents by recents.collectAsStateWithLifecycle(
         initialValue = null,
         minActiveState = Lifecycle.State.RESUMED
     )
+    val projectTypes by projectTypes.collectAsStateWithLifecycle()
+    val filteredProjectType by filteredProjectTypes.collectAsStateWithLifecycle()
 
     val pullToRefreshState = rememberPullToRefreshState(
         isRefreshing = projects.loadState.refresh == LoadState.Loading && projects.itemCount > 0,
@@ -75,42 +87,68 @@ fun ProjectsScreen(
     Scaffold(
         pullToRefreshState = pullToRefreshState,
         topBar = {
-            LargeFlexible(
-                title = { Text("Projects") },
-                actions = {
-                    var expanded by remember { mutableStateOf(false) }
-                    IconButton(onClick = { expanded = !expanded }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "More options")
-                    }
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("About") },
-                            onClick = {
-                                expanded = false
-                                onAboutSelected()
-                            },
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Privacy Policy") },
-                            onClick = {
-                                expanded = false
-                                onPrivacySelected()
-                            },
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Logout") },
-                            onClick = {
-                                expanded = false
-                                onLogoutSelected()
-                            },
-                        )
-                    }
+            Column {
+                LargeFlexible(
+                    title = { Text("Projects") },
+                    actions = {
+                        var expanded by remember { mutableStateOf(false) }
+                        IconButton(onClick = { expanded = !expanded }) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                        }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("About") },
+                                onClick = {
+                                    expanded = false
+                                    onAboutSelected()
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Privacy Policy") },
+                                onClick = {
+                                    expanded = false
+                                    onPrivacySelected()
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Logout") },
+                                onClick = {
+                                    expanded = false
+                                    onLogoutSelected()
+                                },
+                            )
+                        }
 
-                },
-            )
+                    },
+                )
+                Sticky(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    val filters by remember {
+                        derivedStateOf {
+                            listOfNotNull(filteredProjectType)
+                                .plus(projectTypes ?: emptyList())
+                                .distinct()
+                        }
+                    }
+                    LazyRow(
+                        contentPadding = PaddingValues(vertical = 6.dp, horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(filters.size, key = { filters[it] }) {
+                            val projectType = filters[it]
+                            Chip(
+                                selected = filteredProjectType == projectType,
+                                label = { Text(projectType) },
+                                onClick = { toggleFilterProjectType(projectType) },
+                            )
+                        }
+                    }
+                }
+            }
         }, modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         LazyColumn(
@@ -216,7 +254,20 @@ private fun Project(project: Project, modifier: Modifier = Modifier) {
             },
             contentDescription = null,
         )
-        Text(project.name ?: "<unknown>")
+        Column {
+            Text(
+                text = project.name ?: "<unknown>",
+                style = IndianaTheme.typography.bodyMedium,
+                color = IndianaTheme.colorScheme.onSurface,
+            )
+            project.projectType?.let { type ->
+                Text(
+                    text = project.projectType,
+                    style = IndianaTheme.typography.labelSmall,
+                    color = IndianaTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
     }
 }
 

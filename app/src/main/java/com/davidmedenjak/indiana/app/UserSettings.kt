@@ -12,7 +12,12 @@ class UserSettings @Inject constructor(private val preferences: SharedPreference
         get() = preferences.getString(PREF_API_TOKEN, "")
         set(value) = preferences.edit { putString(PREF_API_TOKEN, value) }
 
+    var projectFiler: String?
+        get() = preferences.getString(PREF_PROJECT_FILTER, null)
+        set(value) = preferences.edit { putString(PREF_PROJECT_FILTER, value) }
+
     companion object {
         private const val PREF_API_TOKEN = "api_token"
+        private const val PREF_PROJECT_FILTER = "project_filter"
     }
 }

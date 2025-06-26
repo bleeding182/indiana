@@ -40,6 +40,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.davidmedenjak.indiana.model.V0ArtifactListElementResponseModel
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Button
+import com.davidmedenjak.indiana.theme.ui.atoms.Card
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
@@ -97,22 +98,35 @@ fun BuildDetailScreen(
             ),
             modifier = Modifier.fillMaxSize(),
         ) {
+            item(key = "stable_header") { }
             if (showPermissionInfo) {
                 item(key = "permission", contentType = "permission") {
-                    Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
-                        Text("Enable unknown sources for this app to immediately install apps after download")
-                        Button(
-                            text = "Okay",
-                            onClick = {
-                                context.startActivity(
-                                    Intent(
-                                        Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
-                                        "package:${context.packageName}".toUri()
+                    Card(
+                        modifier = Modifier
+                            .padding(vertical = 16.dp, horizontal = 16.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp, horizontal = 16.dp)
+                        ) {
+                            Text("Enable unknown sources for this app to immediately install apps after download")
+                            Button(
+                                text = "Okay",
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .align(Alignment.End),
+                                onClick = {
+                                    context.startActivity(
+                                        Intent(
+                                            Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                            "package:${context.packageName}".toUri()
+                                        )
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     )
-                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                )
-                            }
-                        )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -277,9 +291,9 @@ private fun SimpleArtifact(
                 .padding(8.dp)
                 .align(Alignment.Top)
         )
-    Column(
-        horizontalAlignment = Alignment.Start,
-    ) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+        ) {
 //        Icon(
 //            buildDrawable(),
 //            contentDescription = artifact.status.toString(), // fixme
@@ -287,18 +301,18 @@ private fun SimpleArtifact(
 //                .size(40.dp)
 //                .padding(4.dp)
 //        )
-        Text(
-            artifact.title ?: "",
-            style = IndianaTheme.typography.bodyMedium,
-            modifier = Modifier,
-        )
-        Text(
-            artifact.artifactType ?: "",
-            style = IndianaTheme.typography.bodySmall,
-            modifier = Modifier,
-            color = IndianaTheme.colorScheme.onSurfaceVariant,
-        )
-    }
+            Text(
+                artifact.title ?: "",
+                style = IndianaTheme.typography.bodyMedium,
+                modifier = Modifier,
+            )
+            Text(
+                artifact.artifactType ?: "",
+                style = IndianaTheme.typography.bodySmall,
+                modifier = Modifier,
+                color = IndianaTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 

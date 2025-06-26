@@ -2,6 +2,8 @@ package com.davidmedenjak.indiana.app
 
 import android.app.Application
 import android.preference.PreferenceManager
+import androidx.room.Room
+import com.davidmedenjak.indiana.db.AppDatabase
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.Module
 import dagger.Provides
@@ -18,7 +20,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(app: Application) = PreferenceManager.getDefaultSharedPreferences(app)
+    fun provideSharedPreferences(app: Application) =
+        PreferenceManager.getDefaultSharedPreferences(app)
 
     @Provides
     @Singleton
@@ -27,4 +30,9 @@ class AppModule {
     @Provides
     @Singleton
     fun appCoroutineScope() = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    @Provides
+    @Singleton
+    fun appDatabase(context: Application): AppDatabase =
+        Room.databaseBuilder<AppDatabase>(context, "indiana").build()
 }

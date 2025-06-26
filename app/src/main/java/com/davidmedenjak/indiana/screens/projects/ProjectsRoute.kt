@@ -6,7 +6,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import com.davidmedenjak.indiana.AppBackStack.RequiresLogin
-import com.davidmedenjak.indiana.model.V0AppResponseItemModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -15,7 +14,7 @@ object ProjectsGraph : NavKey, RequiresLogin
 @Composable
 fun ProjectsRoute(
     navKey: ProjectsGraph,
-    navigateToProject: (project: V0AppResponseItemModel) -> Unit,
+    navigateToProject: (project: Project) -> Unit,
     onAboutSelected: () -> Unit,
     onPrivacySelected: () -> Unit,
     onLogoutSelected: () -> Unit,
@@ -26,7 +25,11 @@ fun ProjectsRoute(
     val context = LocalContext.current
     ProjectsScreen(
         projects = viewModel.pagedProjects,
-        onProjectSelected = navigateToProject,
+        recents = viewModel.recents,
+        onProjectSelected = {
+            navigateToProject(it)
+            viewModel.updateRecents(it)
+        },
         onAboutSelected = onAboutSelected,
         onPrivacySelected = onPrivacySelected,
         onLogoutSelected = onLogoutSelected,

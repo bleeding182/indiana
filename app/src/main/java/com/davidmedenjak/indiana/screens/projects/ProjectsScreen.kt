@@ -5,10 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
@@ -29,10 +31,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.davidmedenjak.indiana.model.V0AppResponseItemModel
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.AsyncImage
 import com.davidmedenjak.indiana.theme.ui.atoms.DropdownMenu
@@ -52,13 +55,19 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun ProjectsScreen(
-    projects: Flow<PagingData<V0AppResponseItemModel>>,
-    onProjectSelected: (project: V0AppResponseItemModel) -> Unit,
+    projects: Flow<PagingData<Project>>,
+    recents: Flow<List<Project>?>,
+    onProjectSelected: (project: Project) -> Unit,
     onAboutSelected: () -> Unit,
     onPrivacySelected: () -> Unit,
     onLogoutSelected: () -> Unit,
 ) {
     val projects = projects.collectAsLazyPagingItems()
+    val recents by recents.collectAsStateWithLifecycle(
+        initialValue = null,
+        minActiveState = Lifecycle.State.RESUMED
+    )
+
     val pullToRefreshState = rememberPullToRefreshState(
         isRefreshing = projects.loadState.refresh == LoadState.Loading && projects.itemCount > 0,
         onRefresh = projects::refresh
@@ -113,6 +122,38 @@ fun ProjectsScreen(
             ),
             modifier = Modifier.fillMaxSize(),
         ) {
+            item(key = "stable_header") { }
+
+            val itemModifier = Modifier.fillMaxWidth()
+
+            val recents = recents
+            if (recents != null && recents.isNotEmpty()) {
+                item(key = "recents_header", contentType = "header") {
+                    Text(
+                        "Recents",
+                        style = IndianaTheme.typography.labelMedium,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
+                items(
+                    count = recents.size,
+                    key = { "recent:${recents[it].id}" },
+                    contentType = { "project" }) { index ->
+                    val item = recents[index]
+                    Project(item, modifier = itemModifier.clickable { onProjectSelected(item) })
+                }
+                item(contentType = "spacer") {
+                    Spacer(modifier = Modifier.height(height = 8.dp))
+                }
+                item(key = "other_header", contentType = "header") {
+                    Text(
+                        "All Projects",
+                        style = IndianaTheme.typography.labelMedium,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
+            }
+
             when (projects.loadState.refresh) {
                 LoadState.Loading -> {
                     if (projects.itemCount == 0) {
@@ -127,10 +168,9 @@ fun ProjectsScreen(
                 is LoadState.NotLoading -> {}
             }
 
-            val itemModifier = Modifier.fillMaxWidth()
             items(
                 count = projects.itemCount,
-                key = { projects.peek(it)?.slug!! },
+                key = { projects.peek(it)?.id!! },
                 contentType = { "project" }) { index ->
                 val item = projects[index]!!
                 Project(item, modifier = itemModifier.clickable { onProjectSelected(item) })
@@ -152,7 +192,7 @@ fun ProjectsScreen(
 }
 
 @Composable
-private fun Project(project: V0AppResponseItemModel, modifier: Modifier = Modifier) {
+private fun Project(project: Project, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .sizeIn(minHeight = 48.dp)
@@ -161,7 +201,7 @@ private fun Project(project: V0AppResponseItemModel, modifier: Modifier = Modifi
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         AsyncImage(
-            model = project.avatarUrl,
+            model = project.avatar,
             modifier = Modifier
                 .size(40.dp)
                 .clip(IndianaTheme.shapes.small)
@@ -176,7 +216,7 @@ private fun Project(project: V0AppResponseItemModel, modifier: Modifier = Modifi
             },
             contentDescription = null,
         )
-        Text(project.title ?: "<unknown>")
+        Text(project.name ?: "<unknown>")
     }
 }
 
@@ -185,21 +225,11 @@ private fun Project(project: V0AppResponseItemModel, modifier: Modifier = Modifi
 private fun Preview() {
     PreviewSurface {
         Project(
-            V0AppResponseItemModel(
-                avatarUrl = null,
-                isDisabled = false,
-                isGithubChecksEnabled = false,
-                isPublic = false,
-                owner = null,
-                projectId = "ID",
+            Project(
+                id = "slug",
+                avatar = null,
                 projectType = "Type",
-                provider = "Provider",
-                repoOwner = "RepoOwner",
-                repoSlug = "RepoSlug",
-                repoUrl = "RepoUrl",
-                slug = "slug",
-                status = 3,
-                title = "ProjectTitle"
+                name = "ProjectTitle"
             ),
         )
     }

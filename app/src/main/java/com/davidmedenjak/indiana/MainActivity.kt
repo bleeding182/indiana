@@ -77,8 +77,8 @@ class MainActivity : ComponentActivity() {
                                     navigateToProject = {
                                         appBackStack.add(
                                             ProjectDetailGraph(
-                                                title = it.title ?: "",
-                                                slug = it.slug!!
+                                                title = it.name ?: "",
+                                                slug = it.id,
                                             )
                                         )
                                     },

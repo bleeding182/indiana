@@ -9,37 +9,96 @@ import androidx.paging.PagingState
 import androidx.paging.cachedIn
 import com.davidmedenjak.indiana.api.ApplicationApi
 import com.davidmedenjak.indiana.api.ApplicationApi.SortByAppList
-import com.davidmedenjak.indiana.model.V0AppResponseItemModel
+import com.davidmedenjak.indiana.db.AppDatabase
+import com.davidmedenjak.indiana.db.ProjectEntity
+import com.davidmedenjak.indiana.db.ProjectLastViewed
 import dagger.hilt.android.lifecycle.HiltViewModel
-import retrofit2.HttpException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.time.Instant
 import javax.inject.Inject
 
 @HiltViewModel
 class ProjectsViewModel @Inject constructor(
     private val api: ApplicationApi,
+    private val database: AppDatabase,
 ) : ViewModel() {
+    fun updateRecents(project: Project) {
+        viewModelScope.launch {
+            withContext(NonCancellable) {
+                val projectLastViewed = ProjectLastViewed(
+                    id = project.id,
+                    lastViewed = Instant.now()
+                )
+                database.projects().updateLastViewed(projectLastViewed)
+            }
+        }
+    }
+
+    val recents = database.projects().lastViewed(5)
+        .map { projects ->
+            projects.map {
+                Project(
+                    id = it.id,
+                    avatar = it.avatar,
+                    name = it.name,
+                    projectType = it.projectType,
+                )
+            }
+        }
+        .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = null)
     val pagedProjects = Pager(
         PagingConfig(pageSize = 50, initialLoadSize = 50)
     ) {
-        ProjectsPagingSource(api)
+        ProjectsPagingSource(api, database)
     }.flow.cachedIn(viewModelScope)
 }
 
 class ProjectsPagingSource(
     val api: ApplicationApi,
-) : PagingSource<String, V0AppResponseItemModel>() {
+    private val database: AppDatabase,
+) : PagingSource<String, Project>() {
+
     override suspend fun load(
         params: LoadParams<String>
-    ): LoadResult<String, V0AppResponseItemModel> {
+    ): LoadResult<String, Project> {
         try {
             val response = api.appList(
                 sortBy = SortByAppList.last_build_at,
                 next = params.key,
                 limit = params.loadSize
             )
+            coroutineScope {
+                launch(Dispatchers.IO) {
+                    val projects = response.data
+                        ?.map {
+                            ProjectEntity(
+                                id = it.slug!!,
+                                avatar = it.avatarUrl,
+                                name = it.title,
+                                projectType = it.projectType,
+                            )
+                        }
+                        ?: return@launch
+                    database.projects().upsert(projects)
+                }
+            }
 
             return LoadResult.Page(
-                data = response.data ?: emptyList(),
+                data = response.data?.map {
+                    Project(
+                        id = it.slug!!,
+                        avatar = it.avatarUrl,
+                        name = it.title,
+                        projectType = it.projectType,
+                    )
+                } ?: emptyList(),
                 prevKey = null,
                 nextKey = response.paging?.next,
             )
@@ -48,7 +107,7 @@ class ProjectsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<String, V0AppResponseItemModel>): String? {
+    override fun getRefreshKey(state: PagingState<String, Project>): String? {
         return null
     }
 }

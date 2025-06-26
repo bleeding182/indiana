@@ -1,3 +1,7 @@
+@file:OptIn(KspExperimental::class)
+
+import com.google.devtools.ksp.KspExperimental
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -44,6 +48,10 @@ android {
         compose = true
         buildConfig = true
     }
+}
+
+ksp {
+    useKsp2 = false
 }
 
 dependencies {

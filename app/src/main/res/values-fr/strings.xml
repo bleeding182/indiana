@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Indiana</string>
+
+    <!-- Navigation -->
+    <string name="navigation_back_description">Retour</string>
+    <string name="navigation_more_options_description">Plus d\'options</string>
+
+    <!-- About Screen -->
+    <string name="about_title">À propos</string>
+    <string name="about_content">Cette app est open source. Tu peux trouver le code source sur GitHub sous licence MIT.</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_title">Indiana</string>
+    <string name="auth_subtitle">Lance-toi avec ton token API</string>
+    <string name="auth_no_token_message">Pas encore de token API ? Crée-en un dans ton profil.</string>
+    <string name="auth_create_token_button">C\'est parti</string>
+    <string name="auth_token_field_label">Token API</string>
+    <string name="auth_submit_button">Valider</string>
+    <string name="auth_menu_about">À propos</string>
+    <string name="auth_menu_privacy">Confidentialité</string>
+
+    <!-- Projects Screen -->
+    <string name="projects_title">Projets</string>
+    <string name="projects_menu_about">À propos</string>
+    <string name="projects_menu_privacy">Confidentialité</string>
+    <string name="projects_menu_logout">Déconnexion</string>
+    <string name="projects_section_recents">Récents</string>
+    <string name="projects_section_all">Tous les projets</string>
+    <string name="projects_unknown_name">&lt;inconnu&gt;</string>
+
+    <!-- Project Detail Screen -->
+    <string name="project_detail_subtitle">Builds</string>
+    <string name="project_detail_triggered_prefix">Déclenché</string>
+
+    <!-- Build Detail Screen -->
+    <string name="build_detail_permission_message">Active les sources inconnues pour cette app pour installer directement les apps après téléchargement</string>
+    <string name="build_detail_permission_button">OK</string>
+
+    <!-- Privacy Screen -->
+    <string name="privacy_title">Confidentialité</string>
+    <string name="privacy_content">Cette app stocke le token API fourni localement sur ton téléphone pour délivrer son service. Il ne sera utilisé que pour communiquer avec le fournisseur de service qui a émis le token et ne sera pas partagé avec des tiers.\n\nPour améliorer l\'expérience utilisateur de cette app, elle contient un suivi anonyme d\'événements et un rapport de crash avec Google Firebase.\n\nPour installer des APKs sur le téléphone, cette app nécessite la permission REQUEST_INSTALL_PACKAGES.\n\nCette politique peut changer avec toute mise à jour future et tous les changements seront reflétés ici.</string>
+
+    <!-- Content descriptions for accessibility -->
+    <string name="content_description_project_avatar">Avatar du projet</string>
+    <string name="content_description_build_status">Statut du build</string>
+    <string name="content_description_artifact_icon">Icône d\'artefact</string>
+</resources>

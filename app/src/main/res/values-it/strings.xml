@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Indiana</string>
+
+    <!-- Navigation -->
+    <string name="navigation_back_description">Indietro</string>
+    <string name="navigation_more_options_description">Altre opzioni</string>
+
+    <!-- About Screen -->
+    <string name="about_title">Info</string>
+    <string name="about_content">Questa app è open source. Puoi trovare il codice sorgente su GitHub sotto licenza MIT.</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_title">Indiana</string>
+    <string name="auth_subtitle">Parti con il tuo token API</string>
+    <string name="auth_no_token_message">Non hai ancora un token API? Creane uno dal tuo profilo.</string>
+    <string name="auth_create_token_button">Andiamo</string>
+    <string name="auth_token_field_label">Token API</string>
+    <string name="auth_submit_button">Conferma</string>
+    <string name="auth_menu_about">Info</string>
+    <string name="auth_menu_privacy">Privacy</string>
+
+    <!-- Projects Screen -->
+    <string name="projects_title">Progetti</string>
+    <string name="projects_menu_about">Info</string>
+    <string name="projects_menu_privacy">Privacy</string>
+    <string name="projects_menu_logout">Logout</string>
+    <string name="projects_section_recents">Recenti</string>
+    <string name="projects_section_all">Tutti i progetti</string>
+    <string name="projects_unknown_name">&lt;sconosciuto&gt;</string>
+
+    <!-- Project Detail Screen -->
+    <string name="project_detail_subtitle">Build</string>
+    <string name="project_detail_triggered_prefix">Avviato</string>
+
+    <!-- Build Detail Screen -->
+    <string name="build_detail_permission_message">Abilita sorgenti sconosciute per questa app per installare direttamente le app dopo il download</string>
+    <string name="build_detail_permission_button">OK</string>
+
+    <!-- Privacy Screen -->
+    <string name="privacy_title">Privacy</string>
+    <string name="privacy_content">Questa app memorizza il token API fornito localmente sul tuo telefono per fornire il suo servizio. Sarà utilizzato solo per comunicare con il fornitore di servizi che ha emesso il token e non sarà condiviso con terze parti.\n\nPer migliorare l\'esperienza utente di questa app, contiene tracking anonimo di eventi e crash reporting con Google Firebase.\n\nPer installare APK sul telefono, questa app richiede il permesso REQUEST_INSTALL_PACKAGES.\n\nQuesta policy può cambiare con qualsiasi aggiornamento futuro e tutti i cambiamenti saranno riflessi qui.</string>
+
+    <!-- Content descriptions for accessibility -->
+    <string name="content_description_project_avatar">Avatar del progetto</string>
+    <string name="content_description_build_status">Stato del build</string>
+    <string name="content_description_artifact_icon">Icona dell\'artefatto</string>
+</resources>

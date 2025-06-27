@@ -34,6 +34,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
+import com.davidmedenjak.indiana.theme.R
 import androidx.compose.material3.Scaffold as M3Scaffold
 
 interface TopBarScope {
@@ -46,7 +48,7 @@ interface NavigationIconScope {
     fun Up(navigateUp: () -> Unit) = IconButton(onClick = navigateUp) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Navigate back",
+            contentDescription = stringResource(R.string.navigation_back_description),
         )
     }
 }

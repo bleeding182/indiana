@@ -31,9 +31,11 @@ import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.davidmedenjak.indiana.R
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -72,7 +74,7 @@ fun ProjectDetailScreen(
         topBar = {
             LargeFlexible(
                 title = { Text(projectName) },
-                subtitle = { Text("Builds") },
+                subtitle = { Text(stringResource(R.string.project_detail_subtitle)) },
                 actions = {},
                 navigationIcon = { Up(onNavigateUp) }
             )
@@ -185,7 +187,7 @@ private fun Build(build: V0BuildResponseItemModel, modifier: Modifier = Modifier
                 }
             }
             Text(
-                "Triggered $formattedStartTime",
+                "${stringResource(R.string.project_detail_triggered_prefix)} $formattedStartTime",
                 style = IndianaTheme.typography.labelSmall,
                 color = IndianaTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 4.dp)

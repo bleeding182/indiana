@@ -1,4 +1,48 @@
 <resources>
     <string name="app_name">Indiana</string>
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"https://indiana.davidmedenjak.com\",\n  }\n}]</string>
+
+    <!-- Navigation -->
+    <string name="navigation_back_description">Navigate back</string>
+    <string name="navigation_more_options_description">More options</string>
+
+    <!-- About Screen -->
+    <string name="about_title">About</string>
+    <string name="about_content">This app is open source. The source code can be found on GitHub and is licensed under the MIT License.</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_title">Indiana</string>
+    <string name="auth_subtitle">Get started with your API token</string>
+    <string name="auth_no_token_message">Don\'t have an API token? Create one on your profile.</string>
+    <string name="auth_create_token_button">Take me there</string>
+    <string name="auth_token_field_label">API Token</string>
+    <string name="auth_submit_button">Submit</string>
+    <string name="auth_menu_about">About</string>
+    <string name="auth_menu_privacy">Privacy Policy</string>
+
+    <!-- Projects Screen -->
+    <string name="projects_title">Projects</string>
+    <string name="projects_menu_about">About</string>
+    <string name="projects_menu_privacy">Privacy Policy</string>
+    <string name="projects_menu_logout">Logout</string>
+    <string name="projects_section_recents">Recents</string>
+    <string name="projects_section_all">All Projects</string>
+    <string name="projects_unknown_name">&lt;unknown&gt;</string>
+
+    <!-- Project Detail Screen -->
+    <string name="project_detail_subtitle">Builds</string>
+    <string name="project_detail_triggered_prefix">Triggered</string>
+
+    <!-- Build Detail Screen -->
+    <string name="build_detail_permission_message">Enable unknown sources for this app to immediately install apps after download</string>
+    <string name="build_detail_permission_button">Okay</string>
+
+    <!-- Privacy Screen -->
+    <string name="privacy_title">Privacy Policy</string>
+    <string name="privacy_content">This application stores the provided API token locally on your phone to deliver its service. It will only be used to communicate with the service provider that issued the token and not shared with any third parties.\n\nTo enhance the user experience of this app it contains anonymous tracking of events and crash reporting with Google Firebase.\n\nTo install APKs on the phone this app requires the REQUEST_INSTALL_PACKAGES permission.\n\nThis policy may change with any future update and all the changes will be reflected here.</string>
+
+    <!-- Content descriptions for accessibility -->
+    <string name="content_description_project_avatar">Project avatar</string>
+    <string name="content_description_build_status">Build status</string>
+    <string name="content_description_artifact_icon">Artifact icon</string>
 </resources>

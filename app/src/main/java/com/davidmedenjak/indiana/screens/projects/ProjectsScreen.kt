@@ -32,8 +32,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.davidmedenjak.indiana.R
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
@@ -89,32 +91,32 @@ fun ProjectsScreen(
         topBar = {
             Column {
                 LargeFlexible(
-                    title = { Text("Projects") },
+                    title = { Text(stringResource(R.string.projects_title)) },
                     actions = {
                         var expanded by remember { mutableStateOf(false) }
                         IconButton(onClick = { expanded = !expanded }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.navigation_more_options_description))
                         }
                         DropdownMenu(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("About") },
+                                text = { Text(stringResource(R.string.projects_menu_about)) },
                                 onClick = {
                                     expanded = false
                                     onAboutSelected()
                                 },
                             )
                             DropdownMenuItem(
-                                text = { Text("Privacy Policy") },
+                                text = { Text(stringResource(R.string.projects_menu_privacy)) },
                                 onClick = {
                                     expanded = false
                                     onPrivacySelected()
                                 },
                             )
                             DropdownMenuItem(
-                                text = { Text("Logout") },
+                                text = { Text(stringResource(R.string.projects_menu_logout)) },
                                 onClick = {
                                     expanded = false
                                     onLogoutSelected()
@@ -168,7 +170,7 @@ fun ProjectsScreen(
             if (recents != null && recents.isNotEmpty()) {
                 item(key = "recents_header", contentType = "header") {
                     Text(
-                        "Recents",
+                        stringResource(R.string.projects_section_recents),
                         style = IndianaTheme.typography.labelMedium,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
@@ -185,7 +187,7 @@ fun ProjectsScreen(
                 }
                 item(key = "other_header", contentType = "header") {
                     Text(
-                        "All Projects",
+                        stringResource(R.string.projects_section_all),
                         style = IndianaTheme.typography.labelMedium,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
@@ -256,7 +258,7 @@ private fun Project(project: Project, modifier: Modifier = Modifier) {
         )
         Column {
             Text(
-                text = project.name ?: "<unknown>",
+                text = project.name ?: stringResource(R.string.projects_unknown_name),
                 style = IndianaTheme.typography.bodyMedium,
                 color = IndianaTheme.colorScheme.onSurface,
             )

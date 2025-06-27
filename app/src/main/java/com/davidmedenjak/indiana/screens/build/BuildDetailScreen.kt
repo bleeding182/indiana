@@ -30,8 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.davidmedenjak.indiana.R
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.paging.LoadState
@@ -110,9 +112,9 @@ fun BuildDetailScreen(
                                 .fillMaxWidth()
                                 .padding(vertical = 16.dp, horizontal = 16.dp)
                         ) {
-                            Text("Enable unknown sources for this app to immediately install apps after download")
+                            Text(stringResource(R.string.build_detail_permission_message))
                             Button(
-                                text = "Okay",
+                                text = stringResource(R.string.build_detail_permission_button),
                                 modifier = Modifier
                                     .padding(top = 8.dp)
                                     .align(Alignment.End),

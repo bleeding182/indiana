@@ -18,9 +18,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.davidmedenjak.indiana.R
 import androidx.core.net.toUri
 import com.davidmedenjak.indiana.theme.ui.atoms.Button
 import com.davidmedenjak.indiana.theme.ui.atoms.Card
@@ -44,26 +46,26 @@ fun AuthScreen(
     Scaffold(
         topBar = {
             LargeFlexible(
-                title = { Text("Indiana") },
-                subtitle = { Text("Get started with your API token") },
+                title = { Text(stringResource(R.string.auth_title)) },
+                subtitle = { Text(stringResource(R.string.auth_subtitle)) },
                 actions = {
                     var expanded by remember { mutableStateOf(false) }
                     IconButton(onClick = { expanded = !expanded }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                        Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.navigation_more_options_description))
                     }
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("About") },
+                            text = { Text(stringResource(R.string.auth_menu_about)) },
                             onClick = {
                                 expanded = false
                                 onAboutSelected()
                             },
                         )
                         DropdownMenuItem(
-                            text = { Text("Privacy Policy") },
+                            text = { Text(stringResource(R.string.auth_menu_privacy)) },
                             onClick = {
                                 expanded = false
                                 onPrivacySelected()
@@ -83,13 +85,13 @@ fun AuthScreen(
         ) {
             val context = LocalContext.current
             Text(
-                text = "Don't have an API token? Create one on your profile.",
+                text = stringResource(R.string.auth_no_token_message),
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .padding(top = 16.dp),
             )
             TextButton(
-                text = "Take me there",
+                text = stringResource(R.string.auth_create_token_button),
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(end = 8.dp),
@@ -114,14 +116,14 @@ fun AuthScreen(
                         text,
                         modifier = Modifier.fillMaxSize(),
                         onValueChange = { text = it },
-                        label = { Text("API Token") }
+                        label = { Text(stringResource(R.string.auth_token_field_label)) }
                     )
                     Button(
                         modifier = Modifier
                             .align(Alignment.End)
                             .padding(top = 8.dp),
                         onClick = { onTryToken(text.text) },
-                        text = "Submit",
+                        text = stringResource(R.string.auth_submit_button),
                     )
                 }
             }

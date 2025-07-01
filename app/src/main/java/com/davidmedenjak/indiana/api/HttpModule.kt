@@ -2,19 +2,62 @@ package com.davidmedenjak.indiana.api
 
 import com.davidmedenjak.indiana.BuildConfig
 import com.davidmedenjak.indiana.session.SessionManager
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonUnquotedLiteral
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Named
 import javax.inject.Provider
 import javax.inject.Singleton
+
+object AnySerializer : KSerializer<Any> {
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("kotlin.Any")
+    
+    override fun serialize(encoder: Encoder, value: Any) {
+        when (value) {
+            is String -> encoder.encodeString(value)
+            is Int -> encoder.encodeInt(value)
+            is Long -> encoder.encodeLong(value)
+            is Double -> encoder.encodeDouble(value)
+            is Boolean -> encoder.encodeBoolean(value)
+            else -> encoder.encodeString(value.toString())
+        }
+    }
+    
+    override fun deserialize(decoder: Decoder): Any {
+        return try {
+            decoder.decodeString()
+        } catch (e: Exception) {
+            try {
+                decoder.decodeInt()
+            } catch (e: Exception) {
+                try {
+                    decoder.decodeDouble()
+                } catch (e: Exception) {
+                    try {
+                        decoder.decodeBoolean()
+                    } catch (e: Exception) {
+                        decoder.decodeString()
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -53,16 +96,21 @@ class HttpModule {
 
     @Singleton
     @Provides
-    fun provideMoshi() = Moshi.Builder()
-        .build()
+    fun provideJson() = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+        serializersModule = SerializersModule {
+            contextual(AnySerializer)
+        }
+    }
 
     @Singleton
     @Provides
     fun provideRetrofit(
-        moshi: Moshi,
+        json: Json,
         okHttpClient: Provider<OkHttpClient>
     ) = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addConverterFactory(StreamingKotlinxSerializationConverterFactory(json))
         .callFactory { okHttpClient.get().newCall(it) }
         .baseUrl("https://api.bitrise.io/v0.1/")
         .build()
@@ -71,10 +119,10 @@ class HttpModule {
     @Provides
     @Named("Authorized")
     fun provideAuthorizedRetrofit(
-        moshi: Moshi,
+        json: Json,
         @Named("Authorized") okHttpClient: Provider<OkHttpClient>
     ) = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addConverterFactory(StreamingKotlinxSerializationConverterFactory(json))
         .callFactory { okHttpClient.get().newCall(it) }
         .baseUrl("https://api.bitrise.io/v0.1/")
         .build()

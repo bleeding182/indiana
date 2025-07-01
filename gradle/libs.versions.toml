@@ -63,15 +63,11 @@ androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecy
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerializationCore" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationCore" }
 
-moshi = "com.squareup.moshi:moshi:1.15.2"
-moshi-codegen = "com.squareup.moshi:moshi-kotlin-codegen:1.15.2"
-
 okhttp-bom = "com.squareup.okhttp3:okhttp-bom:4.12.0"
 okhttp = { module = "com.squareup.okhttp3:okhttp" }
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor" }
 
 retrofit = "com.squareup.retrofit2:retrofit:3.0.0"
-retrofit-converter-moshi = "com.squareup.retrofit2:converter-moshi:3.0.0"
 
 dagger = 'com.google.dagger:dagger-android:2.56.2'
 dagger-hilt = 'com.google.dagger:hilt-android:2.56.2'
@@ -90,7 +86,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-openapi-generator = { id = "org.openapi.generator", version = "7.13.0" }
+openapi-generator = { id = "org.openapi.generator", version = "7.14.0" }
 ksp = { id = "com.google.devtools.ksp", version = "2.2.0-2.0.2" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version = "2.56.2" }

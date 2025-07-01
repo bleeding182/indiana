@@ -33,12 +33,12 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.davidmedenjak.indiana.R
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.model.V0ArtifactListElementResponseModel
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Button
@@ -54,6 +54,10 @@ import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 @Composable
 fun BuildDetailScreen(
@@ -171,15 +175,17 @@ fun BuildDetailScreen(
     }
 }
 
+private fun JsonElement?.mapText() = (this as? JsonPrimitive)?.content
+
 @Composable
 private fun Artifact(artifact: V0ArtifactListElementResponseModel, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     if (artifact.artifactMeta != null && artifact.artifactMeta is Map<*, *> && artifact.artifactType == "android-apk") {
-        val meta = artifact.artifactMeta as Map<*, *>
-        val product_flavour = meta["product_flavour"]
-        val build_type = meta["build_type"]
-        val signed_by = meta["signed_by"]?.toString()
+        val meta = artifact.artifactMeta as JsonObject
+        val product_flavour = meta["product_flavour"].mapText()
+        val build_type = meta["build_type"].mapText()
+        val signed_by = meta["signed_by"].mapText()
 //        val module = meta["module"]
 //        val file_size_bytes = meta["file_size_bytes"]
 //        val include = meta["include"]
@@ -187,10 +193,10 @@ private fun Artifact(artifact: V0ArtifactListElementResponseModel, modifier: Mod
 //        val aab = meta["aab"]
 //        val apk = meta["apk"]
 //        val split = meta["split"]
-        (meta["app_info"] as? Map<*, *>)?.let { info ->
-            val app_name = info["app_name"]
-            val package_name = info["package_name"]
-            val version_name = info["version_name"]
+        (meta["app_info"] as? JsonObject)?.let { info ->
+            val app_name = info["app_name"].mapText()
+            val package_name = info["package_name"].mapText()
+            val version_name = info["version_name"].mapText()
 //            val version_code = info["version_code"]
 //            val min_sdk_version = info["min_sdk_version"]
 
@@ -330,7 +336,7 @@ private fun Preview() {
                     artifactType = "file",
                 )
             )
-            val meta = hashMapOf(
+            val metaMap = hashMapOf(
                 "product_flavour" to "",
                 "build_type" to "debug",
                 "signed_by" to "C=US, O=Android, CN=Android Debug",
@@ -340,6 +346,7 @@ private fun Preview() {
                     "version_name" to "1.0.0",
                 ),
             )
+            val meta = Json.parseToJsonElement(Json.encodeToString(metaMap))
             Artifact(
                 V0ArtifactListElementResponseModel(
                     title = "ApkApp.apk",

@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.openapi.generator)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 openApiGenerate {
@@ -22,13 +22,23 @@ openApiGenerate {
     additionalProperties.putAll(
         mapOf(
             "library" to "jvm-retrofit2",
-            "serializationLibrary" to "moshi",
-            "moshiCodeGen" to "true",
+            "serializationLibrary" to "kotlinx_serialization",
             "useCoroutines" to "true",
             "omitGradleWrapper" to "true",
             "sourceFolder" to "bitrise-swagger",
             "useSettingsGradle" to "false",
             "useResponseAsReturnType" to "false",
+        )
+    )
+    typeMappings.putAll(
+        mapOf(
+            "object" to "JsonElement",
+            "AnyType" to "JsonElement"
+        )
+    )
+    importMappings.putAll(
+        mapOf(
+            "JsonElement" to "kotlinx.serialization.json.JsonElement"
         )
     )
 
@@ -60,7 +70,7 @@ dependencies {
 
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
-    implementation(libs.moshi)
-    ksp(libs.moshi.codegen)
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
 }

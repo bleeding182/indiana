@@ -6,6 +6,7 @@ import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilePresent
@@ -48,10 +50,11 @@ import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.atoms.contentError
-import com.davidmedenjak.indiana.theme.ui.atoms.contentLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.pageError
 import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
+import com.davidmedenjak.indiana.theme.ui.modifier.skeletonLoader
+import com.davidmedenjak.indiana.theme.ui.modifier.textSkeletonLoader
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlinx.coroutines.flow.Flow
 
@@ -136,7 +139,9 @@ fun BuildDetailScreen(
             when (projects.loadState.refresh) {
                 LoadState.Loading -> {
                     if (projects.itemCount == 0) {
-                        contentLoading("refresh")
+                        items(5) {
+                            ArtifactLoader()
+                        }
                     }
                 }
 
@@ -267,6 +272,41 @@ private fun Artifact(artifact: V0ArtifactListElementResponseModel, modifier: Mod
 }
 
 @Composable
+private fun ArtifactLoader(modifier: Modifier = Modifier) {
+
+    Row(
+        modifier = modifier
+            .sizeIn(minHeight = 48.dp)
+            .padding(start = 12.dp, end = 16.dp)
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .skeletonLoader(shape = IndianaTheme.shapes.medium)
+                .padding(8.dp)
+                .align(Alignment.Top)
+        )
+        Column(
+            horizontalAlignment = Alignment.Start,
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(120.dp)
+                    .textSkeletonLoader(IndianaTheme.typography.bodyMedium),
+            )
+            Box(
+                modifier = Modifier
+                    .width(64.dp)
+                    .textSkeletonLoader(IndianaTheme.typography.bodySmall),
+            )
+        }
+    }
+}
+
+@Composable
 private fun SimpleArtifact(
     modifier: Modifier,
     artifact: V0ArtifactListElementResponseModel
@@ -354,6 +394,18 @@ private fun Preview() {
                     artifactMeta = meta
                 )
             )
+        }
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewLoader() {
+    PreviewSurface {
+        Column {
+            (0..5).forEach {
+                ArtifactLoader()
+            }
         }
     }
 }

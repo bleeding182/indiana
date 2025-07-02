@@ -3,6 +3,7 @@ package com.davidmedenjak.indiana.screens.projects
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
@@ -31,16 +33,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.davidmedenjak.indiana.R
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.AsyncImage
 import com.davidmedenjak.indiana.theme.ui.atoms.Chip
@@ -53,10 +56,11 @@ import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Sticky
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.atoms.contentError
-import com.davidmedenjak.indiana.theme.ui.atoms.contentLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.pageError
 import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
+import com.davidmedenjak.indiana.theme.ui.modifier.skeletonLoader
+import com.davidmedenjak.indiana.theme.ui.modifier.textSkeletonLoader
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -95,7 +99,10 @@ fun ProjectsScreen(
                     actions = {
                         var expanded by remember { mutableStateOf(false) }
                         IconButton(onClick = { expanded = !expanded }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.navigation_more_options_description))
+                            Icon(
+                                Icons.Default.MoreVert,
+                                contentDescription = stringResource(R.string.navigation_more_options_description)
+                            )
                         }
                         DropdownMenu(
                             expanded = expanded,
@@ -197,7 +204,9 @@ fun ProjectsScreen(
             when (projects.loadState.refresh) {
                 LoadState.Loading -> {
                     if (projects.itemCount == 0) {
-                        contentLoading("refresh")
+                        items(6) {
+                            ProjectLoader()
+                        }
                     }
                 }
 
@@ -273,6 +282,36 @@ private fun Project(project: Project, modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+private fun ProjectLoader(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .sizeIn(minHeight = 48.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(IndianaTheme.shapes.small)
+                .skeletonLoader(),
+        )
+        Column {
+            Box(
+                modifier = Modifier
+                    .width(112.dp)
+                    .textSkeletonLoader(IndianaTheme.typography.bodyMedium)
+            )
+            Box(
+                modifier = Modifier
+                    .width(60.dp)
+                    .textSkeletonLoader(IndianaTheme.typography.labelSmall)
+            )
+        }
+    }
+}
+
 @PreviewLightDark
 @Composable
 private fun Preview() {
@@ -285,5 +324,13 @@ private fun Preview() {
                 name = "ProjectTitle"
             ),
         )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewLoader() {
+    PreviewSurface {
+        ProjectLoader()
     }
 }

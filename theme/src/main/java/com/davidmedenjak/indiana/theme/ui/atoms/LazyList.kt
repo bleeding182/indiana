@@ -17,23 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.davidmedenjak.indiana.theme.ui.percentage
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 
-fun LazyListScope.contentLoading(key: Any?, paddingVertical: Dp = 24.dp) {
-    item(key = key, contentType = "contentLoading") {
-        Column(
-            verticalArrangement = Arrangement.percentage(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillParentMaxSize()
-        ) {
-            IndeterminateProgress(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = paddingVertical)
-            )
-        }
-    }
-}
-
 fun LazyListScope.pageLoading(key: Any?, paddingVertical: Dp = 24.dp) {
     item(key = key, contentType = "loading") {
         Row(
@@ -109,16 +92,6 @@ private fun PreviewError() {
     PreviewSurface {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             contentError("error", onRetryClicked = {})
-        }
-    }
-}
-
-@PreviewLightDark
-@Composable
-private fun PreviewLoading() {
-    PreviewSurface {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            contentLoading("loading")
         }
     }
 }

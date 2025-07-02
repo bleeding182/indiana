@@ -14,10 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import com.davidmedenjak.indiana.theme.ui.modifier.LocalSkeletonBaseTime
 import androidx.compose.material3.ColorScheme as M3ColorScheme
 import androidx.compose.material3.Shapes as M3Shapes
 import androidx.compose.material3.Typography as M3Typography
@@ -137,10 +139,12 @@ fun IndianaTheme(
         else -> LightColorScheme
     }
 
+    val baseTime = remember { System.currentTimeMillis() }
     CompositionLocalProvider(
         LocalColorScheme provides ColorScheme(colorScheme),
         LocalTypography provides Typography(M3Typography()),
         LocalShapes provides Shapes(M3Shapes()),
+        LocalSkeletonBaseTime provides baseTime,
     ) {
         MaterialExpressiveTheme(
             colorScheme = IndianaTheme.colorScheme.colorScheme,

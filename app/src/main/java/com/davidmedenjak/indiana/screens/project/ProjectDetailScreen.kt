@@ -4,6 +4,7 @@ import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -35,10 +37,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.davidmedenjak.indiana.R
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
@@ -48,10 +50,11 @@ import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Surface
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.atoms.contentError
-import com.davidmedenjak.indiana.theme.ui.atoms.contentLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.pageError
 import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
+import com.davidmedenjak.indiana.theme.ui.modifier.skeletonLoader
+import com.davidmedenjak.indiana.theme.ui.modifier.textSkeletonLoader
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
@@ -92,7 +95,9 @@ fun ProjectDetailScreen(
             when (builds.loadState.refresh) {
                 LoadState.Loading -> {
                     if (builds.itemCount == 0) {
-                        contentLoading("refresh")
+                        items(15) {
+                            BuildLoader()
+                        }
                     }
                 }
 
@@ -214,6 +219,48 @@ private fun Build(build: V0BuildResponseItemModel, modifier: Modifier = Modifier
 }
 
 @Composable
+private fun BuildLoader(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .sizeIn(minHeight = 48.dp)
+            .padding(start = 12.dp, end = 16.dp)
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .skeletonLoader(shape = IndianaTheme.shapes.medium)
+                .padding(8.dp)
+        )
+        Column(modifier = Modifier.weight(1f)) {
+            Box(
+                modifier = Modifier
+                    .width(120.dp)
+                    .textSkeletonLoader(IndianaTheme.typography.bodyMedium),
+            )
+            Box(
+                modifier = Modifier
+                    .width(140.dp)
+                    .textSkeletonLoader(IndianaTheme.typography.labelSmall)
+                    .padding(top = 4.dp),
+            )
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.wrapContentHeight(Alignment.Top)
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(64.dp)
+                    .textSkeletonLoader(IndianaTheme.typography.labelSmall),
+            )
+        }
+    }
+}
+
+@Composable
 private fun buildDrawable(status: Int?): VectorPainter {
     val icon = when (status) {
         0 -> Icons.Default.HourglassEmpty
@@ -261,6 +308,20 @@ private fun Preview() {
                         status = status
                     )
                 )
+            }
+        }
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewLoader() {
+    PreviewSurface {
+        Column {
+            (0..4).forEach { status ->
+                Box {
+                    BuildLoader()
+                }
             }
         }
     }

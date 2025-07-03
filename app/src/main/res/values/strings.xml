@@ -24,6 +24,7 @@
     <string name="projects_title">Projects</string>
     <string name="projects_menu_about">About</string>
     <string name="projects_menu_privacy">Privacy Policy</string>
+    <string name="projects_menu_update">Update app</string>
     <string name="projects_menu_logout">Logout</string>
     <string name="projects_section_recents">Recents</string>
     <string name="projects_section_all">All Projects</string>

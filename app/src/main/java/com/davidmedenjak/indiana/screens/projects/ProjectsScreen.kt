@@ -1,5 +1,6 @@
 package com.davidmedenjak.indiana.screens.projects
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -69,7 +70,7 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun ProjectsScreen(
     projects: Flow<PagingData<Project>>,
-    recents: Flow<List<Project>?>,
+    recents: StateFlow<List<Project>?>,
     projectTypes: StateFlow<List<String>?>,
     filteredProjectTypes: MutableStateFlow<String?>,
     onProjectSelected: (Project) -> Unit,
@@ -80,7 +81,6 @@ fun ProjectsScreen(
 ) {
     val projects = projects.collectAsLazyPagingItems()
     val recents by recents.collectAsStateWithLifecycle(
-        initialValue = null,
         minActiveState = Lifecycle.State.RESUMED
     )
     val projectTypes by projectTypes.collectAsStateWithLifecycle()
@@ -174,6 +174,7 @@ fun ProjectsScreen(
             val itemModifier = Modifier.fillMaxWidth()
 
             val recents = recents
+            Log.d("RecentsAs", recents?.size.toString())
             if (recents != null && recents.isNotEmpty()) {
                 item(key = "recents_header", contentType = "header") {
                     Text(

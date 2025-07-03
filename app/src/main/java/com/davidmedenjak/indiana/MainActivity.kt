@@ -6,7 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
@@ -43,16 +46,24 @@ interface MainEntryPoint {
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val activity = LocalActivity.current!!
+            val appBackStack = remember {
+                EntryPoints.get(activity, MainEntryPoint::class.java)
+                    .appBackStack
+            }
+            
+            val isInitializing by appBackStack.isInitializing.collectAsStateWithLifecycle()
+            
+            splashScreen.setKeepOnScreenCondition {
+                isInitializing
+            }
+            
             IndianaTheme {
                 Surface {
-                    val activity = LocalActivity.current!!
-                    val appBackStack = remember {
-                        EntryPoints.get(activity, MainEntryPoint::class.java)
-                            .appBackStack
-                    }
                     Log.d("backstack", appBackStack.backStack.joinToString())
 
                     NavDisplay(

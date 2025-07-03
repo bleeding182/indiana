@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back_description">Back</string>
+    <string name="content_error_message">Failed to load content</string>
+    <string name="action_retry">Retry</string>
+    <string name="content_empty_message">Nothing here.</string>
 </resources>

@@ -44,4 +44,9 @@
     <string name="content_description_project_avatar">Avatar du projet</string>
     <string name="content_description_build_status">Statut du build</string>
     <string name="content_description_artifact_icon">Icône d\'artefact</string>
+
+    <!-- LazyList content states -->
+    <string name="content_error_message">Impossible de charger le contenu</string>
+    <string name="action_retry">Recommencer</string>
+    <string name="content_empty_message">Rien par ici.</string>
 </resources>

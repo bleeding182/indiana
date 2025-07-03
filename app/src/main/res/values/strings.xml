@@ -45,4 +45,9 @@
     <string name="content_description_project_avatar">Project avatar</string>
     <string name="content_description_build_status">Build status</string>
     <string name="content_description_artifact_icon">Artifact icon</string>
+
+    <!-- LazyList content states -->
+    <string name="content_error_message">Failed to load content</string>
+    <string name="action_retry">Retry</string>
+    <string name="content_empty_message">Nothing here.</string>
 </resources>

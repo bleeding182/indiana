@@ -49,6 +49,7 @@ import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Surface
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
+import com.davidmedenjak.indiana.theme.ui.atoms.contentEmpty
 import com.davidmedenjak.indiana.theme.ui.atoms.contentError
 import com.davidmedenjak.indiana.theme.ui.atoms.pageError
 import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
@@ -105,7 +106,11 @@ fun ProjectDetailScreen(
                     contentError("contentError", onRetryClicked = builds::retry)
                 }
 
-                is LoadState.NotLoading -> {}
+                is LoadState.NotLoading -> {
+                    if (builds.itemCount == 0) {
+                        contentEmpty("contentEmpty")
+                    }
+                }
             }
 
             val itemModifier = Modifier.fillMaxWidth()

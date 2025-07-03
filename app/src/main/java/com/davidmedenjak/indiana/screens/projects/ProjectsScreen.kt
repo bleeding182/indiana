@@ -33,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -55,6 +54,7 @@ import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Sticky
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
+import com.davidmedenjak.indiana.theme.ui.atoms.contentEmpty
 import com.davidmedenjak.indiana.theme.ui.atoms.contentError
 import com.davidmedenjak.indiana.theme.ui.atoms.pageError
 import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
@@ -214,7 +214,11 @@ fun ProjectsScreen(
                     contentError("contentError", onRetryClicked = projects::retry)
                 }
 
-                is LoadState.NotLoading -> {}
+                is LoadState.NotLoading -> {
+                    if (projects.itemCount == 0) {
+                        contentEmpty("contentEmpty")
+                    }
+                }
             }
 
             items(

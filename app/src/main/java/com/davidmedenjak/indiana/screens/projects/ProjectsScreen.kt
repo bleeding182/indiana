@@ -79,6 +79,17 @@ private fun getProjectTypeDisplayName(projectType: String): String {
     }
 }
 
+private fun getProjectInitials(projectName: String?): String {
+    val name = projectName?.trim() ?: return "?"
+    return if (name.length >= 2) {
+        "${name.first().uppercaseChar()}${name.last().uppercaseChar()}"
+    } else if (name.length == 1) {
+        name.uppercase()
+    } else {
+        "?"
+    }
+}
+
 @Composable
 fun ProjectsScreen(
     projects: Flow<PagingData<Project>>,
@@ -267,22 +278,45 @@ private fun Project(project: Project, modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        AsyncImage(
-            model = project.avatar,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(IndianaTheme.shapes.small)
-                .background(IndianaTheme.colorScheme.surfaceVariant),
-            contentScale = ContentScale.Inside,
-            error = {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Default.Image),
-                    tint = IndianaTheme.colorScheme.onSurfaceVariant,
-                    contentDescription = null,
+        if (project.avatar != null) {
+            AsyncImage(
+                model = project.avatar,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(IndianaTheme.shapes.small)
+                    .background(IndianaTheme.colorScheme.surfaceVariant),
+                contentScale = ContentScale.Inside,
+                error = {
+                    val initials = getProjectInitials(project.name)
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = initials,
+                            style = IndianaTheme.typography.labelMedium,
+                            color = IndianaTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                },
+                contentDescription = null,
+            )
+        } else {
+            val initials = getProjectInitials(project.name)
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(IndianaTheme.shapes.small)
+                    .background(IndianaTheme.colorScheme.surfaceVariant),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = initials,
+                    style = IndianaTheme.typography.labelMedium,
+                    color = IndianaTheme.colorScheme.onSurfaceVariant,
                 )
-            },
-            contentDescription = null,
-        )
+            }
+        }
         Column {
             Text(
                 text = project.name ?: stringResource(R.string.projects_unknown_name),

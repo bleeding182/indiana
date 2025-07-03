@@ -68,6 +68,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
+private fun getProjectTypeDisplayName(projectType: String): String {
+    return when (projectType.lowercase()) {
+        "other" -> stringResource(R.string.project_type_other)
+        "android" -> stringResource(R.string.project_type_android)
+        "ios" -> stringResource(R.string.project_type_ios)
+        "macos" -> stringResource(R.string.project_type_macos)
+        "flutter" -> stringResource(R.string.project_type_flutter)
+        else -> projectType
+    }
+}
+
+@Composable
 fun ProjectsScreen(
     projects: Flow<PagingData<Project>>,
     recents: StateFlow<List<Project>?>,
@@ -149,9 +161,10 @@ fun ProjectsScreen(
                     ) {
                         items(filters.size, key = { filters[it] }) {
                             val projectType = filters[it]
+                            val displayName = getProjectTypeDisplayName(projectType)
                             Chip(
                                 selected = filteredProjectType == projectType,
-                                label = { Text(projectType) },
+                                label = { Text(displayName) },
                                 onClick = { toggleFilterProjectType(projectType) },
                             )
                         }
@@ -277,8 +290,9 @@ private fun Project(project: Project, modifier: Modifier = Modifier) {
                 color = IndianaTheme.colorScheme.onSurface,
             )
             project.projectType?.let { type ->
+                val displayName = getProjectTypeDisplayName(type)
                 Text(
-                    text = project.projectType,
+                    text = displayName,
                     style = IndianaTheme.typography.labelSmall,
                     color = IndianaTheme.colorScheme.onSurfaceVariant,
                 )

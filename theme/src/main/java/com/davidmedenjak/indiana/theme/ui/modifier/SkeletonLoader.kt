@@ -1,16 +1,34 @@
 package com.davidmedenjak.indiana.theme.ui.modifier
 
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.translate
@@ -27,40 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlin.math.sqrt
-
-/**
- * Calculates the appropriate height for a text skeleton based on TextStyle typography metrics.
- *
- * @param textStyle The TextStyle to extract metrics from
- * @param includeLeading Whether to include line spacing (true for full lineHeight, false for just text bounds)
- * @return The height that the text would occupy
- */
-@Composable
-fun getTextSkeletonHeight(textStyle: TextStyle, includeLeading: Boolean = false): Dp {
-    val density = LocalDensity.current
-
-    return with(density) {
-        val fontSize = if (textStyle.fontSize != TextUnit.Unspecified) {
-            textStyle.fontSize.toDp()
-        } else {
-            16.sp.toDp()
-        }
-
-        if (includeLeading) {
-            // Use full line height including leading space
-            if (textStyle.lineHeight != TextUnit.Unspecified) {
-                textStyle.lineHeight.toDp()
-            } else {
-                fontSize * 1.2f
-            }
-        } else {
-            // Use just the text bounds (ascent + descent) without leading
-            // Most fonts: ascent ≈ 0.75 * fontSize, descent ≈ 0.25 * fontSize
-            // Total text bounds ≈ fontSize (since ascent + descent ≈ 1.0 * fontSize)
-            fontSize
-        }
-    }
-}
 
 /**
  * Calculates detailed typography metrics for more precise skeleton dimensions.
@@ -203,13 +187,13 @@ fun Modifier.skeletonLoader(
     val actualBaseColor = if (baseColor != Color.Unspecified) {
         baseColor
     } else {
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        MaterialTheme.colorScheme.surfaceVariant
     }
 
     val actualHighlightColor = if (highlightColor != Color.Unspecified) {
         highlightColor
     } else {
-        MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
+        MaterialTheme.colorScheme.surface
     }
 
     // Get base time from provider, or use current time as fallback

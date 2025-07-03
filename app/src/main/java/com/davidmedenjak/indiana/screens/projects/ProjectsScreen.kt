@@ -14,10 +14,12 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
@@ -100,7 +102,10 @@ fun ProjectsScreen(
     onAboutSelected: () -> Unit,
     onPrivacySelected: () -> Unit,
     onLogoutSelected: () -> Unit,
+    onUpdateSelected: () -> Unit,
     toggleFilterProjectType: (String) -> Unit,
+    updateState: com.davidmedenjak.indiana.app.InAppUpdateManager.UpdateState,
+    hasUpdateForMoreThanThreeDays: Boolean,
 ) {
     val projects = projects.collectAsLazyPagingItems()
     val recents by recents.collectAsStateWithLifecycle(
@@ -121,11 +126,24 @@ fun ProjectsScreen(
                     title = { Text(stringResource(R.string.projects_title)) },
                     actions = {
                         var expanded by remember { mutableStateOf(false) }
-                        IconButton(onClick = { expanded = !expanded }) {
-                            Icon(
-                                Icons.Default.MoreVert,
-                                contentDescription = stringResource(R.string.navigation_more_options_description)
-                            )
+                        Box {
+                            IconButton(onClick = { expanded = !expanded }) {
+                                Icon(
+                                    Icons.Default.MoreVert,
+                                    contentDescription = stringResource(R.string.navigation_more_options_description)
+                                )
+                            }
+                            if (hasUpdateForMoreThanThreeDays) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(8.dp)
+                                        .offset(x = 6.dp, y = 6.dp)
+                                        .background(
+                                            color = IndianaTheme.colorScheme.primary,
+                                            shape = CircleShape
+                                        )
+                                )
+                            }
                         }
                         DropdownMenu(
                             expanded = expanded,
@@ -145,6 +163,31 @@ fun ProjectsScreen(
                                     onPrivacySelected()
                                 },
                             )
+                            if (updateState == com.davidmedenjak.indiana.app.InAppUpdateManager.UpdateState.AVAILABLE ||
+                                updateState == com.davidmedenjak.indiana.app.InAppUpdateManager.UpdateState.DOWNLOADED) {
+                                DropdownMenuItem(
+                                    text = { 
+                                        Row {
+                                            Text(stringResource(R.string.projects_menu_update))
+                                            if (hasUpdateForMoreThanThreeDays) {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .size(8.dp)
+                                                        .offset(x = 4.dp, y = (-2).dp)
+                                                        .background(
+                                                            color = IndianaTheme.colorScheme.primary,
+                                                            shape = CircleShape
+                                                        )
+                                                )
+                                            }
+                                        }
+                                    },
+                                    onClick = {
+                                        expanded = false
+                                        onUpdateSelected()
+                                    },
+                                )
+                            }
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.projects_menu_logout)) },
                                 onClick = {

@@ -53,4 +53,18 @@ class TrackingSettingsViewModel @Inject constructor(
             firebasePerformance.isPerformanceCollectionEnabled = enabled
         }
     }
+
+    fun resetAnalyticsData() {
+        viewModelScope.launch {
+            setAnalyticsEnabled(false)
+            firebaseAnalytics.resetAnalyticsData()
+        }
+    }
+
+    fun resetCrashlyticsData() {
+        viewModelScope.launch {
+            setCrashlyticsEnabled(false)
+            firebaseCrashlytics.deleteUnsentReports()
+        }
+    }
 }

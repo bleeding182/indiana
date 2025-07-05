@@ -45,7 +45,7 @@
 
     <!-- Privacy Screen -->
     <string name="privacy_title">Privacy Policy</string>
-    <string name="privacy_content">This application stores the provided API token locally on your phone to deliver its service. It will only be used to communicate with the service provider that issued the token and not shared with any third parties.\n\nTo enhance the user experience of this app it contains anonymous tracking of events and crash reporting with Google Firebase.\n\nTo install APKs on the phone this app requires the REQUEST_INSTALL_PACKAGES permission.\n\nThis policy may change with any future update and all the changes will be reflected here.</string>
+    <string name="privacy_content">This application stores the provided API token locally on your phone to deliver its service. It will only be used to communicate with the service provider that issued the token and not shared with any third parties.\n\nTo enhance the user experience of this app, we use the following optional tracking services with Google Firebase:\n\n• Analytics: We collect anonymous usage data to understand how you use the app and improve your experience. This includes screen views, button clicks, and feature usage patterns.\n\n• Crash Reporting (Crashlytics): We automatically collect crash reports to help us identify and fix bugs faster. This includes stack traces and device information when the app crashes.\n\n• Performance Monitoring: We monitor app performance metrics like startup time, screen rendering, and network requests to identify and fix slowdowns.\n\nThis tracking data is collected by Google Firebase and is subject to Google\'s privacy practices. While we do not collect personally identifiable information directly, Firebase may collect device identifiers and other data that could potentially be used to track usage patterns. You can control these settings and disable any or all of these services at any time through the app\'s tracking settings.\n\nTo install APKs on the phone this app requires the REQUEST_INSTALL_PACKAGES permission.\n\nThis policy may change with any future update and all the changes will be reflected here.</string>
 
     <!-- Tracking Settings Screen -->
     <string name="tracking_settings_title">Tracking Settings</string>
@@ -56,6 +56,12 @@
     <string name="tracking_crashlytics_description">Automatically report crashes to help us fix bugs faster</string>
     <string name="tracking_performance_title">Performance Monitoring</string>
     <string name="tracking_performance_description">Monitor app performance to identify and fix slowdowns</string>
+    <string name="tracking_reset_analytics_title">Reset Analytics Data</string>
+    <string name="tracking_reset_analytics_description">Clear all analytics data and generate a new anonymous identifier</string>
+    <string name="tracking_reset_analytics_button">Reset Analytics</string>
+    <string name="tracking_reset_crashlytics_title">Delete Crash Reports</string>
+    <string name="tracking_reset_crashlytics_description">Delete all unsent crash reports stored on your device</string>
+    <string name="tracking_reset_crashlytics_button">Delete Reports</string>
 
     <!-- Content descriptions for accessibility -->
     <string name="content_description_project_avatar">Project avatar</string>

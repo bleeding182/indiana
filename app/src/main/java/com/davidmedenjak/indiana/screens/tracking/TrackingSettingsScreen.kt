@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,19 +13,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.theme.IndianaTheme
+import com.davidmedenjak.indiana.theme.ui.atoms.HorizontalDivider
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Surface
 import com.davidmedenjak.indiana.theme.ui.atoms.Switch
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
+import com.davidmedenjak.indiana.theme.ui.atoms.TextButton
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 
 @Composable
@@ -48,7 +52,9 @@ fun TrackingSettingsScreen(
         ) {
             Text(
                 text = stringResource(R.string.tracking_settings_description),
-                modifier = Modifier.padding(bottom = 24.dp).padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .padding(bottom = 24.dp)
+                    .padding(horizontal = 16.dp)
             )
 
             TrackingSettingItem(
@@ -58,12 +64,30 @@ fun TrackingSettingsScreen(
                 onToggle = { viewModel.setAnalyticsEnabled(it) }
             )
 
+            ResetDataButton(
+                title = stringResource(R.string.tracking_reset_analytics_title),
+                description = stringResource(R.string.tracking_reset_analytics_description),
+                buttonText = stringResource(R.string.tracking_reset_analytics_button),
+                onClick = { viewModel.resetAnalyticsData() }
+            )
+
+            HorizontalDivider(modifier = Modifier.fillMaxWidth())
+
             TrackingSettingItem(
                 title = stringResource(R.string.tracking_crashlytics_title),
                 description = stringResource(R.string.tracking_crashlytics_description),
                 enabled = viewModel.crashlytics,
                 onToggle = { viewModel.setCrashlyticsEnabled(it) }
             )
+
+            ResetDataButton(
+                title = stringResource(R.string.tracking_reset_crashlytics_title),
+                description = stringResource(R.string.tracking_reset_crashlytics_description),
+                buttonText = stringResource(R.string.tracking_reset_crashlytics_button),
+                onClick = { viewModel.resetCrashlyticsData() }
+            )
+
+            HorizontalDivider(modifier = Modifier.fillMaxWidth())
 
             TrackingSettingItem(
                 title = stringResource(R.string.tracking_performance_title),
@@ -84,7 +108,7 @@ private fun TrackingSettingItem(
     modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    
+
     Surface(
         modifier = modifier.padding(vertical = 8.dp)
     ) {
@@ -122,6 +146,39 @@ private fun TrackingSettingItem(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ResetDataButton(
+    title: String,
+    description: String,
+    buttonText: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 8.dp)
+    ) {
+        Text(
+            text = title,
+            style = IndianaTheme.typography.titleSmall,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+        Text(
+            text = description,
+            style = IndianaTheme.typography.bodySmall,
+            color = IndianaTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+        TextButton(
+            modifier = Modifier.align(Alignment.End),
+            text = buttonText,
+            onClick = onClick,
+        )
     }
 }
 
@@ -166,12 +223,23 @@ private fun TrackingSettingsScreenPreview() {
                 onToggle = { analyticsEnabled = it }
             )
 
+            ResetDataButton(
+                title = stringResource(R.string.tracking_reset_analytics_title),
+                description = stringResource(R.string.tracking_reset_analytics_description),
+                buttonText = stringResource(R.string.tracking_reset_analytics_button),
+                onClick = { }
+            )
+
+            HorizontalDivider(modifier = Modifier.fillMaxWidth())
+
             TrackingSettingItem(
                 title = "Crash Reporting",
                 description = "Automatically report crashes to help us fix bugs faster",
                 enabled = crashlyticsEnabled,
                 onToggle = { crashlyticsEnabled = it }
             )
+
+            HorizontalDivider(modifier = Modifier.fillMaxWidth())
 
             TrackingSettingItem(
                 title = "Performance Monitoring",

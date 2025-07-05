@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,9 +32,14 @@ fun PrivacyScreen(
             )
         }, modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).padding(horizontal = 16.dp)) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+        ) {
             Text(stringResource(R.string.privacy_content))
-            
+
             Button(
                 text = stringResource(R.string.tracking_settings_title),
                 onClick = onNavigateToTrackingSettings,

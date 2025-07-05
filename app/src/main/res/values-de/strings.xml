@@ -44,7 +44,7 @@
 
     <!-- Privacy Screen -->
     <string name="privacy_title">Datenschutz</string>
-    <string name="privacy_content">Diese App speichert den bereitgestellten API-Token lokal auf deinem Handy, um ihre Funktion zu erfüllen. Er wird nur für die Kommunikation mit dem Serviceanbieter verwendet, der den Token ausgestellt hat, und nicht an Dritte weitergegeben.\n\nUm die Nutzererfahrung zu verbessern, enthält diese App anonymes Event-Tracking und Crash-Reporting mit Google Firebase.\n\nUm APKs auf dem Handy zu installieren, benötigt diese App die REQUEST_INSTALL_PACKAGES-Berechtigung.\n\nDiese Richtlinie kann sich mit zukünftigen Updates ändern und alle Änderungen werden hier widergespiegelt.</string>
+    <string name="privacy_content">Diese App speichert den bereitgestellten API-Token lokal auf deinem Handy, um ihre Funktion zu erfüllen. Er wird nur für die Kommunikation mit dem Serviceanbieter verwendet, der den Token ausgestellt hat, und nicht an Dritte weitergegeben.\n\nUm die Nutzererfahrung zu verbessern, nutzen wir die folgenden optionalen Tracking-Services mit Google Firebase:\n\n• Analytics: Wir sammeln anonyme Nutzungsdaten, um zu verstehen, wie du die App verwendest und deine Erfahrung zu verbessern. Dies umfasst Bildschirmansichten, Button-Klicks und Nutzungsmuster von Funktionen.\n\n• Crash-Reporting (Crashlytics): Wir sammeln automatisch Crash-Reports, um Bugs schneller zu identifizieren und zu beheben. Dies umfasst Stack-Traces und Geräteinformationen bei App-Abstürzen.\n\n• Performance-Überwachung: Wir überwachen App-Performance-Metriken wie Startzeit, Bildschirm-Rendering und Netzwerk-Anfragen, um Verlangsamungen zu identifizieren und zu beheben.\n\nDiese Tracking-Daten werden von Google Firebase gesammelt und unterliegen Googles Datenschutzpraktiken. Obwohl wir nicht direkt persönlich identifizierbare Informationen sammeln, kann Firebase Gerätekennungen und andere Daten sammeln, die möglicherweise zur Verfolgung von Nutzungsmustern verwendet werden könnten. Du kannst diese Einstellungen kontrollieren und alle oder einzelne dieser Services jederzeit über die Tracking-Einstellungen der App deaktivieren.\n\nUm APKs auf dem Handy zu installieren, benötigt diese App die REQUEST_INSTALL_PACKAGES-Berechtigung.\n\nDiese Richtlinie kann sich mit zukünftigen Updates ändern und alle Änderungen werden hier widergespiegelt.</string>
 
     <!-- Tracking Settings Screen -->
     <string name="tracking_settings_title">Tracking-Einstellungen</string>
@@ -55,6 +55,12 @@
     <string name="tracking_crashlytics_description">Automatische Meldung von Abstürzen, damit wir Bugs schneller beheben können</string>
     <string name="tracking_performance_title">Performance-Überwachung</string>
     <string name="tracking_performance_description">Überwache die App-Performance, um Verlangsamungen zu identifizieren und zu beheben</string>
+    <string name="tracking_reset_analytics_title">Analytics-Daten zurücksetzen</string>
+    <string name="tracking_reset_analytics_description">Alle Analytics-Daten löschen und eine neue anonyme Kennung generieren</string>
+    <string name="tracking_reset_analytics_button">Analytics zurücksetzen</string>
+    <string name="tracking_reset_crashlytics_title">Crash-Reports löschen</string>
+    <string name="tracking_reset_crashlytics_description">Alle ungesendeten Crash-Reports auf deinem Gerät löschen</string>
+    <string name="tracking_reset_crashlytics_button">Reports löschen</string>
 
     <!-- Content descriptions for accessibility -->
     <string name="content_description_project_avatar">Projekt-Avatar</string>

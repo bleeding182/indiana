@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="privacy_policy">This application stores the provided API token locally on your phone to deliver its service. It will only be used to communicate with the service provider that issued the token and not shared with any third parties.\n\n
-        To enhance the user experience of this app it contains anonymous tracking of events and crash reporting with Google Firebase.\n\n
-        To install APKs on the phone this app requires the REQUEST_INSTALL_PACKAGES permission.\n\n
-        This policy may change with any future update and all the changes will be reflected here.</string>
-</resources>

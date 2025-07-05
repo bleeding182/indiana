@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.firebase.performance)
 }
 
 android {
@@ -90,6 +91,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.performance)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)

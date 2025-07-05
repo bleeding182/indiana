@@ -6,6 +6,8 @@ import android.preference.PreferenceManager
 import androidx.room.Room
 import com.davidmedenjak.indiana.db.AppDatabase
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.perf.FirebasePerformance
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,6 +29,14 @@ class AppModule {
     @Provides
     @Singleton
     fun provideAnalytics(app: Application) = FirebaseAnalytics.getInstance(app)
+
+    @Provides
+    @Singleton
+    fun provideCrashlytics() = FirebaseCrashlytics.getInstance()
+
+    @Provides
+    @Singleton
+    fun providePerformance() = FirebasePerformance.getInstance()
 
     @Provides
     @Singleton

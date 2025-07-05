@@ -28,6 +28,8 @@ import com.davidmedenjak.indiana.screens.project.ProjectDetailGraph
 import com.davidmedenjak.indiana.screens.project.ProjectDetailRoute
 import com.davidmedenjak.indiana.screens.projects.ProjectsGraph
 import com.davidmedenjak.indiana.screens.projects.ProjectsRoute
+import com.davidmedenjak.indiana.screens.tracking.TrackingSettingsGraph
+import com.davidmedenjak.indiana.screens.tracking.TrackingSettingsRoute
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Surface
 import dagger.hilt.EntryPoint
@@ -128,6 +130,13 @@ class MainActivity : ComponentActivity() {
                             }
                             entry<PrivacyGraph> {
                                 PrivacyRoute(
+                                    it,
+                                    onNavigateUp = appBackStack::remove,
+                                    onNavigateToTrackingSettings = { appBackStack.add(TrackingSettingsGraph) },
+                                )
+                            }
+                            entry<TrackingSettingsGraph> {
+                                TrackingSettingsRoute(
                                     it,
                                     onNavigateUp = appBackStack::remove,
                                 )

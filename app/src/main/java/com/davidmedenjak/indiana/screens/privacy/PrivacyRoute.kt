@@ -11,8 +11,10 @@ data object PrivacyGraph : NavKey
 fun PrivacyRoute(
     navKey: PrivacyGraph,
     onNavigateUp: () -> Unit,
+    onNavigateToTrackingSettings: () -> Unit,
 ) {
     PrivacyScreen(
         onNavigateUp = onNavigateUp,
+        onNavigateToTrackingSettings = onNavigateToTrackingSettings,
     )
 }

@@ -46,6 +46,16 @@
     <string name="privacy_title">Privacy</string>
     <string name="privacy_content">Questa app memorizza il token API fornito localmente sul tuo telefono per fornire il suo servizio. Sarà utilizzato solo per comunicare con il fornitore di servizi che ha emesso il token e non sarà condiviso con terze parti.\n\nPer migliorare l\'esperienza utente di questa app, contiene tracking anonimo di eventi e crash reporting con Google Firebase.\n\nPer installare APK sul telefono, questa app richiede il permesso REQUEST_INSTALL_PACKAGES.\n\nQuesta policy può cambiare con qualsiasi aggiornamento futuro e tutti i cambiamenti saranno riflessi qui.</string>
 
+    <!-- Tracking Settings Screen -->
+    <string name="tracking_settings_title">Impostazioni di tracking</string>
+    <string name="tracking_settings_description">Usiamo questi servizi per migliorare la nostra app e offrirti un\'esperienza migliore. Puoi disattivarli quando vuoi.</string>
+    <string name="tracking_analytics_title">Analytics</string>
+    <string name="tracking_analytics_description">Aiutaci a capire come usi l\'app per migliorare la tua esperienza</string>
+    <string name="tracking_crashlytics_title">Segnalazione crash</string>
+    <string name="tracking_crashlytics_description">Segnalazione automatica dei crash per poter sistemare i bug più velocemente</string>
+    <string name="tracking_performance_title">Monitoraggio prestazioni</string>
+    <string name="tracking_performance_description">Monitora le prestazioni dell\'app per identificare e sistemare i rallentamenti</string>
+
     <!-- Content descriptions for accessibility -->
     <string name="content_description_project_avatar">Avatar del progetto</string>
     <string name="content_description_build_status">Stato del build</string>

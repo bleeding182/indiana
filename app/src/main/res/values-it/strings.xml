@@ -41,6 +41,31 @@
     <!-- Build Detail Screen -->
     <string name="build_detail_permission_message">Abilita sorgenti sconosciute per questa app per installare direttamente le app dopo il download</string>
     <string name="build_detail_permission_button">OK</string>
+    <string name="build_detail_information_title">Informazioni build</string>
+    <string name="build_detail_status_not_started">Non iniziato</string>
+    <string name="build_detail_status_on_hold">In attesa</string>
+    <string name="build_detail_status_running">In corso</string>
+    <string name="build_detail_status_success">Riuscito</string>
+    <string name="build_detail_status_failed">Fallito</string>
+    <string name="build_detail_status_aborted">Interrotto</string>
+    <string name="build_detail_status_unknown">Sconosciuto</string>
+    <string name="build_detail_abort_build">Interrompi build</string>
+    <string name="build_detail_restart_build">Riavvia build</string>
+    <string name="build_detail_retry">Riprova</string>
+    <string name="build_detail_tag">Tag</string>
+    <string name="build_detail_branch">Branch</string>
+    <string name="build_detail_commit">Commit</string>
+    <string name="build_detail_message">Messaggio</string>
+    <string name="build_detail_abort_reason">Motivo dell\'interruzione</string>
+    <string name="build_detail_workflow">Workflow</string>
+    <string name="build_detail_build_number">Build #</string>
+    <string name="build_detail_triggered">Attivato</string>
+    <string name="build_detail_confirmation_dialog_abort_build_title">Interrompi build</string>
+    <string name="build_detail_confirmation_dialog_abort_build_text">Interrompe il build in corso.</string>
+    <string name="build_detail_confirmation_dialog_abort_build_action_abort">Interrompi build</string>
+    <string name="build_detail_confirmation_dialog_restart_build_title">Riavvia build</string>
+    <string name="build_detail_confirmation_dialog_restart_build_text">Avvia un nuovo build con la stessa configurazione.</string>
+    <string name="build_detail_confirmation_dialog_restart_build_action_start">Avvia</string>
 
     <!-- Privacy Screen -->
     <string name="privacy_title">Privacy</string>

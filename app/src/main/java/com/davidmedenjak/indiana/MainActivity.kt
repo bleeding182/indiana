@@ -6,9 +6,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entry
@@ -57,13 +57,13 @@ class MainActivity : ComponentActivity() {
                 EntryPoints.get(activity, MainEntryPoint::class.java)
                     .appBackStack
             }
-            
+
             val isInitializing by appBackStack.isInitializing.collectAsStateWithLifecycle()
-            
+
             splashScreen.setKeepOnScreenCondition {
                 isInitializing
             }
-            
+
             IndianaTheme {
                 Surface {
                     Log.d("backstack", appBackStack.backStack.joinToString())
@@ -120,6 +120,7 @@ class MainActivity : ComponentActivity() {
                                 BuildDetailRoute(
                                     it,
                                     onNavigateUp = appBackStack::remove,
+                                    onNavigateToBuild = { appBackStack.add(it) },
                                 )
                             }
                             entry<AboutGraph> {
@@ -132,7 +133,11 @@ class MainActivity : ComponentActivity() {
                                 PrivacyRoute(
                                     it,
                                     onNavigateUp = appBackStack::remove,
-                                    onNavigateToTrackingSettings = { appBackStack.add(TrackingSettingsGraph) },
+                                    onNavigateToTrackingSettings = {
+                                        appBackStack.add(
+                                            TrackingSettingsGraph
+                                        )
+                                    },
                                 )
                             }
                             entry<TrackingSettingsGraph> {

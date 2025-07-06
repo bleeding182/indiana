@@ -37,11 +37,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
+import com.davidmedenjak.indiana.screens.build.BuildStatus
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.IndeterminateProgressCircular
@@ -73,6 +75,10 @@ fun ProjectDetailScreen(
         isRefreshing = builds.loadState.refresh == LoadState.Loading && builds.itemCount > 0,
         onRefresh = builds::refresh
     )
+    LifecycleStartEffect(Unit) {
+        builds.refresh()
+        onStopOrDispose { }
+    }
     Scaffold(
         pullToRefreshState = pullToRefreshState,
         topBar = {
@@ -268,10 +274,10 @@ private fun BuildLoader(modifier: Modifier = Modifier) {
 @Composable
 private fun buildDrawable(status: Int?): VectorPainter {
     val icon = when (status) {
-        0 -> Icons.Default.HourglassEmpty
-        1 -> Icons.Default.Check
-        2 -> Icons.Default.ErrorOutline
-        3 -> Icons.Default.Block
+        BuildStatus.NotFinished -> Icons.Default.HourglassEmpty
+        BuildStatus.Successful -> Icons.Default.Check
+        BuildStatus.Failed -> Icons.Default.ErrorOutline
+        BuildStatus.AbortedWithFailure, BuildStatus.AbortedWithSuccess -> Icons.Default.Block
         else -> Icons.Default.QuestionMark
     }
     return rememberVectorPainter(icon)
@@ -279,10 +285,10 @@ private fun buildDrawable(status: Int?): VectorPainter {
 
 @Composable
 private fun buildBackgroundColor(status: Int?): Color = when (status) {
-    0 -> IndianaTheme.colorScheme.primaryContainer
-    1 -> IndianaTheme.colorScheme.primaryContainer
-    2 -> IndianaTheme.colorScheme.surfaceContainer
-    3 -> IndianaTheme.colorScheme.surfaceContainer
+    BuildStatus.NotFinished -> IndianaTheme.colorScheme.primaryContainer
+    BuildStatus.Successful -> IndianaTheme.colorScheme.primaryContainer
+    BuildStatus.Failed -> IndianaTheme.colorScheme.surfaceContainer
+    BuildStatus.AbortedWithFailure, BuildStatus.AbortedWithSuccess -> IndianaTheme.colorScheme.surfaceContainer
     else -> IndianaTheme.colorScheme.tertiaryContainer
 }
 
@@ -323,7 +329,7 @@ private fun Preview() {
 private fun PreviewLoader() {
     PreviewSurface {
         Column {
-            (0..4).forEach { status ->
+            (0..5).forEach { status ->
                 Box {
                     BuildLoader()
                 }

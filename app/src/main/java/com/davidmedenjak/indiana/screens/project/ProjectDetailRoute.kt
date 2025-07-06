@@ -1,8 +1,6 @@
 package com.davidmedenjak.indiana.screens.project
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import com.davidmedenjak.indiana.AppBackStack.RequiresLogin
@@ -23,9 +21,7 @@ fun ProjectDetailRoute(
 ) {
     val viewModel = hiltViewModel<ProjectDetailViewModel>()
     viewModel.navKey = navKey
-    val scope = rememberCoroutineScope()
 
-    val context = LocalContext.current
     ProjectDetailScreen(
         projectName = navKey.title,
         builds = viewModel.pagedBuilds,

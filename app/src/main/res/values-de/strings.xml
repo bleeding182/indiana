@@ -41,6 +41,31 @@
     <!-- Build Detail Screen -->
     <string name="build_detail_permission_message">Aktiviere unbekannte Quellen für diese App, um Apps nach dem Download sofort zu installieren</string>
     <string name="build_detail_permission_button">Alles klar</string>
+    <string name="build_detail_information_title">Build-Informationen</string>
+    <string name="build_detail_status_not_started">Nicht gestartet</string>
+    <string name="build_detail_status_on_hold">Wartend</string>
+    <string name="build_detail_status_running">Läuft</string>
+    <string name="build_detail_status_success">Erfolgreich</string>
+    <string name="build_detail_status_failed">Fehlgeschlagen</string>
+    <string name="build_detail_status_aborted">Abgebrochen</string>
+    <string name="build_detail_status_unknown">Unbekannt</string>
+    <string name="build_detail_abort_build">Build abbrechen</string>
+    <string name="build_detail_restart_build">Build neu starten</string>
+    <string name="build_detail_retry">Erneut versuchen</string>
+    <string name="build_detail_tag">Tag</string>
+    <string name="build_detail_branch">Branch</string>
+    <string name="build_detail_commit">Commit</string>
+    <string name="build_detail_message">Nachricht</string>
+    <string name="build_detail_abort_reason">Abbruchgrund</string>
+    <string name="build_detail_workflow">Workflow</string>
+    <string name="build_detail_build_number">Build #</string>
+    <string name="build_detail_triggered">Gestartet</string>
+    <string name="build_detail_confirmation_dialog_abort_build_title">Build abbrechen</string>
+    <string name="build_detail_confirmation_dialog_abort_build_text">Den laufenden Build abbrechen.</string>
+    <string name="build_detail_confirmation_dialog_abort_build_action_abort">Build stoppen</string>
+    <string name="build_detail_confirmation_dialog_restart_build_title">Build neu starten</string>
+    <string name="build_detail_confirmation_dialog_restart_build_text">Startet einen neuen Build mit der gleichen Konfiguration.</string>
+    <string name="build_detail_confirmation_dialog_restart_build_action_start">Starten</string>
 
     <!-- Privacy Screen -->
     <string name="privacy_title">Datenschutz</string>

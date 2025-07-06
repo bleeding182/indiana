@@ -42,6 +42,31 @@
     <!-- Build Detail Screen -->
     <string name="build_detail_permission_message">Enable unknown sources for this app to immediately install apps after download</string>
     <string name="build_detail_permission_button">Okay</string>
+    <string name="build_detail_information_title">Build Information</string>
+    <string name="build_detail_status_not_started">Not Started</string>
+    <string name="build_detail_status_on_hold">On Hold</string>
+    <string name="build_detail_status_running">Running</string>
+    <string name="build_detail_status_success">Success</string>
+    <string name="build_detail_status_failed">Failed</string>
+    <string name="build_detail_status_aborted">Aborted</string>
+    <string name="build_detail_status_unknown">Unknown</string>
+    <string name="build_detail_abort_build">Abort Build</string>
+    <string name="build_detail_restart_build">Restart Build</string>
+    <string name="build_detail_retry">Retry</string>
+    <string name="build_detail_tag">Tag</string>
+    <string name="build_detail_branch">Branch</string>
+    <string name="build_detail_commit">Commit</string>
+    <string name="build_detail_message">Message</string>
+    <string name="build_detail_abort_reason">Abort Reason</string>
+    <string name="build_detail_workflow">Workflow</string>
+    <string name="build_detail_build_number">Build #</string>
+    <string name="build_detail_triggered">Triggered</string>
+    <string name="build_detail_confirmation_dialog_abort_build_title">Abort Build</string>
+    <string name="build_detail_confirmation_dialog_abort_build_text">Abort the running build.</string>
+    <string name="build_detail_confirmation_dialog_abort_build_action_abort">Abort</string>
+    <string name="build_detail_confirmation_dialog_restart_build_title">Restart Build</string>
+    <string name="build_detail_confirmation_dialog_restart_build_text">Starts a new build using the same configuration.</string>
+    <string name="build_detail_confirmation_dialog_restart_build_action_start">Start</string>
 
     <!-- Privacy Screen -->
     <string name="privacy_title">Privacy Policy</string>

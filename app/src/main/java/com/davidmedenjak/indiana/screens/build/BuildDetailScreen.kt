@@ -20,8 +20,11 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.FilePresent
 import androidx.compose.material.icons.filled.InstallMobile
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,22 +36,27 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.davidmedenjak.indiana.R
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.model.V0ArtifactListElementResponseModel
+import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Button
 import com.davidmedenjak.indiana.theme.ui.atoms.Card
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
+import com.davidmedenjak.indiana.theme.ui.atoms.IconButton
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
+import com.davidmedenjak.indiana.theme.ui.atoms.Surface
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
+import com.davidmedenjak.indiana.theme.ui.atoms.TextButton
 import com.davidmedenjak.indiana.theme.ui.atoms.contentEmpty
 import com.davidmedenjak.indiana.theme.ui.atoms.contentError
 import com.davidmedenjak.indiana.theme.ui.atoms.pageError
@@ -56,29 +64,87 @@ import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
 import com.davidmedenjak.indiana.theme.ui.modifier.skeletonLoader
 import com.davidmedenjak.indiana.theme.ui.modifier.textSkeletonLoader
+import com.davidmedenjak.indiana.theme.ui.molectule.Confirmation
+import com.davidmedenjak.indiana.theme.ui.molectule.PropertyLayout
+import com.davidmedenjak.indiana.theme.ui.molectule.rememberConfirmationDialogState
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
+import com.google.firebase.crashlytics.recordException
 import kotlinx.coroutines.flow.Flow
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun BuildDetailScreen(
     projectName: String,
     buildName: String,
+    buildDetails: V0BuildResponseItemModel?,
+    isLoadingBuildDetails: Boolean,
+    buildDetailsError: String?,
     artifacts: Flow<PagingData<V0ArtifactListElementResponseModel>>,
     onNavigateUp: () -> Unit,
     onArtifactSelected: (V0ArtifactListElementResponseModel) -> Unit,
+    onAbortBuild: (String?) -> Unit,
+    onRestartBuild: () -> Unit,
+    onRetryLoadBuildDetails: () -> Unit,
 ) {
     val projects = artifacts.collectAsLazyPagingItems()
     val pullToRefreshState = rememberPullToRefreshState(
         isRefreshing = projects.loadState.refresh == LoadState.Loading && projects.itemCount > 0,
         onRefresh = projects::refresh
     )
+
+    val confirmationDialogState = rememberConfirmationDialogState()
+
     Scaffold(
         pullToRefreshState = pullToRefreshState,
         topBar = {
             LargeFlexible(
                 title = { Text(buildName) },
                 subtitle = { Text(projectName) },
-                actions = {},
+                actions = {
+                    val context = LocalContext.current
+                    if (buildDetails?.status == BuildStatus.NotFinished) {
+                        IconButton(onClick = {
+                            confirmationDialogState.confirm(
+                                Confirmation(
+                                    title = context.getString(R.string.build_detail_confirmation_dialog_abort_build_title),
+                                    text = context.getString(R.string.build_detail_confirmation_dialog_abort_build_text),
+                                    action = context.getString(R.string.build_detail_confirmation_dialog_abort_build_action_abort),
+                                    callback = { onAbortBuild(null) }
+                                ),
+                            )
+                        }) {
+                            Icon(
+                                painter = rememberVectorPainter(Icons.Default.Stop),
+                                contentDescription = stringResource(R.string.build_detail_abort_build),
+                                tint = IndianaTheme.colorScheme.error,
+                            )
+                        }
+                    }
+
+                    if (buildDetails?.status in BuildStatus.Completed) {
+                        IconButton(onClick = {
+                            confirmationDialogState.confirm(
+                                Confirmation(
+                                    title = context.getString(R.string.build_detail_confirmation_dialog_restart_build_title),
+                                    text = context.getString(R.string.build_detail_confirmation_dialog_restart_build_text),
+                                    action = context.getString(R.string.build_detail_confirmation_dialog_restart_build_action_start),
+                                    callback = { onRestartBuild() },
+                                ),
+                            )
+                        }) {
+                            Icon(
+                                painter = rememberVectorPainter(Icons.Default.Refresh),
+                                contentDescription = stringResource(R.string.build_detail_restart_build),
+                                tint = IndianaTheme.colorScheme.primary,
+                            )
+                        }
+                    }
+                },
                 navigationIcon = { Up(onNavigateUp) }
             )
         }, modifier = Modifier.fillMaxSize()
@@ -135,6 +201,19 @@ fun BuildDetailScreen(
                         }
                     }
                 }
+            }
+
+            // Build Details Section
+            item(key = "build_details", contentType = "build_details") {
+                BuildDetailsSection(
+                    buildDetails = buildDetails,
+                    isLoading = isLoadingBuildDetails,
+                    error = buildDetailsError,
+                    onRetry = onRetryLoadBuildDetails,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 16.dp)
+                )
             }
 
             when (projects.loadState.refresh) {
@@ -341,13 +420,6 @@ private fun SimpleArtifact(
         Column(
             horizontalAlignment = Alignment.Start,
         ) {
-//        Icon(
-//            buildDrawable(),
-//            contentDescription = artifact.status.toString(), // fixme
-//            modifier = Modifier
-//                .size(40.dp)
-//                .padding(4.dp)
-//        )
             Text(
                 artifact.title ?: "",
                 style = IndianaTheme.typography.bodyMedium,
@@ -360,6 +432,231 @@ private fun SimpleArtifact(
                 color = IndianaTheme.colorScheme.onSurfaceVariant,
             )
         }
+    }
+}
+
+@Composable
+private fun BuildDetailsSection(
+    buildDetails: V0BuildResponseItemModel?,
+    isLoading: Boolean,
+    error: String?,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(modifier = modifier) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            when {
+                isLoading -> {
+                    BuildDetailsLoader()
+                }
+
+                error != null -> {
+                    BuildDetailsError(
+                        error = error,
+                        onRetry = onRetry
+                    )
+                }
+
+                buildDetails != null -> {
+                    BuildDetailsContent(
+                        buildDetails = buildDetails,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BuildDetailsContent(
+    buildDetails: V0BuildResponseItemModel,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        BuildStatusChip(
+            status = buildDetails.status,
+            statusText = buildDetails.statusText,
+            isOnHold = buildDetails.isOnHold ?: false,
+            modifier = Modifier.padding(bottom = 8.dp),
+        )
+
+        buildDetails.abortReason?.let { workflow ->
+            InfoRow(
+                label = stringResource(R.string.build_detail_abort_reason),
+                value = workflow
+            )
+        }
+
+        buildDetails.triggeredWorkflow?.let { workflow ->
+            InfoRow(
+                label = stringResource(R.string.build_detail_workflow),
+                value = workflow
+            )
+        }
+
+        buildDetails.tag?.let { branch ->
+            InfoRow(
+                label = stringResource(R.string.build_detail_tag),
+                value = branch
+            )
+        }
+
+        buildDetails.branch?.let { branch ->
+            InfoRow(
+                label = stringResource(R.string.build_detail_branch),
+                value = branch
+            )
+        }
+
+        buildDetails.commitHash?.let { hash ->
+            InfoRow(
+                label = stringResource(R.string.build_detail_commit),
+                value = hash.take(8)
+            )
+        }
+
+        buildDetails.commitMessage?.let { message ->
+            InfoRow(
+                label = stringResource(R.string.build_detail_message),
+                value = message
+            )
+        }
+
+        // Timing information
+        buildDetails.triggeredAt?.let { triggered ->
+            val time = try {
+                Instant.parse(triggered).atZone(ZoneId.systemDefault())
+                    .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+            } catch (ex: Exception) {
+                Firebase.crashlytics.recordException(ex) {
+                    key("value", triggered)
+                }
+                triggered
+            }
+            InfoRow(
+                label = stringResource(R.string.build_detail_triggered),
+                value = time
+            )
+        }
+    }
+}
+
+@Composable
+private fun BuildStatusChip(
+    status: Int?,
+    isOnHold: Boolean,
+    statusText: String?,
+    modifier: Modifier = Modifier,
+) {
+    val text = when (status) {
+        BuildStatus.NotFinished -> if (isOnHold) {
+            stringResource(R.string.build_detail_status_on_hold)
+        } else {
+            stringResource(R.string.build_detail_status_running)
+        }
+
+        BuildStatus.Successful -> stringResource(R.string.build_detail_status_success)
+        BuildStatus.Failed -> stringResource(R.string.build_detail_status_failed)
+        BuildStatus.AbortedWithFailure, BuildStatus.AbortedWithSuccess -> stringResource(R.string.build_detail_status_aborted)
+        else -> statusText ?: stringResource(R.string.build_detail_status_unknown)
+    }
+
+    val color = when (status) {
+        BuildStatus.NotFinished -> IndianaTheme.colorScheme.onSurfaceVariant
+        BuildStatus.Successful -> IndianaTheme.colorScheme.primary
+        BuildStatus.Failed -> IndianaTheme.colorScheme.error
+        BuildStatus.AbortedWithSuccess, BuildStatus.AbortedWithFailure -> IndianaTheme.colorScheme.onSurfaceVariant
+        else -> IndianaTheme.colorScheme.onSurfaceVariant
+    }
+    Surface(
+        modifier = modifier,
+        shape = IndianaTheme.shapes.extraSmall,
+        color = IndianaTheme.colorScheme.tertiaryContainer
+    ) {
+        Text(
+            text,
+            modifier = Modifier
+                .padding(horizontal = 4.dp, vertical = 2.dp),
+            style = IndianaTheme.typography.labelMedium,
+            color = color,
+        )
+    }
+}
+
+@Composable
+private fun InfoRow(
+    label: String,
+    value: String,
+) = PropertyLayout(
+    modifier = Modifier.fillMaxWidth(),
+) {
+    Text(
+        text = label,
+        style = IndianaTheme.typography.labelMedium,
+        color = IndianaTheme.colorScheme.onSurfaceVariant,
+    )
+    Text(
+        text = value,
+        style = IndianaTheme.typography.bodyMedium,
+    )
+}
+
+@Composable
+private fun BuildDetailsLoader() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        repeat(4) {
+            PropertyLayout(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(80.dp)
+                        .textSkeletonLoader(IndianaTheme.typography.labelMedium)
+                )
+                Box(
+                    modifier = Modifier
+                        .width(120.dp)
+                        .textSkeletonLoader(IndianaTheme.typography.bodyMedium)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun BuildDetailsError(
+    error: String,
+    onRetry: () -> Unit,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
+    ) {
+        Icon(
+            painter = rememberVectorPainter(Icons.Default.Error),
+            contentDescription = null,
+            tint = IndianaTheme.colorScheme.error
+        )
+        Text(
+            text = error,
+            style = IndianaTheme.typography.bodySmall,
+            color = IndianaTheme.colorScheme.error,
+            textAlign = TextAlign.Center
+        )
+        TextButton(
+            text = stringResource(R.string.build_detail_retry),
+            onClick = onRetry,
+            modifier = Modifier.align(Alignment.End)
+        )
     }
 }
 
@@ -413,4 +710,29 @@ private fun PreviewLoader() {
             }
         }
     }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewError() {
+    PreviewSurface {
+        BuildDetailsError("There was an error", {})
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewLoading() {
+    PreviewSurface {
+        BuildDetailsLoader()
+    }
+}
+
+object BuildStatus {
+    val NotFinished = 0
+    val Successful = 1
+    val Failed = 2
+    val AbortedWithFailure = 3
+    val AbortedWithSuccess = 4
+    val Completed = setOf(Successful, Failed, AbortedWithFailure, AbortedWithSuccess)
 }

@@ -5,6 +5,9 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.IntentFilter
 import android.os.Build
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
@@ -16,32 +19,127 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.paging.cachedIn
 import com.davidmedenjak.indiana.api.BuildArtifactApi
+import com.davidmedenjak.indiana.api.BuildsApi
 import com.davidmedenjak.indiana.features.artifacts.DownloadBroadcastReceiver
 import com.davidmedenjak.indiana.model.V0ArtifactListElementResponseModel
+import com.davidmedenjak.indiana.model.V0BuildAbortParams
+import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
+import com.davidmedenjak.indiana.model.V0BuildTriggerParams
+import com.davidmedenjak.indiana.model.V0BuildTriggerParamsBuildParams
+import com.davidmedenjak.indiana.model.V0BuildTriggerParamsHookInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BuildDetailViewModel @Inject constructor(
     private val application: Application,
-    private val api: BuildArtifactApi,
+    private val artifactApi: BuildArtifactApi,
+    private val buildsApi: BuildsApi,
     private val savedStateHandle: SavedStateHandle,
 ) : AndroidViewModel(application) {
 
     lateinit var navKey: BuildDetailGraph
 
+    var buildDetails by mutableStateOf<V0BuildResponseItemModel?>(null)
+        private set
+
+    var isLoadingBuildDetails by mutableStateOf(false)
+        private set
+
+    var buildDetailsError by mutableStateOf<String?>(null)
+        private set
+
+    var newlyStartedBuild = savedStateHandle.getMutableStateFlow<BuildDetailGraph?>("newlyStartedBuild", null)
+
     val pagedArtifacts = Pager(
         PagingConfig(pageSize = 15, initialLoadSize = 20)
     ) {
         BuildDetailPagingSource(
-            api,
+            artifactApi,
             appSlug = navKey.appSlug,
             buildSlug = navKey.buildSlug
         )
     }.flow.cachedIn(viewModelScope)
 
+    fun loadBuildDetails() {
+        if (isLoadingBuildDetails) return
+
+        viewModelScope.launch {
+            isLoadingBuildDetails = true
+            buildDetailsError = null
+
+            try {
+                val response = buildsApi.buildShow(
+                    appSlug = navKey.appSlug,
+                    buildSlug = navKey.buildSlug
+                )
+                buildDetails = response.data
+            } catch (e: Exception) {
+                buildDetailsError = e.message
+            } finally {
+                isLoadingBuildDetails = false
+            }
+        }
+    }
+
+    fun abortBuild(reason: String? = null) {
+        viewModelScope.launch {
+            try {
+                buildsApi.buildAbort(
+                    appSlug = navKey.appSlug,
+                    buildSlug = navKey.buildSlug,
+                    buildAbortParams = V0BuildAbortParams(
+                        abortReason = reason ?: "",
+                        abortWithSuccess = false,
+                        skipNotifications = false
+                    )
+                )
+                // Reload build details to reflect the abort
+                loadBuildDetails()
+            } catch (e: Exception) {
+                buildDetailsError = "Failed to abort build: ${e.message}"
+            }
+        }
+    }
+
+    fun restartBuild() {
+        val currentBuild = buildDetails ?: return
+
+        viewModelScope.launch {
+            try {
+                val triggerParams = V0BuildTriggerParams(
+                    buildParams = V0BuildTriggerParamsBuildParams(
+                        branch = currentBuild.branch,
+                        workflowId = currentBuild.triggeredWorkflow,
+                        commitHash = currentBuild.commitHash,
+                        commitMessage = "Restarted build #${currentBuild.buildNumber}",
+                        tag = currentBuild.tag
+                    ),
+                    hookInfo = V0BuildTriggerParamsHookInfo(
+                        type = "bitrise",
+                    )
+                )
+
+                val result = buildsApi.buildTrigger(
+                    appSlug = navKey.appSlug,
+                    buildParams = triggerParams,
+                )
+
+                // Could potentially navigate to the new build, but for now just show success
+                buildDetailsError = null
+                newlyStartedBuild.value = navKey.copy(
+                    buildTitle = result.buildNumber.toString(),
+                    buildSlug = result.buildSlug!!,
+                )
+            } catch (e: Exception) {
+                buildDetailsError = "Failed to restart build: ${e.message}"
+            }
+        }
+    }
+
     suspend fun downloadArtifact(artifact: V0ArtifactListElementResponseModel) {
-        val details = api.artifactShow(
+        val details = artifactApi.artifactShow(
             navKey.appSlug,
             buildSlug = navKey.buildSlug,
             artifactSlug = artifact.slug ?: return,

@@ -41,6 +41,31 @@
     <!-- Build Detail Screen -->
     <string name="build_detail_permission_message">Active les sources inconnues pour cette app pour installer directement les apps après téléchargement</string>
     <string name="build_detail_permission_button">OK</string>
+    <string name="build_detail_information_title">Informations du build</string>
+    <string name="build_detail_status_not_started">Pas commencé</string>
+    <string name="build_detail_status_on_hold">En attente</string>
+    <string name="build_detail_status_running">En cours</string>
+    <string name="build_detail_status_success">Réussi</string>
+    <string name="build_detail_status_failed">Échoué</string>
+    <string name="build_detail_status_aborted">Abandonné</string>
+    <string name="build_detail_status_unknown">Inconnu</string>
+    <string name="build_detail_abort_build">Arrêter le build</string>
+    <string name="build_detail_restart_build">Relancer le build</string>
+    <string name="build_detail_retry">Réessayer</string>
+    <string name="build_detail_tag">Tag</string>
+    <string name="build_detail_branch">Branche</string>
+    <string name="build_detail_commit">Commit</string>
+    <string name="build_detail_message">Message</string>
+    <string name="build_detail_abort_reason">Raison de l\'abandon</string>
+    <string name="build_detail_workflow">Workflow</string>
+    <string name="build_detail_build_number">Build #</string>
+    <string name="build_detail_triggered">Déclenché</string>
+    <string name="build_detail_confirmation_dialog_abort_build_title">Arrêter le build</string>
+    <string name="build_detail_confirmation_dialog_abort_build_text">Arrête le build en cours.</string>
+    <string name="build_detail_confirmation_dialog_abort_build_action_abort">Arrêter le build</string>
+    <string name="build_detail_confirmation_dialog_restart_build_title">Relancer le build</string>
+    <string name="build_detail_confirmation_dialog_restart_build_text">Lance un nouveau build avec la même configuration.</string>
+    <string name="build_detail_confirmation_dialog_restart_build_action_start">Lancer</string>
 
     <!-- Privacy Screen -->
     <string name="privacy_title">Confidentialité</string>

@@ -41,10 +41,13 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.davidmedenjak.indiana.R
+import com.davidmedenjak.indiana.download.DownloadProgressIndicator
+import com.davidmedenjak.indiana.download.DownloadState
 import com.davidmedenjak.indiana.model.V0ArtifactListElementResponseModel
 import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
 import com.davidmedenjak.indiana.theme.IndianaTheme
@@ -90,6 +93,7 @@ fun BuildDetailScreen(
     onAbortBuild: (String?) -> Unit,
     onRestartBuild: () -> Unit,
     onRetryLoadBuildDetails: () -> Unit,
+    getDownloadForArtifact: (String) -> Flow<DownloadState?>,
 ) {
     val projects = artifacts.collectAsLazyPagingItems()
     val pullToRefreshState = rememberPullToRefreshState(
@@ -216,6 +220,7 @@ fun BuildDetailScreen(
                 )
             }
 
+
             when (projects.loadState.refresh) {
                 LoadState.Loading -> {
                     if (projects.itemCount == 0) {
@@ -242,7 +247,13 @@ fun BuildDetailScreen(
                 key = { projects.peek(it)?.slug!! },
                 contentType = { "project" }) { index ->
                 val item = projects[index]!!
-                Artifact(item, modifier = itemModifier.clickable { onArtifactSelected(item) })
+                Artifact(
+                    artifact = item,
+                    downloadState = getDownloadForArtifact(
+                        item.slug ?: ""
+                    ).collectAsStateWithLifecycle(null).value,
+                    modifier = itemModifier.clickable { onArtifactSelected(item) }
+                )
             }
 
             when (projects.loadState.append) {
@@ -261,7 +272,11 @@ fun BuildDetailScreen(
 }
 
 @Composable
-private fun Artifact(artifact: V0ArtifactListElementResponseModel, modifier: Modifier = Modifier) {
+private fun Artifact(
+    artifact: V0ArtifactListElementResponseModel,
+    downloadState: DownloadState?,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
 
     if (artifact.artifactMeta != null && artifact.artifactMeta is Map<*, *> && artifact.artifactType == "android-apk") {
@@ -284,7 +299,11 @@ private fun Artifact(artifact: V0ArtifactListElementResponseModel, modifier: Mod
 //            val min_sdk_version = info["min_sdk_version"]
 
             if (signed_by.isNullOrBlank() || artifact.title?.endsWith(".aab") == true) {
-                SimpleArtifact(modifier = modifier, artifact = artifact)
+                SimpleArtifact(
+                    modifier = modifier,
+                    artifact = artifact,
+                    downloadState = downloadState
+                )
                 return
             }
 
@@ -348,10 +367,18 @@ private fun Artifact(artifact: V0ArtifactListElementResponseModel, modifier: Mod
                         )
                     }
                 }
+
+                // Download progress indicator
+                if (downloadState != null) {
+                    DownloadProgressIndicator(
+                        downloadState = downloadState,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
             }
         }
     } else {
-        SimpleArtifact(modifier, artifact)
+        SimpleArtifact(modifier, artifact, downloadState)
     }
 }
 
@@ -393,7 +420,8 @@ private fun ArtifactLoader(modifier: Modifier = Modifier) {
 @Composable
 private fun SimpleArtifact(
     modifier: Modifier,
-    artifact: V0ArtifactListElementResponseModel
+    artifact: V0ArtifactListElementResponseModel,
+    downloadState: DownloadState? = null
 ) {
     Row(
         modifier = modifier
@@ -419,6 +447,7 @@ private fun SimpleArtifact(
         )
         Column(
             horizontalAlignment = Alignment.Start,
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 artifact.title ?: "",
@@ -430,6 +459,14 @@ private fun SimpleArtifact(
                 style = IndianaTheme.typography.bodySmall,
                 modifier = Modifier,
                 color = IndianaTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        // Download progress indicator
+        if (downloadState != null) {
+            DownloadProgressIndicator(
+                downloadState = downloadState,
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }
@@ -639,7 +676,9 @@ private fun BuildDetailsError(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
     ) {
         Icon(
             painter = rememberVectorPainter(Icons.Default.Error),
@@ -670,7 +709,8 @@ private fun Preview() {
                 V0ArtifactListElementResponseModel(
                     title = "Title",
                     artifactType = "file",
-                )
+                ),
+                downloadState = null,
             )
             val meta = hashMapOf(
                 "product_flavour" to "",
@@ -687,14 +727,36 @@ private fun Preview() {
                     title = "ApkApp.apk",
                     artifactType = "android-apk",
                     artifactMeta = meta
-                )
+                ),
+                downloadState = DownloadState.InProgress(
+                    id = "TODO()",
+                    artifactId = "TODO()",
+                    buildId = "TODO()",
+                    projectId = "TODO()",
+                    fileName = "TODO()",
+                    fileSize = 123,
+                    downloadUrl = "TODO()",
+                    createdAt = Instant.now(),
+                    downloadedBytes = 10,
+                ),
             )
             Artifact(
                 V0ArtifactListElementResponseModel(
                     title = "ApkApp.aab",
                     artifactType = "android-apk",
                     artifactMeta = meta
-                )
+                ),
+                downloadState = DownloadState.InProgress(
+                    id = "TODO()",
+                    artifactId = "TODO()",
+                    buildId = "TODO()",
+                    projectId = "TODO()",
+                    fileName = "TODO()",
+                    fileSize = 123,
+                    downloadUrl = "TODO()",
+                    createdAt = Instant.now(),
+                    downloadedBytes = 10,
+                ),
             )
         }
     }

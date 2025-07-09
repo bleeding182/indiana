@@ -1,15 +1,9 @@
 package com.davidmedenjak.indiana.screens.build
 
 import android.app.Application
-import android.app.DownloadManager
-import android.content.Context
-import android.content.IntentFilter
-import android.os.Build
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -20,7 +14,12 @@ import androidx.paging.PagingState
 import androidx.paging.cachedIn
 import com.davidmedenjak.indiana.api.BuildArtifactApi
 import com.davidmedenjak.indiana.api.BuildsApi
-import com.davidmedenjak.indiana.features.artifacts.DownloadBroadcastReceiver
+import com.davidmedenjak.indiana.download.ArtifactClickResult
+import com.davidmedenjak.indiana.download.DownloadManager
+import com.davidmedenjak.indiana.download.DownloadState
+import com.davidmedenjak.indiana.download.FileOpener
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
 import com.davidmedenjak.indiana.model.V0ArtifactListElementResponseModel
 import com.davidmedenjak.indiana.model.V0BuildAbortParams
 import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
@@ -28,6 +27,7 @@ import com.davidmedenjak.indiana.model.V0BuildTriggerParams
 import com.davidmedenjak.indiana.model.V0BuildTriggerParamsBuildParams
 import com.davidmedenjak.indiana.model.V0BuildTriggerParamsHookInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +36,9 @@ class BuildDetailViewModel @Inject constructor(
     private val application: Application,
     private val artifactApi: BuildArtifactApi,
     private val buildsApi: BuildsApi,
-    private val savedStateHandle: SavedStateHandle,
+    private val downloadManager: DownloadManager,
+    private val fileOpener: FileOpener,
+    savedStateHandle: SavedStateHandle,
 ) : AndroidViewModel(application) {
 
     lateinit var navKey: BuildDetailGraph
@@ -50,7 +52,11 @@ class BuildDetailViewModel @Inject constructor(
     var buildDetailsError by mutableStateOf<String?>(null)
         private set
 
-    var newlyStartedBuild = savedStateHandle.getMutableStateFlow<BuildDetailGraph?>("newlyStartedBuild", null)
+    var newlyStartedBuild =
+        savedStateHandle.getMutableStateFlow<BuildDetailGraph?>("newlyStartedBuild", null)
+
+    // Track which download should auto-open (only one at a time)
+    private var autoOpenDownloadId by mutableStateOf<String?>(null)
 
     val pagedArtifacts = Pager(
         PagingConfig(pageSize = 15, initialLoadSize = 20)
@@ -138,36 +144,68 @@ class BuildDetailViewModel @Inject constructor(
         }
     }
 
-    suspend fun downloadArtifact(artifact: V0ArtifactListElementResponseModel) {
-        val details = artifactApi.artifactShow(
-            navKey.appSlug,
+    suspend fun handleArtifactClick(artifact: V0ArtifactListElementResponseModel): ArtifactClickResult {
+        val result = downloadManager.handleArtifactClick(
+            artifact = artifact,
+            appSlug = navKey.appSlug,
             buildSlug = navKey.buildSlug,
-            artifactSlug = artifact.slug ?: return,
-            download = null,
-        ).data ?: return
-        val context = application
-        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
-        val downloadUrl = details.expiringDownloadUrl?.toUri() ?: return
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !context.packageManager.canRequestPackageInstalls()) {
-            val request = DownloadManager.Request(downloadUrl)
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                .setTitle(artifact.title)
-            downloadManager.enqueue(request)
-        } else {
-            val request = DownloadManager.Request(downloadUrl)
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                .setTitle(artifact.title)
-
-            val downloadId = downloadManager.enqueue(request)
-            ContextCompat.registerReceiver(
-                context,
-                DownloadBroadcastReceiver(downloadId),
-                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-                ContextCompat.RECEIVER_EXPORTED
-            )
+            projectId = navKey.appSlug // Using appSlug as projectId for now
+        )
+        
+        // If we started a new download and it's an APK, set up auto-open
+        if (result is ArtifactClickResult.DownloadStarted && 
+            artifact.title?.endsWith(".apk", ignoreCase = true) == true) {
+            
+            // Clear any existing auto-open download
+            autoOpenDownloadId = null
+            
+            // Set this download for auto-open
+            autoOpenDownloadId = result.downloadId
+            
+            // Start monitoring this download for completion
+            viewModelScope.launch {
+                monitorDownloadForAutoOpen(result.downloadId)
+            }
         }
+        
+        return result
+    }
+
+    fun getDownloadForArtifact(artifactId: String): Flow<DownloadState?> {
+        return downloadManager.getDownloadByArtifactId(artifactId)
+    }
+
+    fun getDownloadsForBuild(): Flow<List<DownloadState>> {
+        return downloadManager.getDownloadsByBuild(navKey.buildSlug)
+    }
+    
+    private suspend fun monitorDownloadForAutoOpen(downloadId: String) {
+        try {
+            val completedDownload = downloadManager.getDownloadById(downloadId)
+                .filterIsInstance<DownloadState.Completed>()
+                .first()
+                
+            // Check if this download is still the one we want to auto-open
+            if (autoOpenDownloadId == downloadId) {
+                // Auto-install the completed APK
+                fileOpener.installApk(application, completedDownload.localPath)
+                // Clear the auto-open tracking
+                autoOpenDownloadId = null
+            }
+        } catch (_: Exception) {
+            // If monitoring fails, just clear the auto-open tracking
+            autoOpenDownloadId = null
+        }
+    }
+    
+    // Call this when the user leaves the screen to cancel auto-open
+    fun onScreenLeft() {
+        autoOpenDownloadId = null
+    }
+    
+    // Check if a specific download is set for auto-open
+    fun isAutoOpenDownload(downloadId: String): Boolean {
+        return autoOpenDownloadId == downloadId
     }
 }
 

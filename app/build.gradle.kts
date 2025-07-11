@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.androidx.foundation.android)
     ksp(libs.dagger.compiler)
     ksp(libs.dagger.compiler.hilt)
+    ksp(libs.dagger.compiler.hilt.androidx)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)

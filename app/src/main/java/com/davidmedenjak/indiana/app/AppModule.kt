@@ -6,6 +6,8 @@ import android.preference.PreferenceManager
 import androidx.room.Room
 import androidx.work.WorkManager
 import com.davidmedenjak.indiana.db.AppDatabase
+import com.davidmedenjak.indiana.db.DownloadDao
+import com.davidmedenjak.indiana.db.ProjectDao
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.perf.FirebasePerformance
@@ -47,6 +49,12 @@ class AppModule {
     @Singleton
     fun appDatabase(context: Application): AppDatabase =
         Room.databaseBuilder<AppDatabase>(context, "indiana").build()
+
+    @Provides
+    fun projectDao(database: AppDatabase): ProjectDao = database.projects()
+
+    @Provides
+    fun downloadDao(database: AppDatabase): DownloadDao = database.downloads()
 
     @Provides
     @Singleton

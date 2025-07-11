@@ -18,6 +18,7 @@ import com.davidmedenjak.indiana.download.ArtifactClickResult
 import com.davidmedenjak.indiana.download.DownloadManager
 import com.davidmedenjak.indiana.download.DownloadState
 import com.davidmedenjak.indiana.download.FileOpener
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import com.davidmedenjak.indiana.model.V0ArtifactListElementResponseModel
@@ -38,6 +39,7 @@ class BuildDetailViewModel @Inject constructor(
     private val buildsApi: BuildsApi,
     private val downloadManager: DownloadManager,
     private val fileOpener: FileOpener,
+    private val analytics: FirebaseAnalytics,
     savedStateHandle: SavedStateHandle,
 ) : AndroidViewModel(application) {
 
@@ -151,6 +153,19 @@ class BuildDetailViewModel @Inject constructor(
             buildSlug = navKey.buildSlug,
             projectId = navKey.appSlug // Using appSlug as projectId for now
         )
+        
+        val artifactType = artifact.artifactType ?: "unknown"
+        val source = when (result) {
+            is ArtifactClickResult.FileOpened -> "Cache"
+            is ArtifactClickResult.DownloadInProgress -> "Download"
+            is ArtifactClickResult.DownloadStarted -> "Download"
+            is ArtifactClickResult.Error -> "Download"
+        }
+        
+        analytics.logEvent("artifact_click", android.os.Bundle().apply {
+            putString(FirebaseAnalytics.Param.ITEM_VARIANT, artifactType)
+            putString(FirebaseAnalytics.Param.SOURCE, source)
+        })
         
         // If we started a new download and it's an APK, set up auto-open
         if (result is ArtifactClickResult.DownloadStarted && 

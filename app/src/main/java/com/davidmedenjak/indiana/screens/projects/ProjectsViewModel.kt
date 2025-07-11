@@ -13,6 +13,7 @@ import com.davidmedenjak.indiana.app.UserSettings
 import com.davidmedenjak.indiana.db.AppDatabase
 import com.davidmedenjak.indiana.db.ProjectEntity
 import com.davidmedenjak.indiana.db.ProjectLastViewed
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,6 +36,7 @@ class ProjectsViewModel @Inject constructor(
     private val api: ApplicationApi,
     private val database: AppDatabase,
     private val userSettings: UserSettings,
+    private val analytics: FirebaseAnalytics,
 ) : ViewModel() {
     fun updateRecents(project: Project) {
         viewModelScope.launch {
@@ -68,6 +70,13 @@ class ProjectsViewModel @Inject constructor(
         .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = null)
 
     fun setFilterProjectType(projectType: String) {
+        val isSelected = filteredProjectTypes.value != projectType
+        
+        analytics.logEvent("filter_project_type", android.os.Bundle().apply {
+            putString(FirebaseAnalytics.Param.ITEM_NAME, projectType)
+            putBoolean(FirebaseAnalytics.Param.VALUE, isSelected)
+        })
+        
         userSettings.projectFiler = projectType
         filteredProjectTypes.update {
             if (it == projectType) {

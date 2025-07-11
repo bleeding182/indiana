@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import com.davidmedenjak.indiana.AppBackStack.RequiresLogin
+import com.davidmedenjak.indiana.analytics.ScreenTrackable
 import com.davidmedenjak.indiana.download.ArtifactClickResult
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -21,7 +22,9 @@ data class BuildDetailGraph(
     val buildTitle: String,
     val appSlug: String,
     val buildSlug: String,
-) : NavKey, RequiresLogin
+) : NavKey, RequiresLogin, ScreenTrackable {
+    override val screenName = "BuildDetail"
+}
 
 @Composable
 fun BuildDetailRoute(

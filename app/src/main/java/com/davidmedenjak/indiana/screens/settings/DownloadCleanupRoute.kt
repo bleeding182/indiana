@@ -10,13 +10,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.davidmedenjak.indiana.R
 import androidx.navigation3.runtime.NavKey
+import com.davidmedenjak.indiana.analytics.ScreenTrackable
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object DownloadCleanupGraph : NavKey
+data object DownloadCleanupGraph : NavKey, ScreenTrackable {
+    override val screenName = "DownloadCleanup"
+}
 
 @Composable
 fun DownloadCleanupRoute(

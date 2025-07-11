@@ -6,16 +6,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.navEntryDecorator
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
+import com.davidmedenjak.indiana.analytics.ScreenTrackable
 import com.davidmedenjak.indiana.screens.about.AboutGraph
 import com.davidmedenjak.indiana.screens.about.AboutRoute
 import com.davidmedenjak.indiana.screens.auth.AuthGraph
@@ -34,6 +40,10 @@ import com.davidmedenjak.indiana.screens.tracking.TrackingSettingsGraph
 import com.davidmedenjak.indiana.screens.tracking.TrackingSettingsRoute
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Surface
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.logEvent
 import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn
@@ -55,10 +65,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val activity = LocalActivity.current!!
-            val appBackStack = remember {
+            val entryPoint = remember {
                 EntryPoints.get(activity, MainEntryPoint::class.java)
-                    .appBackStack
             }
+            val appBackStack = entryPoint.appBackStack
 
             val isInitializing by appBackStack.isInitializing.collectAsStateWithLifecycle()
 
@@ -74,6 +84,7 @@ class MainActivity : ComponentActivity() {
                         backStack = appBackStack.backStack,
                         onBack = { appBackStack.remove() },
                         entryDecorators = listOf(
+                            rememberAnalyticsScreenViewEntryDecorator(),
                             rememberSceneSetupNavEntryDecorator(),
                             rememberSavedStateNavEntryDecorator(),
                             rememberViewModelStoreNavEntryDecorator()
@@ -99,7 +110,11 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onAboutSelected = { appBackStack.add(AboutGraph) },
                                     onPrivacySelected = { appBackStack.add(PrivacyGraph) },
-                                    onDownloadCleanupSelected = { appBackStack.add(DownloadCleanupGraph) },
+                                    onDownloadCleanupSelected = {
+                                        appBackStack.add(
+                                            DownloadCleanupGraph
+                                        )
+                                    },
                                     onLogoutSelected = { appBackStack.logout() },
                                 )
                             }
@@ -159,5 +174,22 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun rememberAnalyticsScreenViewEntryDecorator(): NavEntryDecorator<in Any> = remember {
+    navEntryDecorator { entry ->
+        val key = entry.key
+        if (key is ScreenTrackable) {
+            var lastScreen by remember { mutableStateOf<Any?>(null) }
+            if (key != lastScreen) {
+                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+                    param(FirebaseAnalytics.Param.SCREEN_NAME, key.screenName)
+                }
+            }
+            lastScreen = key
+        }
+        entry.content(key)
     }
 }

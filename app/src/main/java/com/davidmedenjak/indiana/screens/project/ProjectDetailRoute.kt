@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import com.davidmedenjak.indiana.AppBackStack.RequiresLogin
+import com.davidmedenjak.indiana.analytics.ScreenTrackable
 import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
 import kotlinx.serialization.Serializable
 
@@ -11,7 +12,9 @@ import kotlinx.serialization.Serializable
 data class ProjectDetailGraph(
     val title: String,
     val slug: String,
-) : NavKey, RequiresLogin
+) : NavKey, RequiresLogin, ScreenTrackable {
+    override val screenName = "ProjectDetail"
+}
 
 @Composable
 fun ProjectDetailRoute(

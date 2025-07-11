@@ -17,11 +17,14 @@ import androidx.credentials.exceptions.GetCredentialException
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation3.runtime.NavKey
+import com.davidmedenjak.indiana.analytics.ScreenTrackable
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @Serializable
-object AuthGraph : NavKey
+object AuthGraph : NavKey, ScreenTrackable {
+    override val screenName = "Authentication"
+}
 
 @Composable
 fun AuthRoute(

@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.davidmedenjak.indiana.AppBackStack.RequiresLogin
+import com.davidmedenjak.indiana.analytics.ScreenTrackable
 import com.davidmedenjak.indiana.app.InAppUpdateManager
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -26,7 +27,9 @@ interface UpdateManagerEntryPoint {
 }
 
 @Serializable
-object ProjectsGraph : NavKey, RequiresLogin
+object ProjectsGraph : NavKey, RequiresLogin, ScreenTrackable {
+    override val screenName = "ProjectsList"
+}
 
 @Composable
 fun ProjectsRoute(

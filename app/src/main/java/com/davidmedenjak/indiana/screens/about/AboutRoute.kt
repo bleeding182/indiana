@@ -3,10 +3,13 @@ package com.davidmedenjak.indiana.screens.about
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
+import com.davidmedenjak.indiana.analytics.ScreenTrackable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object AboutGraph : NavKey
+data object AboutGraph : NavKey, ScreenTrackable {
+    override val screenName = "About"
+}
 
 @Composable
 fun AboutRoute(

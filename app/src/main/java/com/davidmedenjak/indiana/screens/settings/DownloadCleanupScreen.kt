@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,17 +20,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.settings.CleanupPeriod
 import com.davidmedenjak.indiana.settings.DownloadCleanupSettings
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Button
 import com.davidmedenjak.indiana.theme.ui.atoms.Card
+import com.davidmedenjak.indiana.theme.ui.atoms.ExposedDropdownTextField
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.IndeterminateProgressCircular
-import com.davidmedenjak.indiana.theme.ui.atoms.ExposedDropdownTextField
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.molectule.Confirmation
 import com.davidmedenjak.indiana.theme.ui.molectule.PropertyLayout
@@ -40,6 +44,16 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+
+fun CleanupPeriod.getLocalizedDisplayName(context: android.content.Context): String {
+    return when (this) {
+        CleanupPeriod.ONE_DAY -> context.getString(R.string.cleanup_period_one_day)
+        CleanupPeriod.THREE_DAYS -> context.getString(R.string.cleanup_period_three_days)
+        CleanupPeriod.SEVEN_DAYS -> context.getString(R.string.cleanup_period_seven_days)
+        CleanupPeriod.THIRTY_DAYS -> context.getString(R.string.cleanup_period_thirty_days)
+        CleanupPeriod.NEVER -> context.getString(R.string.cleanup_period_never)
+    }
+}
 
 @Composable
 fun DownloadCleanupScreen(
@@ -77,7 +91,7 @@ fun DownloadCleanupScreen(
             isLoading = uiState.isLoading
         )
 
-        // Download Management
+        val context = LocalContext.current
         DownloadManagementCard(
             selectedPeriod = uiState.selectedCleanupPeriod,
             onPeriodChanged = onCleanupPeriodChanged,
@@ -88,9 +102,9 @@ fun DownloadCleanupScreen(
             onClearAllDownloads = {
                 clearAllDialog.confirm(
                     Confirmation(
-                        title = "Clear All Downloads",
-                        text = "Will clear local cache of downloaded files. This action cannot be undone.",
-                        action = "Clear All",
+                        title = context.getString(R.string.download_cleanup_confirmation_clear_all_title),
+                        text = context.getString(R.string.download_cleanup_confirmation_clear_all_text),
+                        action = context.getString(R.string.download_cleanup_confirmation_clear_all_action),
                         callback = { onClearAllDownloads() },
                     )
                 )
@@ -111,7 +125,7 @@ private fun StorageUsageCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -121,7 +135,7 @@ private fun StorageUsageCard(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "Storage Usage",
+                    text = stringResource(R.string.download_cleanup_storage_usage_title),
                     style = IndianaTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
@@ -135,7 +149,7 @@ private fun StorageUsageCard(
                 ) {
                     IndeterminateProgressCircular()
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Calculating...")
+                    Text(stringResource(R.string.download_cleanup_storage_calculating))
                 }
             } else {
                 Text(
@@ -145,7 +159,7 @@ private fun StorageUsageCard(
                     color = IndianaTheme.colorScheme.primary
                 )
                 Text(
-                    text = "Total size of downloaded files",
+                    text = stringResource(R.string.download_cleanup_storage_total_size),
                     style = IndianaTheme.typography.bodyMedium,
                     color = IndianaTheme.colorScheme.onSurfaceVariant
                 )
@@ -165,6 +179,7 @@ private fun DownloadManagementCard(
     onClearAllDownloads: () -> Unit,
     hasDownloads: Boolean
 ) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -172,7 +187,7 @@ private fun DownloadManagementCard(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Download Management",
+                text = stringResource(R.string.download_cleanup_management_title),
                 style = IndianaTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
@@ -183,16 +198,19 @@ private fun DownloadManagementCard(
                 value = selectedPeriod,
                 onValueChange = onPeriodChanged,
                 options = CleanupPeriod.entries,
-                label = { Text("Auto-delete files after") },
-                optionText = { it.displayName }
+                label = { Text(stringResource(R.string.download_cleanup_auto_delete_label)) },
+                optionText = { it.getLocalizedDisplayName(context) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            PropertyLayout {
-                Text("Last cleanup")
+            PropertyLayout(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp)) {
+                Text(stringResource(R.string.download_cleanup_last_cleanup))
                 Text(
-                    text = lastCleanupTime?.let { formatDateTime(it) } ?: "Never",
+                    text = lastCleanupTime?.let { formatDateTime(it) }
+                        ?: stringResource(R.string.download_cleanup_never),
                     color = IndianaTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -209,14 +227,14 @@ private fun DownloadManagementCard(
                     modifier = Modifier.weight(1f)
                 ) {
                     if (isRunningCleanup) {
-                        IndeterminateProgressCircular()
+                        IndeterminateProgressCircular(modifier = Modifier.size(24.dp))
                     } else {
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Cleanup")
+                        Text(stringResource(R.string.download_cleanup_button_cleanup))
                     }
                 }
 
@@ -233,7 +251,7 @@ private fun DownloadManagementCard(
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Clear All")
+                        Text(stringResource(R.string.download_cleanup_button_clear_all))
                     }
                 }
             }

@@ -23,6 +23,7 @@
     <string name="projects_title">Projets</string>
     <string name="projects_menu_about">À propos</string>
     <string name="projects_menu_privacy">Confidentialité</string>
+    <string name="projects_menu_download_settings">Paramètres de téléchargement</string>
     <string name="projects_menu_update">Mettre à jour l\'app</string>
     <string name="projects_menu_logout">Déconnexion</string>
     <string name="projects_section_recents">Récents</string>
@@ -70,6 +71,26 @@
     <!-- Privacy Screen -->
     <string name="privacy_title">Confidentialité</string>
     <string name="privacy_content">Cette app stocke le token API fourni localement sur ton téléphone pour délivrer son service. Il ne sera utilisé que pour communiquer avec le fournisseur de service qui a émis le token et ne sera pas partagé avec des tiers.\n\nPour améliorer l\'expérience utilisateur de cette app, nous utilisons les services de suivi optionnels suivants avec Google Firebase :\n\n• Analytics : Nous collectons des données d\'utilisation anonymes pour comprendre comment tu utilises l\'app et améliorer ton expérience. Cela inclut les vues d\'écran, les clics de boutons et les modèles d\'utilisation des fonctionnalités.\n\n• Rapport de crash (Crashlytics) : Nous collectons automatiquement des rapports de crash pour nous aider à identifier et corriger les bugs plus rapidement. Cela inclut les traces de pile et les informations sur l\'appareil quand l\'app plante.\n\n• Surveillance des performances : Nous surveillons les métriques de performance de l\'app comme le temps de démarrage, le rendu d\'écran et les requêtes réseau pour identifier et corriger les ralentissements.\n\nCes données de suivi sont collectées par Google Firebase et sont soumises aux pratiques de confidentialité de Google. Bien que nous ne collections pas directement d\'informations personnellement identifiables, Firebase peut collecter des identifiants d\'appareil et d\'autres données qui pourraient potentiellement être utilisées pour suivre les modèles d\'utilisation. Tu peux contrôler ces paramètres et désactiver tout ou partie de ces services à tout moment via les paramètres de suivi de l\'app.\n\nPour installer des APKs sur le téléphone, cette app nécessite la permission REQUEST_INSTALL_PACKAGES.\n\nCette politique peut changer avec toute mise à jour future et tous les changements seront reflétés ici.</string>
+
+    <!-- Download Cleanup Screen -->
+    <string name="download_cleanup_title">Paramètres de téléchargement</string>
+    <string name="download_cleanup_storage_usage_title">Utilisation du stockage</string>
+    <string name="download_cleanup_storage_calculating">Calcul...</string>
+    <string name="download_cleanup_storage_total_size">Taille totale des fichiers téléchargés</string>
+    <string name="download_cleanup_management_title">Gestion des téléchargements</string>
+    <string name="download_cleanup_auto_delete_label">Supprimer automatiquement les fichiers après</string>
+    <string name="download_cleanup_last_cleanup">Dernier nettoyage</string>
+    <string name="download_cleanup_never">Jamais</string>
+    <string name="download_cleanup_button_cleanup">Nettoyer</string>
+    <string name="download_cleanup_button_clear_all">Tout effacer</string>
+    <string name="download_cleanup_confirmation_clear_all_title">Effacer tous les téléchargements</string>
+    <string name="download_cleanup_confirmation_clear_all_text">Supprimera le cache local des fichiers téléchargés. Cette action ne peut pas être annulée.</string>
+    <string name="download_cleanup_confirmation_clear_all_action">Tout effacer</string>
+    <string name="cleanup_period_one_day">1 jour</string>
+    <string name="cleanup_period_three_days">3 jours</string>
+    <string name="cleanup_period_seven_days">7 jours</string>
+    <string name="cleanup_period_thirty_days">30 jours</string>
+    <string name="cleanup_period_never">Jamais</string>
 
     <!-- Tracking Settings Screen -->
     <string name="tracking_settings_title">Paramètres de suivi</string>

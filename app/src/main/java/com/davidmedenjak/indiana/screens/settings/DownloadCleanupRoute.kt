@@ -6,7 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.davidmedenjak.indiana.R
 import androidx.navigation3.runtime.NavKey
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
@@ -26,7 +28,7 @@ fun DownloadCleanupRoute(
     Scaffold(
         topBar = {
             LargeFlexible(
-                title = { Text("Download Settings") },
+                title = { Text(stringResource(R.string.download_cleanup_title)) },
                 navigationIcon = { Up(onBack) }
             )
         },

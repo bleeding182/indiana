@@ -746,7 +746,7 @@ private fun Preview() {
                     artifactType = "android-apk",
                     artifactMeta = meta
                 ),
-                downloadState = DownloadState.InProgress(
+                downloadState = DownloadState.Pending(
                     id = "TODO()",
                     artifactId = "TODO()",
                     buildId = "TODO()",
@@ -755,7 +755,6 @@ private fun Preview() {
                     fileSize = 123,
                     downloadUrl = "TODO()",
                     createdAt = Instant.now(),
-                    downloadedBytes = 10,
                 ),
             )
         }

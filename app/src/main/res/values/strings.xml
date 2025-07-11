@@ -24,6 +24,7 @@
     <string name="projects_title">Projects</string>
     <string name="projects_menu_about">About</string>
     <string name="projects_menu_privacy">Privacy Policy</string>
+    <string name="projects_menu_download_settings">Download Settings</string>
     <string name="projects_menu_update">Update app</string>
     <string name="projects_menu_logout">Logout</string>
     <string name="projects_section_recents">Recents</string>
@@ -71,6 +72,26 @@
     <!-- Privacy Screen -->
     <string name="privacy_title">Privacy Policy</string>
     <string name="privacy_content">This application stores the provided API token locally on your phone to deliver its service. It will only be used to communicate with the service provider that issued the token and not shared with any third parties.\n\nTo enhance the user experience of this app, we use the following optional tracking services with Google Firebase:\n\n• Analytics: We collect anonymous usage data to understand how you use the app and improve your experience. This includes screen views, button clicks, and feature usage patterns.\n\n• Crash Reporting (Crashlytics): We automatically collect crash reports to help us identify and fix bugs faster. This includes stack traces and device information when the app crashes.\n\n• Performance Monitoring: We monitor app performance metrics like startup time, screen rendering, and network requests to identify and fix slowdowns.\n\nThis tracking data is collected by Google Firebase and is subject to Google\'s privacy practices. While we do not collect personally identifiable information directly, Firebase may collect device identifiers and other data that could potentially be used to track usage patterns. You can control these settings and disable any or all of these services at any time through the app\'s tracking settings.\n\nTo install APKs on the phone this app requires the REQUEST_INSTALL_PACKAGES permission.\n\nThis policy may change with any future update and all the changes will be reflected here.</string>
+
+    <!-- Download Cleanup Screen -->
+    <string name="download_cleanup_title">Download Settings</string>
+    <string name="download_cleanup_storage_usage_title">Storage Usage</string>
+    <string name="download_cleanup_storage_calculating">Calculating...</string>
+    <string name="download_cleanup_storage_total_size">Total size of downloaded files</string>
+    <string name="download_cleanup_management_title">Download Management</string>
+    <string name="download_cleanup_auto_delete_label">Auto-delete files after</string>
+    <string name="download_cleanup_last_cleanup">Last cleanup</string>
+    <string name="download_cleanup_never">Never</string>
+    <string name="download_cleanup_button_cleanup">Cleanup</string>
+    <string name="download_cleanup_button_clear_all">Clear All</string>
+    <string name="download_cleanup_confirmation_clear_all_title">Clear All Downloads</string>
+    <string name="download_cleanup_confirmation_clear_all_text">Will clear local cache of downloaded files. This action cannot be undone.</string>
+    <string name="download_cleanup_confirmation_clear_all_action">Clear All</string>
+    <string name="cleanup_period_one_day">1 day</string>
+    <string name="cleanup_period_three_days">3 days</string>
+    <string name="cleanup_period_seven_days">7 days</string>
+    <string name="cleanup_period_thirty_days">30 days</string>
+    <string name="cleanup_period_never">Never</string>
 
     <!-- Tracking Settings Screen -->
     <string name="tracking_settings_title">Tracking Settings</string>

@@ -18,12 +18,12 @@ fun DownloadProgressIndicator(
 ) {
     when (downloadState) {
         is DownloadState.Pending -> {
-            IndeterminateProgress(modifier = modifier)
+            IndeterminateProgress(modifier = modifier.size(24.dp))
         }
 
         is DownloadState.InProgress -> {
             if (downloadState.isIndeterminate) {
-                IndeterminateProgress(modifier = modifier)
+                IndeterminateProgress(modifier = modifier.size(24.dp))
             } else {
                 DeterministicProgress(
                     progress = { downloadState.progress },

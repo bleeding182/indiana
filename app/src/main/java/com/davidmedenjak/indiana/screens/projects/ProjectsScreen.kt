@@ -165,7 +165,7 @@ fun ProjectsScreen(
                                 },
                             )
                             DropdownMenuItem(
-                                text = { Text("Download Settings") },
+                                text = { Text(stringResource(R.string.projects_menu_download_settings)) },
                                 onClick = {
                                     expanded = false
                                     onDownloadCleanupSelected()

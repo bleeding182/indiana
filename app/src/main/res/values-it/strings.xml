@@ -23,6 +23,7 @@
     <string name="projects_title">Progetti</string>
     <string name="projects_menu_about">Info</string>
     <string name="projects_menu_privacy">Privacy</string>
+    <string name="projects_menu_download_settings">Impostazioni download</string>
     <string name="projects_menu_update">Aggiorna app</string>
     <string name="projects_menu_logout">Logout</string>
     <string name="projects_section_recents">Recenti</string>
@@ -70,6 +71,26 @@
     <!-- Privacy Screen -->
     <string name="privacy_title">Privacy</string>
     <string name="privacy_content">Questa app memorizza il token API fornito localmente sul tuo telefono per fornire il suo servizio. Sarà utilizzato solo per comunicare con il fornitore di servizi che ha emesso il token e non sarà condiviso con terze parti.\n\nPer migliorare l\'esperienza utente di questa app, utilizziamo i seguenti servizi di tracking opzionali con Google Firebase:\n\n• Analytics: Raccogliamo dati di utilizzo anonimi per capire come usi l\'app e migliorare la tua esperienza. Questo include visualizzazioni di schermate, clic sui pulsanti e modelli di utilizzo delle funzionalità.\n\n• Segnalazione crash (Crashlytics): Raccogliamo automaticamente report di crash per aiutarci a identificare e correggere i bug più velocemente. Questo include stack trace e informazioni del dispositivo quando l\'app si blocca.\n\n• Monitoraggio prestazioni: Monitoriamo le metriche delle prestazioni dell\'app come il tempo di avvio, il rendering dello schermo e le richieste di rete per identificare e correggere i rallentamenti.\n\nQuesti dati di tracking sono raccolti da Google Firebase e sono soggetti alle pratiche sulla privacy di Google. Sebbene non raccogliamo direttamente informazioni personalmente identificabili, Firebase può raccogliere identificatori del dispositivo e altri dati che potrebbero potenzialmente essere utilizzati per tracciare i modelli di utilizzo. Puoi controllare queste impostazioni e disabilitare qualsiasi o tutti questi servizi in qualsiasi momento tramite le impostazioni di tracking dell\'app.\n\nPer installare APK sul telefono, questa app richiede il permesso REQUEST_INSTALL_PACKAGES.\n\nQuesta policy può cambiare con qualsiasi aggiornamento futuro e tutti i cambiamenti saranno riflessi qui.</string>
+
+    <!-- Download Cleanup Screen -->
+    <string name="download_cleanup_title">Impostazioni download</string>
+    <string name="download_cleanup_storage_usage_title">Utilizzo storage</string>
+    <string name="download_cleanup_storage_calculating">Calcolo...</string>
+    <string name="download_cleanup_storage_total_size">Dimensione totale dei file scaricati</string>
+    <string name="download_cleanup_management_title">Gestione download</string>
+    <string name="download_cleanup_auto_delete_label">Elimina automaticamente file dopo</string>
+    <string name="download_cleanup_last_cleanup">Ultima pulizia</string>
+    <string name="download_cleanup_never">Mai</string>
+    <string name="download_cleanup_button_cleanup">Pulisci</string>
+    <string name="download_cleanup_button_clear_all">Cancella tutto</string>
+    <string name="download_cleanup_confirmation_clear_all_title">Cancella tutti i download</string>
+    <string name="download_cleanup_confirmation_clear_all_text">Cancellerà la cache locale dei file scaricati. Questa azione non può essere annullata.</string>
+    <string name="download_cleanup_confirmation_clear_all_action">Cancella tutto</string>
+    <string name="cleanup_period_one_day">1 giorno</string>
+    <string name="cleanup_period_three_days">3 giorni</string>
+    <string name="cleanup_period_seven_days">7 giorni</string>
+    <string name="cleanup_period_thirty_days">30 giorni</string>
+    <string name="cleanup_period_never">Mai</string>
 
     <!-- Tracking Settings Screen -->
     <string name="tracking_settings_title">Impostazioni di tracking</string>

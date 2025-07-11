@@ -28,6 +28,8 @@ import com.davidmedenjak.indiana.screens.project.ProjectDetailGraph
 import com.davidmedenjak.indiana.screens.project.ProjectDetailRoute
 import com.davidmedenjak.indiana.screens.projects.ProjectsGraph
 import com.davidmedenjak.indiana.screens.projects.ProjectsRoute
+import com.davidmedenjak.indiana.screens.settings.DownloadCleanupGraph
+import com.davidmedenjak.indiana.screens.settings.DownloadCleanupRoute
 import com.davidmedenjak.indiana.screens.tracking.TrackingSettingsGraph
 import com.davidmedenjak.indiana.screens.tracking.TrackingSettingsRoute
 import com.davidmedenjak.indiana.theme.IndianaTheme
@@ -97,6 +99,7 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onAboutSelected = { appBackStack.add(AboutGraph) },
                                     onPrivacySelected = { appBackStack.add(PrivacyGraph) },
+                                    onDownloadCleanupSelected = { appBackStack.add(DownloadCleanupGraph) },
                                     onLogoutSelected = { appBackStack.logout() },
                                 )
                             }
@@ -144,6 +147,11 @@ class MainActivity : ComponentActivity() {
                                 TrackingSettingsRoute(
                                     it,
                                     onNavigateUp = appBackStack::remove,
+                                )
+                            }
+                            entry<DownloadCleanupGraph> {
+                                DownloadCleanupRoute(
+                                    onBack = appBackStack::remove,
                                 )
                             }
                         }

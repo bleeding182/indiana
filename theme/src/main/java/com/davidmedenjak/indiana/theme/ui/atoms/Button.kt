@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Text
@@ -38,13 +39,32 @@ fun Button(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
 ) = M3Button(
     modifier = modifier,
     shapes = ButtonDefaults.shapes(),
+    enabled = enabled,
     onClick = onClick,
     interactionSource = interactionSource,
 ) { Text(text) }
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun Button(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    interactionSource: MutableInteractionSource? = null,
+    content: @Composable RowScope.() -> Unit,
+) = M3Button(
+    modifier = modifier,
+    shapes = ButtonDefaults.shapes(),
+    enabled = enabled,
+    onClick = onClick,
+    interactionSource = interactionSource,
+    content = content,
+)
 
 @Composable
 @PreviewLightDark

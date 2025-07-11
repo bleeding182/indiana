@@ -34,6 +34,7 @@ fun ProjectsRoute(
     navigateToProject: (project: Project) -> Unit,
     onAboutSelected: () -> Unit,
     onPrivacySelected: () -> Unit,
+    onDownloadCleanupSelected: () -> Unit,
     onLogoutSelected: () -> Unit,
 ) {
     val viewModel = hiltViewModel<ProjectsViewModel>()
@@ -77,6 +78,7 @@ fun ProjectsRoute(
         },
         onAboutSelected = onAboutSelected,
         onPrivacySelected = onPrivacySelected,
+        onDownloadCleanupSelected = onDownloadCleanupSelected,
         onLogoutSelected = onLogoutSelected,
         onUpdateSelected = {
             updateManager.startFlexibleUpdate()

@@ -43,6 +43,9 @@ interface DownloadDao {
     @Query("SELECT * FROM download ORDER BY created_at DESC")
     fun getAllDownloads(): Flow<List<DownloadEntity>>
 
+    @Query("SELECT * FROM download ORDER BY created_at DESC")
+    suspend fun getAllDownloadsList(): List<DownloadEntity>
+
     @Query("SELECT * FROM download WHERE project_id = :projectId ORDER BY created_at DESC")
     fun getDownloadsByProject(projectId: String): Flow<List<DownloadEntity>>
 
@@ -73,4 +76,10 @@ interface DownloadDao {
 
     @Query("DELETE FROM download WHERE state = 'failed' AND created_at < :cutoffTime")
     suspend fun deleteOldFailedDownloads(cutoffTime: java.time.Instant)
+
+    @Query("SELECT * FROM download WHERE state = 'completed' AND completed_at < :cutoffTime AND local_path IS NOT NULL")
+    suspend fun getOldCompletedDownloadsWithFiles(cutoffTime: java.time.Instant): List<DownloadEntity>
+
+    @Query("SELECT * FROM download WHERE state = 'failed' AND created_at < :cutoffTime AND local_path IS NOT NULL")
+    suspend fun getOldFailedDownloadsWithFiles(cutoffTime: java.time.Instant): List<DownloadEntity>
 }

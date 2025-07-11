@@ -101,6 +101,7 @@ fun ProjectsScreen(
     onProjectSelected: (Project) -> Unit,
     onAboutSelected: () -> Unit,
     onPrivacySelected: () -> Unit,
+    onDownloadCleanupSelected: () -> Unit,
     onLogoutSelected: () -> Unit,
     onUpdateSelected: () -> Unit,
     toggleFilterProjectType: (String) -> Unit,
@@ -161,6 +162,13 @@ fun ProjectsScreen(
                                 onClick = {
                                     expanded = false
                                     onPrivacySelected()
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Download Settings") },
+                                onClick = {
+                                    expanded = false
+                                    onDownloadCleanupSelected()
                                 },
                             )
                             if (updateState == com.davidmedenjak.indiana.app.InAppUpdateManager.UpdateState.AVAILABLE ||

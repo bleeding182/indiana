@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.davidmedenjak.indiana.db.AppDatabase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -46,4 +47,9 @@ class AppModule {
     @Singleton
     fun appDatabase(context: Application): AppDatabase =
         Room.databaseBuilder<AppDatabase>(context, "indiana").build()
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(context: Application): WorkManager =
+        WorkManager.getInstance(context)
 }

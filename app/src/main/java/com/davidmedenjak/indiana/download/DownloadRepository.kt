@@ -1,5 +1,8 @@
 package com.davidmedenjak.indiana.download
 
+import android.app.Application
+import android.net.Uri
+import androidx.core.net.toUri
 import com.davidmedenjak.indiana.db.AppDatabase
 import com.davidmedenjak.indiana.db.DownloadDao
 import com.davidmedenjak.indiana.db.DownloadEntity
@@ -11,6 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DownloadRepository @Inject constructor(
+    private val context: Application,
     private val database: AppDatabase,
 ) {
     private val downloadDao: DownloadDao = database.downloads()
@@ -168,8 +172,153 @@ class DownloadRepository @Inject constructor(
 
     suspend fun cleanupOldDownloads(daysOld: Int = 7) {
         val cutoffTime = Instant.now().minusSeconds(daysOld * 24 * 60 * 60L)
+
+        // Get old downloads with files before deleting DB entries
+        val oldCompletedDownloads = downloadDao.getOldCompletedDownloadsWithFiles(cutoffTime)
+        val oldFailedDownloads = downloadDao.getOldFailedDownloadsWithFiles(cutoffTime)
+
+        // Delete files first
+        (oldCompletedDownloads + oldFailedDownloads).forEach { download ->
+            download.localPath?.let { path ->
+                deleteFileFromPath(path)
+            }
+        }
+
+        // Then delete database entries
         downloadDao.deleteOldCompletedDownloads(cutoffTime)
         downloadDao.deleteOldFailedDownloads(cutoffTime)
+    }
+
+    suspend fun calculateStorageUsage(): Long {
+        val allDownloads = downloadDao.getAllDownloadsList()
+        return allDownloads.sumOf { entity ->
+            if (entity.state == DownloadState.STATE_COMPLETED && entity.localPath != null) {
+                getFileSizeFromPath(entity.localPath)
+            } else {
+                0L
+            }
+        }
+    }
+
+    fun getStorageUsageFlow(): Flow<Long> {
+        return downloadDao.getAllDownloads().map { entities ->
+            entities.sumOf { entity ->
+                if (entity.state == DownloadState.STATE_COMPLETED && entity.localPath != null) {
+                    getFileSizeFromPath(entity.localPath)
+                } else {
+                    0L
+                }
+            }
+        }
+    }
+
+    private fun getFileSizeFromPath(path: String): Long {
+        return try {
+            if (path.startsWith("content://") || path.startsWith("file://")) {
+                // Handle URI paths
+                val uri = path.toUri()
+                getFileSizeFromUri(uri)
+            } else {
+                // Handle direct file paths
+                val file = java.io.File(path)
+                if (file.exists()) file.length() else 0L
+            }
+        } catch (e: Exception) {
+            0L
+        }
+    }
+
+    private fun getFileSizeFromUri(uri: Uri): Long {
+        return try {
+            when (uri.scheme) {
+                "file" -> {
+                    // File URI - extract path and get file size
+                    val file = java.io.File(uri.path ?: return 0L)
+                    if (file.exists()) file.length() else 0L
+                }
+
+                "content" -> {
+                    // Content URI - use ContentResolver to get file size
+                    context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                        // For content URIs, we might need to read the actual file size
+                        // This is more complex but necessary for accurate measurement
+                        var size = 0L
+                        val buffer = ByteArray(8192)
+                        var bytesRead: Int
+                        while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                            size += bytesRead
+                        }
+                        size
+                    } ?: 0L
+                }
+
+                else -> 0L
+            }
+        } catch (e: Exception) {
+            0L
+        }
+    }
+
+    private fun deleteFileFromPath(path: String) {
+        try {
+            if (path.startsWith("content://") || path.startsWith("file://")) {
+                // Handle URI paths
+                val uri = path.toUri()
+                deleteFileFromUri(uri)
+            } else {
+                // Handle direct file paths
+                val file = java.io.File(path)
+                if (file.exists()) {
+                    file.delete()
+                }
+            }
+        } catch (e: Exception) {
+            // Log error but continue with cleanup
+        }
+    }
+
+    private fun deleteFileFromUri(uri: Uri) {
+        try {
+            when (uri.scheme) {
+                "file" -> {
+                    // File URI - extract path and delete file
+                    val file = java.io.File(uri.path ?: return)
+                    if (file.exists()) {
+                        file.delete()
+                    }
+                }
+
+                "content" -> {
+                    // Content URI - attempt to delete through DocumentsContract
+                    // Note: This might not always work depending on permissions
+                    try {
+                        context.contentResolver.delete(uri, null, null)
+                    } catch (e: Exception) {
+                        // Content deletion may fail, that's okay
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            // Log error but continue with cleanup
+        }
+    }
+
+    suspend fun clearAllDownloads() {
+        // Get all downloads with files
+        val allDownloads = downloadDao.getAllDownloadsList()
+        val downloadsWithFiles = allDownloads.filter { it.localPath != null }
+
+        // Delete files first
+        downloadsWithFiles.forEach { download ->
+            download.localPath?.let { path ->
+                deleteFileFromPath(path)
+            }
+        }
+
+        // Delete all database entries
+        downloadsWithFiles.forEach { download ->
+            downloadDao.delete(download)
+        }
     }
 }
 
@@ -185,6 +334,7 @@ private fun DownloadEntity.toDownloadState(): DownloadState {
             downloadUrl = downloadUrl,
             createdAt = createdAt,
         )
+
         DownloadState.STATE_IN_PROGRESS -> DownloadState.InProgress(
             id = id,
             artifactId = artifactId,
@@ -196,6 +346,7 @@ private fun DownloadEntity.toDownloadState(): DownloadState {
             createdAt = createdAt,
             downloadedBytes = downloadedBytes,
         )
+
         DownloadState.STATE_COMPLETED -> DownloadState.Completed(
             id = id,
             artifactId = artifactId,
@@ -208,6 +359,7 @@ private fun DownloadEntity.toDownloadState(): DownloadState {
             completedAt = completedAt!!,
             localPath = localPath!!,
         )
+
         DownloadState.STATE_FAILED -> DownloadState.Failed(
             id = id,
             artifactId = artifactId,
@@ -219,6 +371,7 @@ private fun DownloadEntity.toDownloadState(): DownloadState {
             createdAt = createdAt,
             errorMessage = errorMessage ?: "Unknown error",
         )
+
         else -> throw IllegalStateException("Unknown download state: $state")
     }
 }

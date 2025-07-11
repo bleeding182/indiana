@@ -1,10 +1,14 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+- Do not comment on your own actions on every step, be concise
+- Skip any praises, and comments on how everything became better, say "Done!" when the work is finished and keep the summary _short_
+- Use :theme module components instead of Material 3 directly
+- Create missing components in :theme module
 
 ## Project Overview
 
-Indiana is an Android app built with Kotlin and Jetpack Compose that allows users to browse and download Android artifacts built with Bitrise. The app serves as a "hunter for built artifacts" providing a mobile interface to manage Bitrise builds.
+Indiana is an Android app built with Kotlin and Jetpack Compose integrating the public API of Bitrise.io
+It shows an overview of the users projects, builds, and build artifacts with an option to download and install them.
 
 ## Architecture
 

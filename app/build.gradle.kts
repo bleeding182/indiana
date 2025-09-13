@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.performance)
+    id("com.davidmedenjak.fontsubsetting") version "0.0.2"
 }
 
 android {
@@ -48,6 +49,36 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+}
+
+fontSubsetting {
+    fonts {
+        create("materialSymbols") {
+            fontFile.set(file("symbolfonts/MaterialSymbolsOutlined.ttf"))
+            codepointsFile.set(file("symbolfonts/MaterialSymbolsOutlined.codepoints"))
+            packageName.set("com.davidmedenjak.fontsubsetting")
+            className.set("MaterialSymbols")
+            // resourceName and fontFileName will default based on font file name
+            // but we can override them if needed:
+            resourceName.set("symbols")
+            fontFileName.set("symbols.ttf")
+
+            // Configure variable font axes
+            axes {
+                // Keep fill axis but limit to 0..1 range
+                axis("FILL").range(0f, 1f, 0f)
+
+                // Limit weight to 400-700 range (normal to bold)
+                axis("wght").range(400f, 700f, 400f)
+
+                // Remove grade axis completely
+                axis("GRAD").remove()
+
+                // Keep optical size but limit to 24-48 range
+                axis("opsz").range(24f, 48f, 48f)
+            }
+        }
     }
 }
 

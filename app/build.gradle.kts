@@ -1,6 +1,7 @@
 @file:OptIn(KspExperimental::class)
 
 import com.google.devtools.ksp.KspExperimental
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
@@ -22,8 +23,8 @@ android {
         applicationId = "com.davidmedenjak.indiana"
         minSdk = 24
         targetSdk = 36
-        versionCode = 17
-        versionName = "1.3.0"
+        versionCode = 18
+        versionName = "1.3.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,12 +39,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget(JavaVersion.VERSION_17.toString())
+        }
     }
     buildFeatures {
         compose = true
@@ -52,7 +55,7 @@ android {
 }
 
 ksp {
-    useKsp2 = false
+    useKsp2 = true
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 
@@ -70,6 +73,8 @@ dependencies {
 
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.material3.navigation3)
     implementation(libs.kotlinx.serialization.core)
@@ -108,8 +113,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)

@@ -180,7 +180,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun rememberAnalyticsScreenViewEntryDecorator(): NavEntryDecorator<in Any> = remember {
     navEntryDecorator { entry ->
-        val key = entry.key
+        val key = entry.contentKey
         if (key is ScreenTrackable) {
             var lastScreen by remember { mutableStateOf<Any?>(null) }
             if (key != lastScreen) {
@@ -190,6 +190,6 @@ private fun rememberAnalyticsScreenViewEntryDecorator(): NavEntryDecorator<in An
             }
             lastScreen = key
         }
-        entry.content(key)
+        entry.Content()
     }
 }

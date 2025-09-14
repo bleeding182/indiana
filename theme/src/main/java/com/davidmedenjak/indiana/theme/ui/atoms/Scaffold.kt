@@ -164,7 +164,6 @@ fun Scaffold(
                     ) {
                         PullToRefreshDefaults.LoadingIndicator(
                             modifier = Modifier,
-                            threshold = threshold,
                             state = state,
                             isRefreshing = isRefreshing
                         )

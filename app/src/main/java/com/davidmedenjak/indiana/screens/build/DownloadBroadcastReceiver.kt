@@ -7,11 +7,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.widget.Toast
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.File
 import androidx.core.net.toUri
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
 
 class DownloadBroadcastReceiver(val downloadId: Long) : BroadcastReceiver() {
     override fun onReceive(context: Context, data: Intent) {

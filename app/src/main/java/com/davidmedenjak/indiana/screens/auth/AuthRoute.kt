@@ -48,7 +48,11 @@ fun AuthRoute(
 
             when (val credential = result.credential) {
                 is PasswordCredential -> {
-                    viewModel.tryToken(credential.password)
+                    try {
+                        viewModel.tryToken(credential.password)
+                    } catch (ex: Exception) {
+                        Toast.makeText(context, "Token invalid", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 else -> null

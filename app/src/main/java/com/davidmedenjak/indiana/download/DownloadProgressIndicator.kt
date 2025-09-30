@@ -1,15 +1,15 @@
 package com.davidmedenjak.indiana.download
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowCircleDown
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import com.davidmedenjak.indiana.theme.ui.atoms.DeterministicProgress
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
+import com.davidmedenjak.indiana.theme.ui.atoms.Icons
 import com.davidmedenjak.indiana.theme.ui.atoms.IndeterminateProgress
+import com.davidmedenjak.indiana.theme.ui.atoms.MaterialIcon
 
 @Composable
 fun DownloadProgressIndicator(
@@ -33,10 +33,9 @@ fun DownloadProgressIndicator(
         }
 
         is DownloadState.Completed -> {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = rememberVectorPainter(Icons.Default.ArrowCircleDown),
-                contentDescription = null,
+            MaterialIcon(
+                icon = Icons.arrowCircleDown,
+                size = 24.dp,
             )
         }
 

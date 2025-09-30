@@ -19,12 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.FilePresent
-import androidx.compose.material.icons.filled.InstallMobile
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Stop
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,7 +49,9 @@ import com.davidmedenjak.indiana.theme.ui.atoms.Button
 import com.davidmedenjak.indiana.theme.ui.atoms.Card
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.IconButton
+import com.davidmedenjak.indiana.theme.ui.atoms.Icons
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
+import com.davidmedenjak.indiana.theme.ui.atoms.MaterialIcon
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Surface
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
@@ -122,9 +118,9 @@ fun BuildDetailScreen(
                                 ),
                             )
                         }) {
-                            Icon(
-                                painter = rememberVectorPainter(Icons.Default.Stop),
-                                contentDescription = stringResource(R.string.build_detail_abort_build),
+                            MaterialIcon(
+                                icon = Icons.Stop,
+                                size = 24.dp,
                                 tint = IndianaTheme.colorScheme.error,
                             )
                         }
@@ -141,9 +137,9 @@ fun BuildDetailScreen(
                                 ),
                             )
                         }) {
-                            Icon(
-                                painter = rememberVectorPainter(Icons.Default.Refresh),
-                                contentDescription = stringResource(R.string.build_detail_restart_build),
+                            MaterialIcon(
+                                icon = Icons.Refresh,
+                                size = 24.dp,
                                 tint = IndianaTheme.colorScheme.primary,
                             )
                         }
@@ -316,9 +312,9 @@ private fun Artifact(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 val backgroundColor = IndianaTheme.colorScheme.primaryContainer
-                Icon(
-                    painter = rememberVectorPainter(Icons.Default.InstallMobile),
-                    contentDescription = null, // fixme
+                MaterialIcon(
+                    icon = Icons.InstallMobile,
+                    size = 24.dp,
                     tint = IndianaTheme.colorScheme.contentColorFor(backgroundColor),
                     modifier = Modifier
                         .background(
@@ -432,9 +428,9 @@ private fun SimpleArtifact(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         val backgroundColor = IndianaTheme.colorScheme.surfaceContainer
-        Icon(
-            painter = rememberVectorPainter(Icons.Default.FilePresent),
-            contentDescription = null, // fixme
+        MaterialIcon(
+            icon = Icons.FilePresent,
+            size = 24.dp,
             tint = IndianaTheme.colorScheme.contentColorFor(backgroundColor),
             modifier = Modifier
                 .background(
@@ -680,9 +676,9 @@ private fun BuildDetailsError(
             .fillMaxWidth()
             .padding(16.dp),
     ) {
-        Icon(
-            painter = rememberVectorPainter(Icons.Default.Error),
-            contentDescription = null,
+        MaterialIcon(
+            icon = Icons.Error,
+            size = 24.dp,
             tint = IndianaTheme.colorScheme.error
         )
         Text(

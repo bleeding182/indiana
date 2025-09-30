@@ -81,7 +81,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.navigation.compose.hilt)
     implementation(libs.androidx.paging.compose)
-    implementation(libs.androidx.material.icons)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.playservices.auth)
 

@@ -18,19 +18,11 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Block
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.ErrorOutline
-import androidx.compose.material.icons.filled.HourglassEmpty
-import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.VectorPainter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -46,8 +38,10 @@ import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
 import com.davidmedenjak.indiana.screens.build.BuildStatus
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
+import com.davidmedenjak.indiana.theme.ui.atoms.Icons
 import com.davidmedenjak.indiana.theme.ui.atoms.IndeterminateProgressCircular
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
+import com.davidmedenjak.indiana.theme.ui.atoms.MaterialIcon
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Surface
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
@@ -166,10 +160,11 @@ private fun Build(build: V0BuildResponseItemModel, modifier: Modifier = Modifier
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         val backgroundColor = buildBackgroundColor(build.status)
-        Icon(
-            buildDrawable(build.status),
-            contentDescription = build.status.toString(), // fixme
+        MaterialIcon(
+            icon = buildDrawable(build.status),
+//            contentDescription = build.status.toString(), // fixme
             tint = IndianaTheme.colorScheme.contentColorFor(backgroundColor),
+            size = 40.dp,
             modifier = Modifier
                 .background(
                     color = backgroundColor,
@@ -272,15 +267,12 @@ private fun BuildLoader(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun buildDrawable(status: Int?): VectorPainter {
-    val icon = when (status) {
-        BuildStatus.NotFinished -> Icons.Default.HourglassEmpty
-        BuildStatus.Successful -> Icons.Default.Check
-        BuildStatus.Failed -> Icons.Default.ErrorOutline
-        BuildStatus.AbortedWithFailure, BuildStatus.AbortedWithSuccess -> Icons.Default.Block
-        else -> Icons.Default.QuestionMark
-    }
-    return rememberVectorPainter(icon)
+private fun buildDrawable(status: Int?): String = when (status) {
+    BuildStatus.NotFinished -> Icons.HourglassEmpty
+    BuildStatus.Successful -> Icons.Check
+    BuildStatus.Failed -> Icons.ErrorOutline
+    BuildStatus.AbortedWithFailure, BuildStatus.AbortedWithSuccess -> Icons.Block
+    else -> Icons.QuestionMark
 }
 
 @Composable

@@ -22,9 +22,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -53,7 +50,9 @@ import com.davidmedenjak.indiana.theme.ui.atoms.DropdownMenu
 import com.davidmedenjak.indiana.theme.ui.atoms.DropdownMenuItem
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.IconButton
+import com.davidmedenjak.indiana.theme.ui.atoms.Icons
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
+import com.davidmedenjak.indiana.theme.ui.atoms.MaterialIcon
 import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Sticky
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
@@ -129,9 +128,9 @@ fun ProjectsScreen(
                         var expanded by remember { mutableStateOf(false) }
                         Box {
                             IconButton(onClick = { expanded = !expanded }) {
-                                Icon(
-                                    Icons.Default.MoreVert,
-                                    contentDescription = stringResource(R.string.navigation_more_options_description)
+                                MaterialIcon(
+                                    icon = Icons.MoreVert,
+                                    size = 24.dp,
                                 )
                             }
                             if (hasUpdateForMoreThanThreeDays) {

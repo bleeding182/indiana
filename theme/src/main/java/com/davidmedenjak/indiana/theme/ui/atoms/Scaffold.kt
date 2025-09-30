@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -35,6 +33,7 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.davidmedenjak.indiana.theme.R
 import androidx.compose.material3.Scaffold as M3Scaffold
 
@@ -46,9 +45,10 @@ interface TopBarScope {
 interface NavigationIconScope {
     @Composable
     fun Up(navigateUp: () -> Unit) = IconButton(onClick = navigateUp) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = stringResource(R.string.navigation_back_description),
+        MaterialIcon(
+            icon = Icons.arrowBack,
+            size = 24.dp,
+//            contentDescription = stringResource(R.string.navigation_back_description),
         )
     }
 }

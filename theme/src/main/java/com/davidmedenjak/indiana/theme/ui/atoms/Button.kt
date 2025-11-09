@@ -1,8 +1,7 @@
 package com.davidmedenjak.indiana.theme.ui.atoms
 
-import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -10,12 +9,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
+import com.davidmedenjak.indiana.theme.ui.preview.PressedInteractionSource
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
-import kotlinx.coroutines.flow.flowOf
 import androidx.compose.material3.Button as M3Button
 import androidx.compose.material3.TextButton as M3TextButton
 
@@ -71,36 +69,20 @@ fun Button(
 private fun Preview() {
     PreviewSurface {
         Column {
-            Row {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = {}, text = "Action")
 
                 Button(
                     onClick = {}, text = "Action",
-                    interactionSource = remember {
-                        object : MutableInteractionSource {
-                            override val interactions =
-                                flowOf(PressInteraction.Press(Offset(5f, 5f)))
-
-                            override suspend fun emit(interaction: Interaction) = Unit
-                            override fun tryEmit(interaction: Interaction): Boolean = false
-                        }
-                    }
+                    interactionSource = PressedInteractionSource,
                 )
             }
-            Row {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 TextButton(onClick = {}, text = "Action")
 
                 TextButton(
                     onClick = {}, text = "Action",
-                    interactionSource = remember {
-                        object : MutableInteractionSource {
-                            override val interactions =
-                                flowOf(PressInteraction.Press(Offset(5f, 5f)))
-
-                            override suspend fun emit(interaction: Interaction) = Unit
-                            override fun tryEmit(interaction: Interaction): Boolean = false
-                        }
-                    }
+                    interactionSource = PressedInteractionSource,
                 )
             }
         }

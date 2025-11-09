@@ -1,7 +1,7 @@
 package com.davidmedenjak.indiana.screens.project
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import com.davidmedenjak.indiana.AppBackStack.RequiresLogin
 import com.davidmedenjak.indiana.analytics.ScreenTrackable

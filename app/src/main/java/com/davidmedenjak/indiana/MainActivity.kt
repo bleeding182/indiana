@@ -15,12 +15,9 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntryDecorator
-import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.navEntryDecorator
-import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.davidmedenjak.indiana.analytics.ScreenTrackable
 import com.davidmedenjak.indiana.screens.about.AboutGraph
 import com.davidmedenjak.indiana.screens.about.AboutRoute
@@ -85,8 +82,7 @@ class MainActivity : ComponentActivity() {
                         onBack = { appBackStack.remove() },
                         entryDecorators = listOf(
                             rememberAnalyticsScreenViewEntryDecorator(),
-                            rememberSceneSetupNavEntryDecorator(),
-                            rememberSavedStateNavEntryDecorator(),
+                            rememberSaveableStateHolderNavEntryDecorator(),
                             rememberViewModelStoreNavEntryDecorator()
                         ),
                         entryProvider = entryProvider {
@@ -179,7 +175,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun rememberAnalyticsScreenViewEntryDecorator(): NavEntryDecorator<in Any> = remember {
-    navEntryDecorator { entry ->
+    NavEntryDecorator { entry ->
         val key = entry.contentKey
         if (key is ScreenTrackable) {
             var lastScreen by remember { mutableStateOf<Any?>(null) }

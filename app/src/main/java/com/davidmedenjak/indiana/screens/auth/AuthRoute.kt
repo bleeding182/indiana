@@ -14,7 +14,7 @@ import androidx.credentials.GetPasswordOption
 import androidx.credentials.PasswordCredential
 import androidx.credentials.exceptions.CreateCredentialException
 import androidx.credentials.exceptions.GetCredentialException
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation3.runtime.NavKey
 import com.davidmedenjak.indiana.analytics.ScreenTrackable

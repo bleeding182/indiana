@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -26,7 +27,6 @@ import com.davidmedenjak.indiana.theme.ui.atoms.Button
 import com.davidmedenjak.indiana.theme.ui.atoms.Card
 import com.davidmedenjak.indiana.theme.ui.atoms.DropdownMenu
 import com.davidmedenjak.indiana.theme.ui.atoms.DropdownMenuItem
-import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.IconButton
 import com.davidmedenjak.indiana.theme.ui.atoms.Icons
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
@@ -53,7 +53,7 @@ fun AuthScreen(
                     IconButton(onClick = { expanded = !expanded }) {
                         MaterialIcon(
                             icon = Icons.MoreVert,
-                            size = 24.dp,
+                            modifier = Modifier.size(24.dp),
                         )
                     }
                     DropdownMenu(

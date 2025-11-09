@@ -26,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -47,7 +46,6 @@ import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Button
 import com.davidmedenjak.indiana.theme.ui.atoms.Card
-import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.IconButton
 import com.davidmedenjak.indiana.theme.ui.atoms.Icons
 import com.davidmedenjak.indiana.theme.ui.atoms.LargeFlexible
@@ -120,7 +118,7 @@ fun BuildDetailScreen(
                         }) {
                             MaterialIcon(
                                 icon = Icons.Stop,
-                                size = 24.dp,
+                                modifier = Modifier.size(24.dp),
                                 tint = IndianaTheme.colorScheme.error,
                             )
                         }
@@ -139,7 +137,7 @@ fun BuildDetailScreen(
                         }) {
                             MaterialIcon(
                                 icon = Icons.Refresh,
-                                size = 24.dp,
+                                modifier = Modifier.size(24.dp),
                                 tint = IndianaTheme.colorScheme.primary,
                             )
                         }
@@ -314,7 +312,6 @@ private fun Artifact(
                 val backgroundColor = IndianaTheme.colorScheme.primaryContainer
                 MaterialIcon(
                     icon = Icons.InstallMobile,
-                    size = 24.dp,
                     tint = IndianaTheme.colorScheme.contentColorFor(backgroundColor),
                     modifier = Modifier
                         .background(
@@ -430,7 +427,6 @@ private fun SimpleArtifact(
         val backgroundColor = IndianaTheme.colorScheme.surfaceContainer
         MaterialIcon(
             icon = Icons.FilePresent,
-            size = 24.dp,
             tint = IndianaTheme.colorScheme.contentColorFor(backgroundColor),
             modifier = Modifier
                 .background(
@@ -678,7 +674,7 @@ private fun BuildDetailsError(
     ) {
         MaterialIcon(
             icon = Icons.Error,
-            size = 24.dp,
+            modifier = Modifier.size(24.dp),
             tint = IndianaTheme.colorScheme.error
         )
         Text(

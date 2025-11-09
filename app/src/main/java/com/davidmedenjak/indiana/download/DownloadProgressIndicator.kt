@@ -35,7 +35,7 @@ fun DownloadProgressIndicator(
         is DownloadState.Completed -> {
             MaterialIcon(
                 icon = Icons.arrowCircleDown,
-                size = 24.dp,
+                modifier = Modifier.size(24.dp),
             )
         }
 

@@ -28,7 +28,6 @@ import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Button
 import com.davidmedenjak.indiana.theme.ui.atoms.Card
 import com.davidmedenjak.indiana.theme.ui.atoms.ExposedDropdownTextField
-import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.Icons
 import com.davidmedenjak.indiana.theme.ui.atoms.IndeterminateProgressCircular
 import com.davidmedenjak.indiana.theme.ui.atoms.MaterialIcon
@@ -128,7 +127,7 @@ private fun StorageUsageCard(
             ) {
                 MaterialIcon(
                     icon = Icons.Storage,
-                    size = 24.dp,
+                    modifier = Modifier.size(24.dp),
                     tint = IndianaTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.width(12.dp))
@@ -229,7 +228,7 @@ private fun DownloadManagementCard(
                     } else {
                         MaterialIcon(
                             icon = Icons.PlayArrow,
-                            size = 24.dp,
+                            modifier = Modifier.size(24.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(stringResource(R.string.download_cleanup_button_cleanup))
@@ -246,7 +245,7 @@ private fun DownloadManagementCard(
                     } else {
                         MaterialIcon(
                             icon = Icons.Delete,
-                            size = 24.dp,
+                            modifier = Modifier.size(24.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(stringResource(R.string.download_cleanup_button_clear_all))

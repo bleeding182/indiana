@@ -164,7 +164,6 @@ private fun Build(build: V0BuildResponseItemModel, modifier: Modifier = Modifier
             icon = buildDrawable(build.status),
 //            contentDescription = build.status.toString(), // fixme
             tint = IndianaTheme.colorScheme.contentColorFor(backgroundColor),
-            size = 40.dp,
             modifier = Modifier
                 .background(
                     color = backgroundColor,

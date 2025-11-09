@@ -130,7 +130,7 @@ fun ProjectsScreen(
                             IconButton(onClick = { expanded = !expanded }) {
                                 MaterialIcon(
                                     icon = Icons.MoreVert,
-                                    size = 24.dp,
+                                    modifier = Modifier.size(24.dp),
                                 )
                             }
                             if (hasUpdateForMoreThanThreeDays) {

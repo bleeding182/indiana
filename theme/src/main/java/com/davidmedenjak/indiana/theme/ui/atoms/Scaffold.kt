@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -47,7 +48,7 @@ interface NavigationIconScope {
     fun Up(navigateUp: () -> Unit) = IconButton(onClick = navigateUp) {
         MaterialIcon(
             icon = Icons.arrowBack,
-            size = 24.dp,
+            modifier = Modifier.size(24.dp),
 //            contentDescription = stringResource(R.string.navigation_back_description),
         )
     }

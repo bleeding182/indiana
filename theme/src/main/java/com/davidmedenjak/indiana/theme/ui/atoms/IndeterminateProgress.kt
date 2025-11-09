@@ -38,7 +38,7 @@ fun DeterministicProgress(
     progress: () -> Float,
     modifier: Modifier = Modifier
 ) = Box(contentAlignment = Alignment.Center, modifier = modifier.size(24.dp)) {
-    MaterialIcon(Icons.arrowCircleDown, size = 24.dp)
+    MaterialIcon(Icons.arrowCircleDown, Modifier.size(24.dp))
     CircularWavyProgressIndicator(
         progress = progress,
         modifier = Modifier.size(20.dp),

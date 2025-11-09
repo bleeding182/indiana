@@ -37,8 +37,7 @@ openApiGenerate {
 
 android {
     namespace = "com.davidmedenjak.api"
-    compileSdk = 35
-    buildToolsVersion = "36.0.0"
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24

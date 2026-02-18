@@ -7,6 +7,14 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/deviceManager.xml
+/.idea/render.experimental.xml
+/.idea/studiobot.xml
+/.idea/markdown.xml
+/.idea/AndroidProjectSystem.xml
+/.kotlin/
+/.claude/settings.local.json
 .DS_Store
 /build
 **/build/
@@ -14,4 +22,3 @@
 /captures
 .externalNativeBuild
 .cxx
-local.properties

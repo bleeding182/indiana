@@ -20,7 +20,6 @@ androidx-navigation3-lifecycle = "1.0.0-alpha04"
 kotlinx-serialization = "1.9.0"
 coil = "3.3.0"
 dagger = "2.57.2"
-moshi = "1.15.2"
 okhttp = "5.3.0"
 retrofit = "3.0.0"
 play-app-update = "2.1.0"
@@ -93,9 +92,6 @@ okhttp-bom = { module = "com.squareup.okhttp3:okhttp-bom", version.ref = "okhttp
 okhttp = { module = "com.squareup.okhttp3:okhttp" }
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-retrofit-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
-moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
-moshi-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 
 # Image Loading
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }

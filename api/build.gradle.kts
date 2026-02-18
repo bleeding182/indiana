@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.openapi.generator)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
     id("indiana.convention")
 }
 
@@ -17,11 +17,21 @@ openApiGenerate {
     generateModelDocumentation = false
     generateModelTests = false
 //    cleanupOutput = true
+    typeMappings.putAll(
+        mapOf(
+            "object" to "JsonElement",
+            "AnyType" to "JsonElement",
+        )
+    )
+    importMappings.putAll(
+        mapOf(
+            "JsonElement" to "kotlinx.serialization.json.JsonElement",
+        )
+    )
     additionalProperties.putAll(
         mapOf(
             "library" to "jvm-retrofit2",
-            "serializationLibrary" to "moshi",
-            "moshiCodeGen" to "true",
+            "serializationLibrary" to "kotlinx_serialization",
             "useCoroutines" to "true",
             "omitGradleWrapper" to "true",
             "sourceFolder" to "bitrise-swagger",
@@ -34,7 +44,7 @@ openApiGenerate {
 sourceSets["main"].kotlin.srcDir(layout.buildDirectory.dir("bitrise-swagger"))
 
 tasks.configureEach {
-    if (name == "kspKotlin" || this is org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>) {
+    if (this is org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>) {
         dependsOn("openApiGenerate")
     }
 }
@@ -42,7 +52,6 @@ tasks.configureEach {
 dependencies {
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
-    implementation(libs.moshi)
-    ksp(libs.moshi.codegen)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
 }

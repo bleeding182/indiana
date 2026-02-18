@@ -2,16 +2,15 @@ package com.davidmedenjak.indiana.api
 
 import com.davidmedenjak.indiana.BuildConfig
 import com.davidmedenjak.indiana.session.SessionManager
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Named
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -53,16 +52,17 @@ class HttpModule {
 
     @Singleton
     @Provides
-    fun provideMoshi() = Moshi.Builder()
-        .build()
+    fun provideJson() = Json {
+        ignoreUnknownKeys = true
+    }
 
     @Singleton
     @Provides
     fun provideRetrofit(
-        moshi: Moshi,
+        json: Json,
         okHttpClient: Provider<OkHttpClient>
     ) = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addConverterFactory(StreamingKotlinxSerializationConverterFactory(json))
         .callFactory { okHttpClient.get().newCall(it) }
         .baseUrl("https://api.bitrise.io/v0.1/")
         .build()
@@ -71,10 +71,10 @@ class HttpModule {
     @Provides
     @Named("Authorized")
     fun provideAuthorizedRetrofit(
-        moshi: Moshi,
+        json: Json,
         @Named("Authorized") okHttpClient: Provider<OkHttpClient>
     ) = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addConverterFactory(StreamingKotlinxSerializationConverterFactory(json))
         .callFactory { okHttpClient.get().newCall(it) }
         .baseUrl("https://api.bitrise.io/v0.1/")
         .build()
@@ -108,4 +108,3 @@ class HttpModule {
     fun provideAuthApi(retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
 
 }
-

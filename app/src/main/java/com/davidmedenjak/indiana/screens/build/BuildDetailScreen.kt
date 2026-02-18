@@ -49,6 +49,12 @@ import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.download.DownloadProgressIndicator
 import com.davidmedenjak.indiana.download.DownloadState
 import com.davidmedenjak.indiana.model.V0ArtifactListElementResponseModel
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonObject
 import com.davidmedenjak.indiana.model.V0BuildResponseItemModel
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Button
@@ -279,22 +285,15 @@ private fun Artifact(
 ) {
     val context = LocalContext.current
 
-    if (artifact.artifactMeta != null && artifact.artifactMeta is Map<*, *> && artifact.artifactType == "android-apk") {
-        val meta = artifact.artifactMeta as Map<*, *>
-        val product_flavour = meta["product_flavour"]
-        val build_type = meta["build_type"]
-        val signed_by = meta["signed_by"]?.toString()
-//        val module = meta["module"]
-//        val file_size_bytes = meta["file_size_bytes"]
-//        val include = meta["include"]
-//        val universal = meta["universal"]
-//        val aab = meta["aab"]
-//        val apk = meta["apk"]
-//        val split = meta["split"]
-        (meta["app_info"] as? Map<*, *>)?.let { info ->
-            val app_name = info["app_name"]
-            val package_name = info["package_name"]
-            val version_name = info["version_name"]
+    val metaObj = artifact.artifactMeta as? JsonObject
+    if (metaObj != null && artifact.artifactType == "android-apk") {
+        val product_flavour = metaObj["product_flavour"]?.jsonPrimitive?.contentOrNull
+        val build_type = metaObj["build_type"]?.jsonPrimitive?.contentOrNull
+        val signed_by = metaObj["signed_by"]?.jsonPrimitive?.contentOrNull
+        (metaObj["app_info"] as? JsonObject)?.let { info ->
+            val app_name = info["app_name"]?.jsonPrimitive?.contentOrNull
+            val package_name = info["package_name"]?.jsonPrimitive?.contentOrNull
+            val version_name = info["version_name"]?.jsonPrimitive?.contentOrNull
 //            val version_code = info["version_code"]
 //            val min_sdk_version = info["min_sdk_version"]
 
@@ -712,16 +711,16 @@ private fun Preview() {
                 ),
                 downloadState = null,
             )
-            val meta = hashMapOf(
-                "product_flavour" to "",
-                "build_type" to "debug",
-                "signed_by" to "C=US, O=Android, CN=Android Debug",
-                "app_info" to hashMapOf(
-                    "app_name" to "Apk App",
-                    "package_name" to "com.foo.app",
-                    "version_name" to "1.0.0",
-                ),
-            )
+            val meta = buildJsonObject {
+                put("product_flavour", "")
+                put("build_type", "debug")
+                put("signed_by", "C=US, O=Android, CN=Android Debug")
+                putJsonObject("app_info") {
+                    put("app_name", "Apk App")
+                    put("package_name", "com.foo.app")
+                    put("version_name", "1.0.0")
+                }
+            }
             Artifact(
                 V0ArtifactListElementResponseModel(
                     title = "ApkApp.apk",

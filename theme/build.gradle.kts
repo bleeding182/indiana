@@ -25,5 +25,6 @@ dependencies {
     implementation(libs.androidx.material.icons)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    lintChecks(project(":lint"))
     debugImplementation(libs.androidx.ui.tooling)
 }

@@ -27,3 +27,4 @@ rootProject.name = "Indiana"
 include(":app")
 include(":api")
 include(":theme")
+include(":lint")

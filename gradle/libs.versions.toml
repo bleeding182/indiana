@@ -30,6 +30,7 @@ firebase-crashlytics-plugin = "3.0.6"
 firebase-performance-plugin = "2.0.2"
 google-services = "4.4.4"
 openapi-generator = "7.17.0"
+lint = "32.0.1"
 junit = "4.13.2"
 
 [libraries]
@@ -120,6 +121,11 @@ desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref 
 # Build Convention Plugin
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+# Lint
+lint-api = { module = "com.android.tools.lint:lint-api", version.ref = "lint" }
+lint-checks = { module = "com.android.tools.lint:lint-checks", version.ref = "lint" }
+lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint" }
 
 # Test
 junit = { module = "junit:junit", version.ref = "junit" }

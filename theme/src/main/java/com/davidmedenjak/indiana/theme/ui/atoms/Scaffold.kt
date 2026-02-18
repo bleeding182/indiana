@@ -19,10 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ScaffoldDefaults
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -45,7 +41,11 @@ import androidx.compose.ui.unit.dp
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.R
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewScreen
+import androidx.compose.material3.Icon as M3Icon
+import androidx.compose.material3.IconButton as M3IconButton
 import androidx.compose.material3.Scaffold as M3Scaffold
+import androidx.compose.material3.ScaffoldDefaults as M3ScaffoldDefaults
+import androidx.compose.material3.TopAppBarDefaults as M3TopAppBarDefaults
 
 interface TopBarScope {
     val scrollBehavior: TopAppBarScrollBehavior
@@ -54,8 +54,8 @@ interface TopBarScope {
 
 interface NavigationIconScope {
     @Composable
-    fun Up(navigateUp: () -> Unit) = IconButton(onClick = navigateUp) {
-        Icon(
+    fun Up(navigateUp: () -> Unit) = M3IconButton(onClick = navigateUp) {
+        M3Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = stringResource(R.string.navigation_back_description),
         )
@@ -72,7 +72,7 @@ fun TopBarScope.LargeFlexible(
     subtitle: (@Composable () -> Unit)? = null,
     navigationIcon: @Composable NavigationIconScope.() -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
+    windowInsets: WindowInsets = M3TopAppBarDefaults.windowInsets,
 ) = LargeFlexibleTopAppBar(
     title = title,
     modifier = modifier,
@@ -90,8 +90,8 @@ fun TopBarScope.Sticky(
     content: @Composable (() -> Unit)
 ) {
     val appBarContainerColor = lerp(
-        TopAppBarDefaults.topAppBarColors().containerColor,
-        TopAppBarDefaults.topAppBarColors().scrolledContainerColor,
+        M3TopAppBarDefaults.topAppBarColors().containerColor,
+        M3TopAppBarDefaults.topAppBarColors().scrolledContainerColor,
         FastOutLinearInEasing.transform(scrollBehavior.state.collapsedFraction),
     )
     Surface(
@@ -128,11 +128,11 @@ fun Scaffold(
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
-    contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
+    contentWindowInsets: WindowInsets = M3ScaffoldDefaults.contentWindowInsets,
     pullToRefreshState: PullToRefreshState? = null,
     content: @Composable (PaddingValues) -> Unit
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val scrollBehavior = M3TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     val state = rememberPullToRefreshState()
     val isRefreshing = pullToRefreshState?.isRefreshing == true
@@ -204,9 +204,11 @@ private fun Preview() {
                         navigationIcon = { Up {} },
                     )
                     Sticky {
-                        Text("Some more text", modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth())
+                        Text(
+                            "Some more text", modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth()
+                        )
                     }
                 }
             },

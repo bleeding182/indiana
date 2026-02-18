@@ -1,7 +1,7 @@
 [versions]
-agp = "8.13.0"
+agp = "9.0.1"
 kotlin = "2.2.20"
-kotlin-ksp = "2.2.20-2.0.3"
+kotlin-ksp = "2.3.2"
 desugar-jdk-libs = "2.1.5"
 androidx-core-ktx = "1.17.0"
 androidx-activity-compose = "1.11.0"
@@ -117,6 +117,10 @@ play-app-update-ktx = { module = "com.google.android.play:app-update-ktx", versi
 # Build Tools
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 
+# Build Convention Plugin
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
 # Test
 junit = { module = "junit:junit", version.ref = "junit" }
 
@@ -124,6 +128,7 @@ junit = { module = "junit:junit", version.ref = "junit" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }

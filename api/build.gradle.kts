@@ -1,11 +1,8 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
-
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.openapi.generator)
     alias(libs.plugins.ksp)
+    id("indiana.convention")
 }
 
 openApiGenerate {
@@ -32,35 +29,17 @@ openApiGenerate {
             "useResponseAsReturnType" to "false",
         )
     )
-
 }
 
-android {
-    namespace = "com.davidmedenjak.api"
-    compileSdk = 36
+sourceSets["main"].kotlin.srcDir(layout.buildDirectory.dir("bitrise-swagger"))
 
-    defaultConfig {
-        minSdk = 24
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.fromTarget(JavaVersion.VERSION_17.toString())
-        }
-    }
-    sourceSets["main"].kotlin.srcDirs(project.layout.buildDirectory.dir("bitrise-swagger"))
-    tasks.preBuild {
-        dependsOn(tasks.withType<GenerateTask>())
+tasks.configureEach {
+    if (name == "kspKotlin" || this is org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>) {
+        dependsOn("openApiGenerate")
     }
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
     implementation(libs.moshi)

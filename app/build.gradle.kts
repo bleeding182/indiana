@@ -1,7 +1,6 @@
 @file:OptIn(KspExperimental::class)
 
 import com.google.devtools.ksp.KspExperimental
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
@@ -13,15 +12,14 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.performance)
+    id("indiana.convention")
 }
 
 android {
     namespace = "com.davidmedenjak.indiana"
-    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.davidmedenjak.indiana"
-        minSdk = 24
         targetSdk = 36
         versionCode = 19
         versionName = "1.3.2"
@@ -39,14 +37,7 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.fromTarget(JavaVersion.VERSION_17.toString())
-        }
     }
     buildFeatures {
         compose = true

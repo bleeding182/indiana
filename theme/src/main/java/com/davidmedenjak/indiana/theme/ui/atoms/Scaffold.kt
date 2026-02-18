@@ -4,12 +4,17 @@ package com.davidmedenjak.indiana.theme.ui.atoms
 
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,7 +40,11 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
+import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.R
+import com.davidmedenjak.indiana.theme.ui.preview.PreviewScreen
 import androidx.compose.material3.Scaffold as M3Scaffold
 
 interface TopBarScope {
@@ -181,3 +190,48 @@ fun Scaffold(
         }
     }
 }
+
+@Composable
+@PreviewLightDark
+private fun Preview() {
+    PreviewScreen {
+        Scaffold(
+            topBar = {
+                Column {
+                    LargeFlexible(
+                        title = { Text("Projects") },
+                        subtitle = { Text("3 projects") },
+                        navigationIcon = { Up {} },
+                    )
+                    Sticky {
+                        Text("Some more text", modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth())
+                    }
+                }
+            },
+        ) { paddingValues ->
+            LazyColumn(contentPadding = paddingValues) {
+                (0..24).forEach { _ ->
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(64.dp)
+                                .background(IndianaTheme.colorScheme.secondaryContainer)
+                        )
+                    }
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(64.dp)
+                                .background(IndianaTheme.colorScheme.primaryContainer)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+

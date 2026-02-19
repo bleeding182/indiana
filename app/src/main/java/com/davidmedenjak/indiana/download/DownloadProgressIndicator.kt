@@ -3,10 +3,12 @@ package com.davidmedenjak.indiana.download
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowCircleDown
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
+import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.DeterministicProgress
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.IndeterminateProgress
@@ -41,7 +43,12 @@ fun DownloadProgressIndicator(
         }
 
         is DownloadState.Failed -> {
-            // Show error indicator or hide progress
+            Icon(
+                modifier = Modifier.size(24.dp),
+                painter = rememberVectorPainter(Icons.Default.Error),
+                contentDescription = null,
+                tint = IndianaTheme.colorScheme.error,
+            )
         }
 
         null -> {

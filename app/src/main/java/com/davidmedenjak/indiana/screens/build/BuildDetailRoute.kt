@@ -36,9 +36,14 @@ fun BuildDetailRoute(
     viewModel.navKey = navKey
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-
     LaunchedEffect(navKey) {
         viewModel.loadBuildDetails()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.downloadErrors.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        }
     }
 
     val newBuild by viewModel.newlyStartedBuild.collectAsState()
@@ -70,17 +75,11 @@ fun BuildDetailRoute(
             scope.launch {
                 val result = viewModel.handleArtifactClick(artifact)
                 when (result) {
-                    is ArtifactClickResult.DownloadStarted -> {
-                        Toast.makeText(context, "Download started", Toast.LENGTH_SHORT).show()
-                    }
-                    is ArtifactClickResult.DownloadInProgress -> {
-                        Toast.makeText(context, "Download already in progress", Toast.LENGTH_SHORT).show()
-                    }
-                    is ArtifactClickResult.FileOpened -> {
-                        // File was opened successfully, no toast needed
-                    }
+                    is ArtifactClickResult.DownloadStarted -> {}
+                    is ArtifactClickResult.DownloadInProgress -> {}
+                    is ArtifactClickResult.FileOpened -> {}
                     is ArtifactClickResult.Error -> {
-                        Toast.makeText(context, "Error: ${result.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
                     }
                 }
             }

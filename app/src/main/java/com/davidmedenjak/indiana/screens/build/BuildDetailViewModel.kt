@@ -28,7 +28,10 @@ import com.davidmedenjak.indiana.model.V0BuildTriggerParams
 import com.davidmedenjak.indiana.model.V0BuildTriggerParamsBuildParams
 import com.davidmedenjak.indiana.model.V0BuildTriggerParamsHookInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -59,6 +62,9 @@ class BuildDetailViewModel @Inject constructor(
 
     // Track which download should auto-open (only one at a time)
     private var autoOpenDownloadId by mutableStateOf<String?>(null)
+
+    private val _downloadErrors = Channel<String>(BUFFERED)
+    val downloadErrors: Flow<String> = _downloadErrors.receiveAsFlow()
 
     val pagedArtifacts = Pager(
         PagingConfig(pageSize = 15, initialLoadSize = 20)
@@ -167,22 +173,16 @@ class BuildDetailViewModel @Inject constructor(
             putString(FirebaseAnalytics.Param.SOURCE, source)
         })
         
-        // If we started a new download and it's an APK, set up auto-open
-        if (result is ArtifactClickResult.DownloadStarted && 
-            artifact.title?.endsWith(".apk", ignoreCase = true) == true) {
-            
-            // Clear any existing auto-open download
-            autoOpenDownloadId = null
-            
-            // Set this download for auto-open
-            autoOpenDownloadId = result.downloadId
-            
-            // Start monitoring this download for completion
+        if (result is ArtifactClickResult.DownloadStarted) {
+            val isApk = artifact.title?.endsWith(".apk", ignoreCase = true) == true
+            if (isApk) {
+                autoOpenDownloadId = result.downloadId
+            }
             viewModelScope.launch {
-                monitorDownloadForAutoOpen(result.downloadId)
+                monitorDownload(result.downloadId, artifact.title ?: "Download", isApk)
             }
         }
-        
+
         return result
     }
 
@@ -194,22 +194,31 @@ class BuildDetailViewModel @Inject constructor(
         return downloadManager.getDownloadsByBuild(navKey.buildSlug)
     }
     
-    private suspend fun monitorDownloadForAutoOpen(downloadId: String) {
+    private suspend fun monitorDownload(downloadId: String, fileName: String, isApk: Boolean) {
         try {
-            val completedDownload = downloadManager.getDownloadById(downloadId)
-                .filterIsInstance<DownloadState.Completed>()
-                .first()
-                
-            // Check if this download is still the one we want to auto-open
-            if (autoOpenDownloadId == downloadId) {
-                // Auto-install the completed APK
-                fileOpener.installApk(application, completedDownload.localPath)
-                // Clear the auto-open tracking
-                autoOpenDownloadId = null
+            val terminal = downloadManager.getDownloadById(downloadId)
+                .filterIsInstance<DownloadState>()
+                .first { it is DownloadState.Completed || it is DownloadState.Failed }
+
+            when (terminal) {
+                is DownloadState.Completed -> {
+                    if (isApk && autoOpenDownloadId == downloadId) {
+                        fileOpener.installApk(application, terminal.localPath)
+                        autoOpenDownloadId = null
+                    }
+                }
+                is DownloadState.Failed -> {
+                    _downloadErrors.trySend("$fileName: ${terminal.errorMessage}")
+                    if (autoOpenDownloadId == downloadId) {
+                        autoOpenDownloadId = null
+                    }
+                }
+                else -> {}
             }
         } catch (_: Exception) {
-            // If monitoring fails, just clear the auto-open tracking
-            autoOpenDownloadId = null
+            if (autoOpenDownloadId == downloadId) {
+                autoOpenDownloadId = null
+            }
         }
     }
     

@@ -1,34 +1,34 @@
 [versions]
 agp = "9.0.1"
-kotlin = "2.2.20"
-kotlin-ksp = "2.3.2"
+kotlin = "2.3.10"
+kotlin-ksp = "2.3.6"
 desugar-jdk-libs = "2.1.5"
 androidx-core-ktx = "1.17.0"
-androidx-activity-compose = "1.11.0"
-androidx-lifecycle = "2.9.4"
-androidx-compose-bom = "2025.11.00"
-androidx-compose-foundation = "1.9.4"
-androidx-credentials = "1.6.0-beta03"
-androidx-room = "2.8.3"
+androidx-activity-compose = "1.12.4"
+androidx-lifecycle = "2.10.0"
+androidx-compose-bom = "2026.02.00"
+androidx-compose-foundation = "1.10.3"
+androidx-credentials = "1.6.0-rc01"
+androidx-room = "2.8.4"
 androidx-core-splashscreen = "1.2.0"
-androidx-work = "2.11.0"
+androidx-work = "2.11.1"
 androidx-hilt = "1.3.0"
-androidx-paging = "3.3.6"
-androidx-navigation3 = "1.0.0-rc01"
+androidx-paging = "3.4.1"
+androidx-navigation3 = "1.0.1"
 androidx-navigation3-material = "1.0.0-alpha03"
-androidx-navigation3-lifecycle = "1.0.0-alpha04"
-kotlinx-serialization = "1.9.0"
+androidx-navigation3-lifecycle = "2.10.0"
+kotlinx-serialization = "1.10.0"
 coil = "3.3.0"
-dagger = "2.57.2"
-okhttp = "5.3.0"
+dagger = "2.59.1"
+okhttp = "5.3.2"
 retrofit = "3.0.0"
 play-app-update = "2.1.0"
-play-services-auth = "21.4.0"
-firebase-bom = "34.5.0"
+play-services-auth = "21.5.1"
+firebase-bom = "34.9.0"
 firebase-crashlytics-plugin = "3.0.6"
 firebase-performance-plugin = "2.0.2"
 google-services = "4.4.4"
-openapi-generator = "7.17.0"
+openapi-generator = "7.20.0"
 lint = "32.0.1"
 junit = "4.13.2"
 
@@ -61,12 +61,10 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 androidx-material3-navigation3 = { module = "androidx.compose.material3.adaptive:adaptive-navigation3", version.ref = "androidx-navigation3-material" }
 
 # Room
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 
 # Paging
-androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
 
 # Work
@@ -117,6 +115,9 @@ desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref 
 # Build Convention Plugin
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+# KSP
+ksp-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "kotlin-ksp" }
 
 # Lint
 lint-api = { module = "com.android.tools.lint:lint-api", version.ref = "lint" }

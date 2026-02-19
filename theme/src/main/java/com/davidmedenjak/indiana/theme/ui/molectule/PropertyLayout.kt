@@ -28,12 +28,17 @@ import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastSumBy
+import com.davidmedenjak.apidoc.Usage
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import kotlin.math.abs
 import kotlin.math.max
 
+@Usage(
+    "2 horizontal arranged slots that will wrap into two lines if they need to wrap. " +
+            "Intended for things like title/value pairs in lists."
+)
 @Composable
 fun PropertyLayout(
     modifier: Modifier = Modifier,
@@ -46,7 +51,7 @@ fun PropertyLayout(
     measurePolicy = PropertyLayoutMeasurePolicy(horizontalPadding, verticalPadding)
 )
 
-class PropertyLayoutMeasurePolicy(
+internal class PropertyLayoutMeasurePolicy(
     private val horizontalPadding: Dp,
     private val verticalPadding: Dp
 ) : MeasurePolicy {

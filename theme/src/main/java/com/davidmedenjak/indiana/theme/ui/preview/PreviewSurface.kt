@@ -7,6 +7,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.davidmedenjak.apidoc.Usage
 import com.davidmedenjak.indiana.theme.IndianaTheme
 
 internal object PreviewSurfaceDefaults {
@@ -14,6 +15,7 @@ internal object PreviewSurfaceDefaults {
     val PaddingNone = PaddingValues.Zero
 }
 
+@Usage("Wrap preview content with theme and padding")
 @Composable
 fun PreviewSurface(
     contentPadding: PaddingValues = PreviewSurfaceDefaults.PaddingDefault,

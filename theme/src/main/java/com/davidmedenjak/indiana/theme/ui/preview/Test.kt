@@ -32,7 +32,7 @@ import com.davidmedenjak.indiana.theme.ui.atoms.TextField
 
 @Preview(showSystemUi = true)
 @Composable
-fun TempInputWithUnitSelection() {
+private fun TempInputWithUnitSelection() {
     PreviewSurface(modifier = Modifier.fillMaxWidth()) {
         Row (
             modifier = Modifier.height(IntrinsicSize.Max).fillMaxWidth(),

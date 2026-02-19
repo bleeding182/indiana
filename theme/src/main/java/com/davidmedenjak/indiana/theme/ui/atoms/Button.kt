@@ -13,10 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.davidmedenjak.indiana.theme.ui.preview.PressedInteractionSource
+import com.davidmedenjak.apidoc.Usage
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
 import androidx.compose.material3.Button as M3Button
 import androidx.compose.material3.TextButton as M3TextButton
 
+@Usage("Use for secondary/dismissive actions")
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TextButton(

@@ -2,7 +2,13 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
     id("indiana.convention")
+}
+
+ksp {
+    arg("apidoc.outputDir", layout.buildDirectory.dir("generated/apidoc").get().asFile.absolutePath)
+    arg("apidoc.moduleRoot", projectDir.absolutePath)
 }
 
 android {
@@ -25,6 +31,8 @@ dependencies {
     implementation(libs.androidx.material.icons)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(project(":apidoc-annotations"))
+    ksp(project(":apidoc"))
     lintChecks(project(":lint"))
     debugImplementation(libs.androidx.ui.tooling)
 }

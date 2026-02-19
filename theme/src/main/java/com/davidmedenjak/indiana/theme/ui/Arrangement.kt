@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastRoundToInt
 
 @Stable
-fun Arrangement.percentage(percentage: Float = 0.25f) = object : Arrangement.HorizontalOrVertical {
+internal fun Arrangement.percentage(percentage: Float = 0.25f) = object : Arrangement.HorizontalOrVertical {
     override val spacing = 0.dp
 
     override fun Density.arrange(

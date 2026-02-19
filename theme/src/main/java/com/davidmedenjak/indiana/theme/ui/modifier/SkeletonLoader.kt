@@ -51,7 +51,7 @@ import kotlin.math.sqrt
  * This gives you access to individual metrics like ascent, descent, etc.
  */
 @Composable
-fun getTextMetrics(textStyle: TextStyle): TextMetrics {
+internal fun getTextMetrics(textStyle: TextStyle): TextMetrics {
     val density = LocalDensity.current
 
     return with(density) {
@@ -88,7 +88,7 @@ fun getTextMetrics(textStyle: TextStyle): TextMetrics {
 /**
  * Data class containing typography metrics for text skeleton calculations.
  */
-data class TextMetrics(
+internal data class TextMetrics(
     val fontSize: Dp,
     val lineHeight: Dp,     // Full line height including leading
     val ascent: Dp,         // Distance from baseline to top of tallest characters
@@ -143,7 +143,7 @@ fun Modifier.textSkeletonLoader(
 /**
  * CompositionLocal for providing a base timestamp for skeleton animation synchronization
  */
-val LocalSkeletonBaseTime = staticCompositionLocalOf<Long?> { null }
+internal val LocalSkeletonBaseTime = staticCompositionLocalOf<Long?> { null }
 
 /**
  * Provider component that sets a base timestamp for skeleton animation synchronization.
@@ -152,7 +152,7 @@ val LocalSkeletonBaseTime = staticCompositionLocalOf<Long?> { null }
  * @param baseTime Optional custom base timestamp. If null, uses current time.
  */
 @Composable
-fun SkeletonTimeProvider(
+internal fun SkeletonTimeProvider(
     baseTime: Long? = null,
     content: @Composable () -> Unit
 ) {
@@ -331,7 +331,7 @@ private fun lerp(start: Color, stop: Color, fraction: Float): Color {
 // Preview composable to demonstrate the skeleton loader with synchronized animation
 @Preview(showBackground = true)
 @Composable
-fun SkeletonLoaderPreview() {
+private fun SkeletonLoaderPreview() {
     MaterialTheme {
         // Wrap content in SkeletonTimeProvider for synchronized animations
         SkeletonTimeProvider {

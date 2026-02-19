@@ -38,7 +38,7 @@ internal val LocalShapes = staticCompositionLocalOf { Shapes() }
 internal val LocalColorScheme = staticCompositionLocalOf { ColorScheme(LightColorScheme) }
 
 @Immutable
-class Shapes(val shapes: M3Shapes = M3Shapes()) {
+class Shapes(internal val shapes: M3Shapes = M3Shapes()) {
     // Shapes None and Full are omitted as None is a RectangleShape and Full is a CircleShape.
     val extraSmall: CornerBasedShape = shapes.extraSmall
     val small: CornerBasedShape = shapes.small
@@ -48,7 +48,7 @@ class Shapes(val shapes: M3Shapes = M3Shapes()) {
 }
 
 @Immutable
-class Typography(val typography: M3Typography = M3Typography()) {
+class Typography(internal val typography: M3Typography = M3Typography()) {
     val displayLarge: TextStyle = typography.displayLarge
     val displayMedium: TextStyle = typography.displayMedium
     val displaySmall: TextStyle = typography.displaySmall
@@ -67,7 +67,7 @@ class Typography(val typography: M3Typography = M3Typography()) {
 }
 
 @Immutable
-class ColorScheme(val colorScheme: M3ColorScheme) {
+class ColorScheme(internal val colorScheme: M3ColorScheme) {
     val primary: Color = colorScheme.primary
     val onPrimary: Color = colorScheme.onPrimary
     val primaryContainer: Color = colorScheme.primaryContainer

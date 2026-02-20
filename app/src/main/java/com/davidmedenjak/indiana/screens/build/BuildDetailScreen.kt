@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -66,6 +67,7 @@ import com.davidmedenjak.indiana.theme.ui.atoms.Scaffold
 import com.davidmedenjak.indiana.theme.ui.atoms.Surface
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.atoms.TextButton
+import com.davidmedenjak.indiana.theme.ui.atoms.TextField
 import com.davidmedenjak.indiana.theme.ui.atoms.contentEmpty
 import com.davidmedenjak.indiana.theme.ui.atoms.contentError
 import com.davidmedenjak.indiana.theme.ui.atoms.pageError
@@ -74,9 +76,11 @@ import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
 import com.davidmedenjak.indiana.theme.ui.modifier.skeletonLoader
 import com.davidmedenjak.indiana.theme.ui.modifier.textSkeletonLoader
 import com.davidmedenjak.indiana.theme.ui.molectule.Confirmation
+import com.davidmedenjak.indiana.theme.ui.molectule.Input
+import com.davidmedenjak.indiana.theme.ui.molectule.rememberDialogState
+import com.davidmedenjak.indiana.theme.ui.molectule.show
 import com.davidmedenjak.indiana.theme.ui.molectule.PropertyLayout
-import com.davidmedenjak.indiana.theme.ui.molectule.rememberConfirmationDialogState
-import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
+import com.davidmedenjak.indiana.theme.ui.preview.PreviewScreen
 import com.google.firebase.Firebase
 import com.google.firebase.crashlytics.crashlytics
 import com.google.firebase.crashlytics.recordException
@@ -107,7 +111,8 @@ fun BuildDetailScreen(
         onRefresh = projects::refresh
     )
 
-    val confirmationDialogState = rememberConfirmationDialogState()
+    val abortDialog = rememberAbortBuildDialog(onAbortBuild = onAbortBuild)
+    val restartDialog = rememberRestartBuildDialog(onRestartBuild = onRestartBuild)
 
     Scaffold(
         pullToRefreshState = pullToRefreshState,
@@ -116,18 +121,8 @@ fun BuildDetailScreen(
                 title = { Text(buildName) },
                 subtitle = { Text(projectName) },
                 actions = {
-                    val context = LocalContext.current
                     if (buildDetails?.status == BuildStatus.NotFinished) {
-                        IconButton(onClick = {
-                            confirmationDialogState.confirm(
-                                Confirmation(
-                                    title = context.getString(R.string.build_detail_confirmation_dialog_abort_build_title),
-                                    text = context.getString(R.string.build_detail_confirmation_dialog_abort_build_text),
-                                    action = context.getString(R.string.build_detail_confirmation_dialog_abort_build_action_abort),
-                                    callback = { onAbortBuild(null) }
-                                ),
-                            )
-                        }) {
+                        IconButton(onClick = { abortDialog.show() }) {
                             Icon(
                                 painter = rememberVectorPainter(Icons.Default.Stop),
                                 contentDescription = stringResource(R.string.build_detail_abort_build),
@@ -137,16 +132,7 @@ fun BuildDetailScreen(
                     }
 
                     if (buildDetails?.status in BuildStatus.Completed) {
-                        IconButton(onClick = {
-                            confirmationDialogState.confirm(
-                                Confirmation(
-                                    title = context.getString(R.string.build_detail_confirmation_dialog_restart_build_title),
-                                    text = context.getString(R.string.build_detail_confirmation_dialog_restart_build_text),
-                                    action = context.getString(R.string.build_detail_confirmation_dialog_restart_build_action_start),
-                                    callback = { onRestartBuild() },
-                                ),
-                            )
-                        }) {
+                        IconButton(onClick = { restartDialog.show() }) {
                             Icon(
                                 painter = rememberVectorPainter(Icons.Default.Refresh),
                                 contentDescription = stringResource(R.string.build_detail_restart_build),
@@ -702,7 +688,7 @@ private fun BuildDetailsError(
 @PreviewLightDark
 @Composable
 private fun Preview() {
-    PreviewSurface {
+    PreviewScreen {
         Column {
             Artifact(
                 V0ArtifactListElementResponseModel(
@@ -763,7 +749,7 @@ private fun Preview() {
 @PreviewLightDark
 @Composable
 private fun PreviewLoader() {
-    PreviewSurface {
+    PreviewScreen {
         Column {
             (0..5).forEach {
                 ArtifactLoader()
@@ -775,7 +761,7 @@ private fun PreviewLoader() {
 @PreviewLightDark
 @Composable
 private fun PreviewError() {
-    PreviewSurface {
+    PreviewScreen {
         BuildDetailsError("There was an error", {})
     }
 }
@@ -783,8 +769,67 @@ private fun PreviewError() {
 @PreviewLightDark
 @Composable
 private fun PreviewLoading() {
-    PreviewSurface {
+    PreviewScreen {
         BuildDetailsLoader()
+    }
+}
+
+@Composable
+private fun rememberAbortBuildDialog(
+    onAbortBuild: (String?) -> Unit,
+    initiallyShowing: Boolean = false,
+) = rememberDialogState<String>(
+    onConfirm = { reason -> onAbortBuild(reason.takeIf(String::isNotBlank)) },
+    initiallyShowing = initiallyShowing,
+) {
+    var text by remember { mutableStateOf(TextFieldValue()) }
+    Input(
+        title = stringResource(R.string.build_detail_confirmation_dialog_abort_build_title),
+        text = {
+            TextField(
+                value = text,
+                onValueChange = { text = it },
+                label = { Text(stringResource(R.string.build_detail_abort_reason)) },
+                singleLine = true,
+            )
+        },
+        confirmButton = {
+            TextButton(
+                text = stringResource(R.string.build_detail_confirmation_dialog_abort_build_action_abort),
+                onClick = { confirmAndDismiss(text.text) },
+            )
+        },
+    )
+}
+
+@Composable
+private fun rememberRestartBuildDialog(
+    onRestartBuild: () -> Unit,
+    initiallyShowing: Boolean = false,
+) = rememberDialogState(
+    onConfirm = { onRestartBuild() },
+    initiallyShowing = initiallyShowing,
+) {
+    Confirmation(
+        title = stringResource(R.string.build_detail_confirmation_dialog_restart_build_title),
+        text = stringResource(R.string.build_detail_confirmation_dialog_restart_build_text),
+        confirmAction = stringResource(R.string.build_detail_confirmation_dialog_restart_build_action_start),
+    )
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewAbortDialog() {
+    PreviewScreen(modifier = Modifier.fillMaxSize()) {
+        rememberAbortBuildDialog(onAbortBuild = {}, initiallyShowing = true)
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewRestartDialog() {
+    PreviewScreen(modifier = Modifier.fillMaxSize()) {
+        rememberRestartBuildDialog(onRestartBuild = {}, initiallyShowing = true)
     }
 }
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.MaterialTheme as M3MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -119,6 +120,22 @@ object IndianaTheme {
 
     val shapes: Shapes
         @Composable @ReadOnlyComposable get() = LocalShapes.current
+
+    @Composable
+    fun Error(content: @Composable () -> Unit) {
+        val scheme = colorScheme.colorScheme
+        val colorScheme = ColorScheme(
+            scheme.copy(
+                primary = scheme.error,
+                onPrimary = scheme.onError,
+                primaryContainer = scheme.errorContainer,
+                onPrimaryContainer = scheme.onErrorContainer,
+            )
+        )
+        CompositionLocalProvider(LocalColorScheme provides colorScheme) {
+            M3MaterialTheme(colorScheme = colorScheme.colorScheme) { content() }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

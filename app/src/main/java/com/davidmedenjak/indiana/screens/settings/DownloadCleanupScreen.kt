@@ -1,5 +1,6 @@
 package com.davidmedenjak.indiana.screens.settings
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,9 +37,10 @@ import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.IndeterminateProgressCircular
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
 import com.davidmedenjak.indiana.theme.ui.molectule.Confirmation
+import com.davidmedenjak.indiana.theme.ui.molectule.rememberDialogState
+import com.davidmedenjak.indiana.theme.ui.molectule.show
 import com.davidmedenjak.indiana.theme.ui.molectule.PropertyLayout
-import com.davidmedenjak.indiana.theme.ui.molectule.rememberConfirmationDialogState
-import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
+import com.davidmedenjak.indiana.theme.ui.preview.PreviewScreen
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
@@ -65,7 +67,7 @@ fun DownloadCleanupScreen(
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val clearAllDialog = rememberConfirmationDialogState()
+    val clearAllDialog = rememberClearAllDownloadsDialog(onClearAllDownloads = onClearAllDownloads)
 
     // Show error messages as toast or snackbar would be handled elsewhere
     LaunchedEffect(uiState.error) {
@@ -91,7 +93,6 @@ fun DownloadCleanupScreen(
             isLoading = uiState.isLoading
         )
 
-        val context = LocalContext.current
         DownloadManagementCard(
             selectedPeriod = uiState.selectedCleanupPeriod,
             onPeriodChanged = onCleanupPeriodChanged,
@@ -99,16 +100,7 @@ fun DownloadCleanupScreen(
             isRunningCleanup = uiState.isRunningCleanup,
             onRunCleanupNow = onRunCleanupNow,
             isClearingAll = uiState.isClearingAll,
-            onClearAllDownloads = {
-                clearAllDialog.confirm(
-                    Confirmation(
-                        title = context.getString(R.string.download_cleanup_confirmation_clear_all_title),
-                        text = context.getString(R.string.download_cleanup_confirmation_clear_all_text),
-                        action = context.getString(R.string.download_cleanup_confirmation_clear_all_action),
-                        callback = { onClearAllDownloads() },
-                    )
-                )
-            },
+            onClearAllDownloads = { clearAllDialog.show() },
             hasDownloads = uiState.storageUsage > 0
         )
     }
@@ -280,10 +272,34 @@ private fun formatDateTime(instant: Instant): String {
     return formatter.format(instant)
 }
 
+@Composable
+private fun rememberClearAllDownloadsDialog(
+    onClearAllDownloads: () -> Unit,
+    initiallyShowing: Boolean = false,
+) = rememberDialogState(
+    onConfirm = { onClearAllDownloads() },
+    initiallyShowing = initiallyShowing,
+    destructive = true,
+) {
+    Confirmation(
+        title = stringResource(R.string.download_cleanup_confirmation_clear_all_title),
+        text = stringResource(R.string.download_cleanup_confirmation_clear_all_text),
+        confirmAction = stringResource(R.string.download_cleanup_confirmation_clear_all_action),
+    )
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewClearAllDialog() {
+    PreviewScreen(modifier = Modifier.fillMaxSize()) {
+        rememberClearAllDownloadsDialog(onClearAllDownloads = {}, initiallyShowing = true)
+    }
+}
+
 @PreviewLightDark
 @Composable
 private fun DownloadCleanupScreenPreview() {
-    PreviewSurface {
+    PreviewScreen {
         DownloadCleanupScreen(
             uiState = DownloadCleanupUiState(
                 cleanupSettings = DownloadCleanupSettings(

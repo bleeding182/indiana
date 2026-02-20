@@ -1,9 +1,6 @@
 package com.davidmedenjak.indiana.theme.ui.atoms
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -11,27 +8,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
-import com.davidmedenjak.indiana.theme.ui.preview.PressedInteractionSource
-import com.davidmedenjak.apidoc.Usage
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewSurface
+import com.davidmedenjak.indiana.theme.ui.preview.WidgetPreviewState
+import com.davidmedenjak.indiana.theme.ui.preview.WidgetStateProvider
 import androidx.compose.material3.Button as M3Button
 import androidx.compose.material3.TextButton as M3TextButton
 
-@Usage("Use for secondary/dismissive actions")
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-fun TextButton(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    interactionSource: MutableInteractionSource? = null,
-) = M3TextButton(
-    modifier = modifier,
-    shapes = ButtonDefaults.shapes(),
-    onClick = onClick,
-    interactionSource = interactionSource,
-) { Text(text) }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -66,27 +49,45 @@ fun Button(
     content = content,
 )
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun TextButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    interactionSource: MutableInteractionSource? = null,
+) = M3TextButton(
+    modifier = modifier,
+    shapes = ButtonDefaults.shapes(),
+    enabled = enabled,
+    onClick = onClick,
+    interactionSource = interactionSource,
+) { Text(text) }
+
+
 @Composable
 @PreviewLightDark
-private fun Preview() {
+private fun PreviewButton(@PreviewParameter(WidgetStateProvider::class) state: WidgetPreviewState) {
     PreviewSurface {
-        Column {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = {}, text = "Action")
+        Button(
+            text = "Action",
+            enabled = state.enabled,
+            interactionSource = state.interactionSource(),
+            onClick = {}
+        )
+    }
+}
 
-                Button(
-                    onClick = {}, text = "Action",
-                    interactionSource = PressedInteractionSource,
-                )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                TextButton(onClick = {}, text = "Action")
-
-                TextButton(
-                    onClick = {}, text = "Action",
-                    interactionSource = PressedInteractionSource,
-                )
-            }
-        }
+@Composable
+@PreviewLightDark
+private fun PreviewTextButton(@PreviewParameter(WidgetStateProvider::class) state: WidgetPreviewState) {
+    PreviewSurface {
+        TextButton(
+            text = "Action",
+            enabled = state.enabled,
+            interactionSource = state.interactionSource(),
+            onClick = {}
+        )
     }
 }

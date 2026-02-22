@@ -16,12 +16,15 @@ It shows an overview of the users projects, builds, and build artifacts with an 
 - **app**: Main application module with UI screens, navigation, and dependency injection
 - **api**: Auto-generated API client for Bitrise API using OpenAPI generator
 - **theme**: Shared UI components and theming system
+- **lint**: Custom Android lint checks (consumed via `lintChecks`)
+- **apidoc** / **apidoc-annotations**: KSP processor that generates `api.md` component catalog for :theme
+- **build-setup**: Gradle convention plugin (`indiana.convention`) for shared build config
 
 ### Key Architectural Components
 - **Dagger Hilt**: Dependency injection framework used throughout the app
 - **Navigation 3**: Uses AndroidX Navigation3 with custom `AppBackStack` for navigation management
 - **Room Database**: Local data persistence for projects and user preferences
-- **Retrofit + Moshi**: Network layer for API communication
+- **Retrofit + kotlinx.serialization**: Network layer for API communication
 - **Firebase**: Analytics, crashlytics, and performance monitoring (configurable)
 
 ### Navigation Architecture
@@ -82,12 +85,6 @@ The API module auto-generates Kotlin client code from the OpenAPI specification:
 
 ## Key Development Patterns
 
-### Dependency Injection
-All major components use Hilt for DI:
-- `@HiltAndroidApp` on the Application class
-- `@AndroidEntryPoint` on Activities and Fragments
-- `@Module` and `@InstallIn` for providing dependencies
-
 ### Screen Implementation
 Each screen follows a consistent pattern:
 - Graph object implementing `NavKey` for navigation
@@ -95,37 +92,9 @@ Each screen follows a consistent pattern:
 - ViewModel for state management (using `@HiltViewModel`)
 - Repository pattern for data access
 
-### State Management
-- ViewModels use `StateFlow` and `MutableStateFlow` for reactive state
-- UI state is collected with `collectAsStateWithLifecycle()`
-- Authentication state is managed globally through `SessionManager`
-
-## Firebase Configuration
-The app includes Firebase services that are configurable through `UserSettings`:
-- Analytics: Can be enabled/disabled per user preference
-- Crashlytics: Configurable crash reporting
-- Performance: Performance monitoring toggle
-
-## Theme System
-The theme module provides:
-- Custom design system components in `theme/src/main/java/com/davidmedenjak/indiana/theme/ui/`
-- Atomic design pattern (atoms, molecules)
-- Material 3 theming with custom colors and typography
-
-## Authentication Flow
-1. User enters Bitrise API token in `AuthRoute`
-2. `SessionManager.authenticate()` validates the token
-3. On success, navigation switches to `ProjectsGraph`
-4. Token is stored in `UserSettings` for persistence
-
-## Database Schema
-- `ProjectEntity`: Stores project information
-- `ProjectLastViewed`: Tracks recently viewed projects
-- Room database with KTX coroutines support
-
 ## Build Configuration
-- Target SDK: 36
-- Min SDK: 24
-- Kotlin version: 2.2.0
-- Compose BOM: 2025.06.01
+- Min SDK: 24 / Target SDK: 36
+- Kotlin: 2.3.10
+- Compose BOM: 2026.02.00 (alpha)
 - Uses Gradle version catalogs (`gradle/libs.versions.toml`)
+- Convention plugin in `build-setup/` applies shared SDK, Java 17, and Kotlin config

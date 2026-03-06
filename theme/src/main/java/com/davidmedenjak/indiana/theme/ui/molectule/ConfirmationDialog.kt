@@ -21,7 +21,7 @@ import com.davidmedenjak.indiana.theme.ui.preview.PreviewScreen
 import androidx.compose.material3.AlertDialog as M3AlertDialog
 
 @Stable
-class DialogState<A : Any, T : Any> internal constructor(
+class ConfirmationDialogState<A : Any, T : Any> internal constructor(
     private val onConfirm: State<(A, T) -> Unit>,
     initialValue: A? = null,
     val destructive: Boolean = false,
@@ -48,94 +48,114 @@ class DialogState<A : Any, T : Any> internal constructor(
     }
 }
 
-fun <T : Any> DialogState<Unit, T>.show() = show(Unit)
+fun <T : Any> ConfirmationDialogState<Unit, T>.show() = show(Unit)
 
 @Composable
-fun <A : Any, T : Any> rememberDialogState(
+fun <A : Any, T : Any> rememberConfirmationDialogState(
     onConfirm: (A, T) -> Unit,
     initialValue: A? = null,
     destructive: Boolean = false,
-    content: @Composable DialogState<A, T>.() -> Unit,
-): DialogState<A, T> {
+): ConfirmationDialogState<A, T> {
     val currentOnConfirm = rememberUpdatedState(onConfirm)
-    val state = remember { DialogState<A, T>(currentOnConfirm, initialValue, destructive) }
-    if (state.isShowing) {
-        state.content()
-    }
-    return state
+    return remember { ConfirmationDialogState(currentOnConfirm, initialValue, destructive) }
 }
 
 @Composable
-fun <T : Any> rememberDialogState(
+fun <T : Any> rememberConfirmationDialogState(
     onConfirm: (T) -> Unit,
     initiallyShowing: Boolean = false,
     destructive: Boolean = false,
-    content: @Composable DialogState<Unit, T>.() -> Unit,
-): DialogState<Unit, T> = rememberDialogState<Unit, T>(
+): ConfirmationDialogState<Unit, T> = rememberConfirmationDialogState<Unit, T>(
     onConfirm = { _, result -> onConfirm(result) },
     initialValue = if (initiallyShowing) Unit else null,
     destructive = destructive,
-    content = content,
 )
 
 @Composable
-fun rememberDialogState(
+fun rememberConfirmationDialogState(
     onConfirm: () -> Unit,
     initiallyShowing: Boolean = false,
     destructive: Boolean = false,
-    content: @Composable DialogState<Unit, Unit>.() -> Unit,
-): DialogState<Unit, Unit> = rememberDialogState<Unit>(
+): ConfirmationDialogState<Unit, Unit> = rememberConfirmationDialogState<Unit>(
     onConfirm = { onConfirm() },
     initiallyShowing = initiallyShowing,
     destructive = destructive,
-    content = content,
 )
 
 @Composable
-fun <A : Any> DialogState<A, Unit>.Confirmation(
+fun <A : Any> ConfirmationDialog(
+    state: ConfirmationDialogState<A, Unit>,
+    title: String,
+    confirmAction: String,
+    modifier: Modifier = Modifier,
+    content: @Composable (A) -> Unit,
+) {
+    if (!state.isShowing) return
+    Dialog(
+        title = title,
+        text = { content(state.argument) },
+        modifier = modifier,
+        destructive = state.destructive,
+        onDismiss = state::dismiss,
+        confirmButton = {
+            TextButton(text = confirmAction, onClick = { state.confirmAndDismiss(Unit) })
+        },
+    )
+}
+
+@Composable
+fun <A : Any> ConfirmationDialog(
+    state: ConfirmationDialogState<A, Unit>,
     title: String,
     text: String,
     confirmAction: String,
     modifier: Modifier = Modifier,
-) = Dialog(
+) = ConfirmationDialog(
+    state = state,
     title = title,
-    text = { Text(text) },
+    confirmAction = confirmAction,
     modifier = modifier,
-    confirmButton = {
-        TextButton(text = confirmAction, onClick = { confirmAndDismiss(Unit) })
-    },
+    content = { Text(text) },
 )
 
 @Composable
-fun <A : Any, T : Any> DialogState<A, T>.Input(
+fun <A : Any, T : Any> ConfirmationDialog(
+    state: ConfirmationDialogState<A, T>,
     title: String,
     modifier: Modifier = Modifier,
-    text: @Composable () -> Unit,
     dismissButton: @Composable () -> Unit = {
-        TextButton(text = stringResource(android.R.string.cancel), onClick = { dismiss() })
+        TextButton(text = stringResource(android.R.string.cancel), onClick = { state.dismiss() })
     },
     confirmButton: @Composable () -> Unit,
-) = Dialog(
-    title = title,
-    text = text,
-    modifier = modifier,
-    dismissButton = dismissButton,
-    confirmButton = confirmButton,
-)
+    content: @Composable (A) -> Unit,
+) {
+    if (!state.isShowing) return
+    Dialog(
+        title = title,
+        text = { content(state.argument) },
+        modifier = modifier,
+        destructive = state.destructive,
+        onDismiss = state::dismiss,
+        dismissButton = dismissButton,
+        confirmButton = confirmButton,
+    )
+}
 
 @Composable
-private fun <A : Any, T : Any> DialogState<A, T>.Dialog(
+private fun Dialog(
     title: String,
     modifier: Modifier = Modifier,
+    destructive: Boolean = false,
     text: @Composable () -> Unit,
+    onDismiss: () -> Unit,
     dismissButton: @Composable () -> Unit = {
-        TextButton(text = stringResource(android.R.string.cancel), onClick = { dismiss() })
+        TextButton(text = stringResource(android.R.string.cancel), onClick = onDismiss)
     },
     confirmButton: @Composable () -> Unit,
 ) = M3AlertDialog(
     title = { Text(title) },
     text = text,
-    onDismissRequest = ::dismiss,
+    onDismissRequest = onDismiss,
     modifier = modifier,
     confirmButton = {
         if (destructive) IndianaTheme.Error { confirmButton() } else confirmButton()
@@ -147,13 +167,13 @@ private fun <A : Any, T : Any> DialogState<A, T>.Dialog(
 @Composable
 private fun PreviewConfirmation() {
     PreviewScreen(modifier = Modifier.fillMaxSize()) {
-        rememberDialogState(onConfirm = {}, initiallyShowing = true) {
-            Confirmation(
-                title = "Restart Build",
-                text = "Are you sure you want to restart this build?",
-                confirmAction = "Restart",
-            )
-        }
+        val state = rememberConfirmationDialogState(onConfirm = {}, initiallyShowing = true)
+        ConfirmationDialog(
+            state = state,
+            title = "Restart Build",
+            text = "Are you sure you want to restart this build?",
+            confirmAction = "Restart",
+        )
     }
 }
 
@@ -161,15 +181,16 @@ private fun PreviewConfirmation() {
 @Composable
 private fun PreviewConfirmationWithId() {
     PreviewScreen(modifier = Modifier.fillMaxSize()) {
-        rememberDialogState(
-            onConfirm = { id, _ -> id + id /* delete $id */ },
+        val state = rememberConfirmationDialogState<String, Unit>(
+            onConfirm = { id, _ -> id + id },
             initialValue = "build-42",
-        ) {
-            Confirmation(
-                title = "Delete Build",
-                text = "Delete build ${argument}?",
-                confirmAction = "Delete",
-            )
+        )
+        ConfirmationDialog(
+            state = state,
+            title = "Delete Build",
+            confirmAction = "Delete",
+        ) { argument ->
+            Text("Delete build $argument?")
         }
     }
 }
@@ -178,38 +199,43 @@ private fun PreviewConfirmationWithId() {
 @Composable
 private fun PreviewDestructiveConfirmation() {
     PreviewScreen(modifier = Modifier.fillMaxSize()) {
-        rememberDialogState(onConfirm = {}, initiallyShowing = true, destructive = true) {
-            Confirmation(
-                title = "Clear All Downloads",
-                text = "This will permanently delete all downloaded files.",
-                confirmAction = "Clear All",
-            )
-        }
+        val state = rememberConfirmationDialogState(
+            onConfirm = {}, initiallyShowing = true, destructive = true,
+        )
+        ConfirmationDialog(
+            state = state,
+            title = "Clear All Downloads",
+            text = "This will permanently delete all downloaded files.",
+            confirmAction = "Clear All",
+        )
     }
 }
 
 @Preview
 @Composable
-private fun PreviewInputDialog() {
+private fun PreviewConfirmationDialog() {
     PreviewScreen(modifier = Modifier.fillMaxSize()) {
-        rememberDialogState(onConfirm = { _: String -> }, initiallyShowing = true) {
-            var text by remember { mutableStateOf(TextFieldValue()) }
-            Input(
-                title = "Abort Build",
-                text = {
-                    TextField(
-                        value = text,
-                        onValueChange = { text = it },
-                        label = { Text("Abort Reason") },
-                        singleLine = true,
-                    )
-                },
-                confirmButton = {
-                    TextButton(
-                        text = "Abort",
-                        onClick = { confirmAndDismiss(text.text) },
-                    )
-                },
+        val state = rememberConfirmationDialogState(
+            onConfirm = { _: String -> },
+            initiallyShowing = true,
+        )
+        if (!state.isShowing) return@PreviewScreen
+        var text by remember { mutableStateOf(TextFieldValue()) }
+        ConfirmationDialog(
+            state = state,
+            title = "Abort Build",
+            confirmButton = {
+                TextButton(
+                    text = "Abort",
+                    onClick = { state.confirmAndDismiss(text.text) },
+                )
+            },
+        ) {
+            TextField(
+                value = text,
+                onValueChange = { text = it },
+                label = { Text("Abort Reason") },
+                singleLine = true,
             )
         }
     }

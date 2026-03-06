@@ -36,8 +36,9 @@ import com.davidmedenjak.indiana.theme.ui.atoms.ExposedDropdownTextField
 import com.davidmedenjak.indiana.theme.ui.atoms.Icon
 import com.davidmedenjak.indiana.theme.ui.atoms.IndeterminateProgressCircular
 import com.davidmedenjak.indiana.theme.ui.atoms.Text
-import com.davidmedenjak.indiana.theme.ui.molectule.Confirmation
-import com.davidmedenjak.indiana.theme.ui.molectule.rememberDialogState
+import com.davidmedenjak.indiana.theme.ui.molectule.ConfirmationDialog
+import com.davidmedenjak.indiana.theme.ui.molectule.ConfirmationDialogState
+import com.davidmedenjak.indiana.theme.ui.molectule.rememberConfirmationDialogState
 import com.davidmedenjak.indiana.theme.ui.molectule.show
 import com.davidmedenjak.indiana.theme.ui.molectule.PropertyLayout
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewScreen
@@ -67,7 +68,11 @@ fun DownloadCleanupScreen(
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val clearAllDialog = rememberClearAllDownloadsDialog(onClearAllDownloads = onClearAllDownloads)
+    val clearAllDialog = rememberConfirmationDialogState(
+        onConfirm = onClearAllDownloads,
+        destructive = true,
+    )
+    ClearAllDownloadsDialog(clearAllDialog)
 
     // Show error messages as toast or snackbar would be handled elsewhere
     LaunchedEffect(uiState.error) {
@@ -273,15 +278,9 @@ private fun formatDateTime(instant: Instant): String {
 }
 
 @Composable
-private fun rememberClearAllDownloadsDialog(
-    onClearAllDownloads: () -> Unit,
-    initiallyShowing: Boolean = false,
-) = rememberDialogState(
-    onConfirm = { onClearAllDownloads() },
-    initiallyShowing = initiallyShowing,
-    destructive = true,
-) {
-    Confirmation(
+private fun ClearAllDownloadsDialog(state: ConfirmationDialogState<Unit, Unit>) {
+    ConfirmationDialog(
+        state = state,
         title = stringResource(R.string.download_cleanup_confirmation_clear_all_title),
         text = stringResource(R.string.download_cleanup_confirmation_clear_all_text),
         confirmAction = stringResource(R.string.download_cleanup_confirmation_clear_all_action),
@@ -292,7 +291,13 @@ private fun rememberClearAllDownloadsDialog(
 @Composable
 private fun PreviewClearAllDialog() {
     PreviewScreen(modifier = Modifier.fillMaxSize()) {
-        rememberClearAllDownloadsDialog(onClearAllDownloads = {}, initiallyShowing = true)
+        ClearAllDownloadsDialog(
+            rememberConfirmationDialogState(
+                onConfirm = {},
+                initiallyShowing = true,
+                destructive = true,
+            ),
+        )
     }
 }
 

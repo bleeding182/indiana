@@ -75,9 +75,9 @@ import com.davidmedenjak.indiana.theme.ui.atoms.pageLoading
 import com.davidmedenjak.indiana.theme.ui.atoms.rememberPullToRefreshState
 import com.davidmedenjak.indiana.theme.ui.modifier.skeletonLoader
 import com.davidmedenjak.indiana.theme.ui.modifier.textSkeletonLoader
-import com.davidmedenjak.indiana.theme.ui.molectule.Confirmation
-import com.davidmedenjak.indiana.theme.ui.molectule.Input
-import com.davidmedenjak.indiana.theme.ui.molectule.rememberDialogState
+import com.davidmedenjak.indiana.theme.ui.molectule.ConfirmationDialog
+import com.davidmedenjak.indiana.theme.ui.molectule.ConfirmationDialogState
+import com.davidmedenjak.indiana.theme.ui.molectule.rememberConfirmationDialogState
 import com.davidmedenjak.indiana.theme.ui.molectule.show
 import com.davidmedenjak.indiana.theme.ui.molectule.PropertyLayout
 import com.davidmedenjak.indiana.theme.ui.preview.PreviewScreen
@@ -111,8 +111,13 @@ fun BuildDetailScreen(
         onRefresh = projects::refresh
     )
 
-    val abortDialog = rememberAbortBuildDialog(onAbortBuild = onAbortBuild)
-    val restartDialog = rememberRestartBuildDialog(onRestartBuild = onRestartBuild)
+    val abortDialog = rememberConfirmationDialogState(
+        onConfirm = { reason: String -> onAbortBuild(reason.takeIf(String::isNotBlank)) },
+    )
+    AbortBuildDialog(abortDialog)
+
+    val restartDialog = rememberConfirmationDialogState(onConfirm = onRestartBuild)
+    RestartBuildDialog(restartDialog)
 
     Scaffold(
         pullToRefreshState = pullToRefreshState,
@@ -775,42 +780,32 @@ private fun PreviewLoading() {
 }
 
 @Composable
-private fun rememberAbortBuildDialog(
-    onAbortBuild: (String?) -> Unit,
-    initiallyShowing: Boolean = false,
-) = rememberDialogState<String>(
-    onConfirm = { reason -> onAbortBuild(reason.takeIf(String::isNotBlank)) },
-    initiallyShowing = initiallyShowing,
-) {
+private fun AbortBuildDialog(state: ConfirmationDialogState<Unit, String>) {
+    if (!state.isShowing) return
     var text by remember { mutableStateOf(TextFieldValue()) }
-    Input(
+    ConfirmationDialog(
+        state = state,
         title = stringResource(R.string.build_detail_confirmation_dialog_abort_build_title),
-        text = {
-            TextField(
-                value = text,
-                onValueChange = { text = it },
-                label = { Text(stringResource(R.string.build_detail_abort_reason)) },
-                singleLine = true,
-            )
-        },
         confirmButton = {
             TextButton(
                 text = stringResource(R.string.build_detail_confirmation_dialog_abort_build_action_abort),
-                onClick = { confirmAndDismiss(text.text) },
+                onClick = { state.confirmAndDismiss(text.text) },
             )
         },
-    )
+    ) {
+        TextField(
+            value = text,
+            onValueChange = { text = it },
+            label = { Text(stringResource(R.string.build_detail_abort_reason)) },
+            singleLine = true,
+        )
+    }
 }
 
 @Composable
-private fun rememberRestartBuildDialog(
-    onRestartBuild: () -> Unit,
-    initiallyShowing: Boolean = false,
-) = rememberDialogState(
-    onConfirm = { onRestartBuild() },
-    initiallyShowing = initiallyShowing,
-) {
-    Confirmation(
+private fun RestartBuildDialog(state: ConfirmationDialogState<Unit, Unit>) {
+    ConfirmationDialog(
+        state = state,
         title = stringResource(R.string.build_detail_confirmation_dialog_restart_build_title),
         text = stringResource(R.string.build_detail_confirmation_dialog_restart_build_text),
         confirmAction = stringResource(R.string.build_detail_confirmation_dialog_restart_build_action_start),
@@ -821,7 +816,9 @@ private fun rememberRestartBuildDialog(
 @Composable
 private fun PreviewAbortDialog() {
     PreviewScreen(modifier = Modifier.fillMaxSize()) {
-        rememberAbortBuildDialog(onAbortBuild = {}, initiallyShowing = true)
+        AbortBuildDialog(
+            rememberConfirmationDialogState(onConfirm = { _: String -> }, initiallyShowing = true),
+        )
     }
 }
 
@@ -829,7 +826,9 @@ private fun PreviewAbortDialog() {
 @Composable
 private fun PreviewRestartDialog() {
     PreviewScreen(modifier = Modifier.fillMaxSize()) {
-        rememberRestartBuildDialog(onRestartBuild = {}, initiallyShowing = true)
+        RestartBuildDialog(
+            rememberConfirmationDialogState(onConfirm = {}, initiallyShowing = true),
+        )
     }
 }
 

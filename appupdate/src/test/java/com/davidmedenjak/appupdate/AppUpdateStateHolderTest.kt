@@ -155,4 +155,48 @@ class AppUpdateStateHolderTest {
         assertTrue(fake.isImmediateFlowVisible)
         assertFalse(fake.isConfirmationDialogVisible)
     }
+
+    @Test
+    fun resumeAutoResumesInProgressImmediateUpdate() {
+        fake.setUpdateAvailable(1)
+        holder.checkForUpdate()
+        holder.startImmediateUpdate()
+        fake.userAcceptsUpdate()
+        // Simulate the app being backgrounded and returning: Play now reports an in-progress
+        // developer-triggered update, and the ON_RESUME recheck should re-launch it.
+        assertTrue(fake.isImmediateFlowVisible)
+
+        holder.checkForUpdate(resumeImmediateInProgress = true)
+
+        assertEquals(UpdateAvailability.InProgress, holder.availability)
+        assertTrue(fake.isImmediateFlowVisible)
+    }
+
+    @Test
+    fun cancelSurvivesRoutineRecheck() {
+        fake.setUpdateAvailable(1)
+        holder.checkForUpdate()
+        holder.startFlexibleUpdate()
+        // User dismisses the dialog; the result callback fires before ON_RESUME.
+        holder.onUpdateFlowResult(Activity.RESULT_CANCELED)
+        assertEquals(InstallStatus.Canceled, holder.installStatus)
+
+        // The ON_RESUME recheck must not erase the cancellation.
+        holder.checkForUpdate(resumeImmediateInProgress = true)
+
+        assertEquals(InstallStatus.Canceled, holder.installStatus)
+    }
+
+    @Test
+    fun failedFlowResultSurvivesRoutineRecheck() {
+        fake.setUpdateAvailable(1)
+        holder.checkForUpdate()
+        holder.onUpdateFlowResult(Activity.RESULT_FIRST_USER)
+        assertEquals(InstallStatus.Failed, holder.installStatus)
+
+        holder.checkForUpdate()
+
+        assertEquals(InstallStatus.Failed, holder.installStatus)
+        assertNotNull(holder.lastError)
+    }
 }

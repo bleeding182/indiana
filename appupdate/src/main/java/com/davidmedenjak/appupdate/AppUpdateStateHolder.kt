@@ -104,7 +104,10 @@ internal class AppUpdateStateHolder(
                 resultLauncher,
                 AppUpdateOptions.newBuilder(type).build(),
             )
-        }.onFailure { lastError = it }
+        }.onFailure {
+            installStatus = InstallStatus.Failed
+            lastError = it
+        }
     }
 
     override fun completeFlexibleUpdate() {
@@ -130,7 +133,6 @@ internal class AppUpdateStateHolder(
 
     private fun applyInfo(info: AppUpdateInfo) {
         currentInfo = info
-        lastError = null
         availability = when (info.updateAvailability()) {
             PlayUpdateAvailability.UPDATE_AVAILABLE -> UpdateAvailability.Available
             PlayUpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS -> UpdateAvailability.InProgress
@@ -148,7 +150,18 @@ internal class AppUpdateStateHolder(
         updatePriority = info.updatePriority()
         isFlexibleAllowed = info.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
         isImmediateAllowed = info.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
-        applyInstallStatus(info.installStatus(), info.bytesDownloaded(), info.totalBytesToDownload())
+
+        // A routine recheck (e.g. on ON_RESUME, which fires right after the update dialog's result)
+        // must not erase a user-visible Canceled/Failed flow result: Play reports UNKNOWN for a
+        // dismissed dialog, so only apply its install status when it has a real one, and keep the
+        // flow error otherwise.
+        val playStatus = info.installStatus()
+        val hasFlowResult =
+            installStatus == InstallStatus.Canceled || installStatus == InstallStatus.Failed
+        if (playStatus != PlayInstallStatus.UNKNOWN || !hasFlowResult) {
+            lastError = null
+            applyInstallStatus(playStatus, info.bytesDownloaded(), info.totalBytesToDownload())
+        }
     }
 
     private fun onInstallState(state: InstallState) {

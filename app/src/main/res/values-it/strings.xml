@@ -25,6 +25,7 @@
     <string name="projects_menu_privacy">Privacy</string>
     <string name="projects_menu_download_settings">Impostazioni download</string>
     <string name="projects_menu_update">Aggiorna app</string>
+    <string name="projects_menu_restart_update">Riavvia per aggiornare</string>
     <string name="projects_menu_logout">Logout</string>
     <string name="projects_section_recents">Recenti</string>
     <string name="projects_section_all">Tutti i progetti</string>

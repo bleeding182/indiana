@@ -25,6 +25,7 @@
     <string name="projects_menu_privacy">Confidentialité</string>
     <string name="projects_menu_download_settings">Paramètres de téléchargement</string>
     <string name="projects_menu_update">Mettre à jour l\'app</string>
+    <string name="projects_menu_restart_update">Redémarrer pour mettre à jour</string>
     <string name="projects_menu_logout">Déconnexion</string>
     <string name="projects_section_recents">Récents</string>
     <string name="projects_section_all">Tous les projets</string>

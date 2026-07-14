@@ -31,6 +31,7 @@ google-services = "4.4.4"
 openapi-generator = "7.20.0"
 lint = "32.0.1"
 junit = "4.13.2"
+robolectric = "4.14.1"
 
 [libraries]
 # AndroidX Core
@@ -40,6 +41,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 
 # Compose (BOM-managed)
 androidx-compose-bom = { module = "androidx.compose:compose-bom-alpha", version.ref = "androidx-compose-bom" }
+androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-ui = { module = "androidx.compose.ui:ui" }
 androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
@@ -52,6 +54,7 @@ androidx-foundation-android = { module = "androidx.compose.foundation:foundation
 
 # Lifecycle
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-navigation3-lifecycle" }
 
@@ -126,6 +129,7 @@ lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint
 
 # Test
 junit = { module = "junit:junit", version.ref = "junit" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

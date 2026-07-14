@@ -53,6 +53,7 @@ ksp {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":api"))
+    implementation(project(":appupdate"))
     implementation(project(":theme"))
 
     implementation(platform(libs.okhttp.bom))
@@ -93,8 +94,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.play.app.update)
-    implementation(libs.play.app.update.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

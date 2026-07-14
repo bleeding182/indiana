@@ -45,6 +45,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.davidmedenjak.appupdate.InstallStatus
+import com.davidmedenjak.appupdate.UpdateAvailability
 import com.davidmedenjak.indiana.R
 import com.davidmedenjak.indiana.theme.IndianaTheme
 import com.davidmedenjak.indiana.theme.ui.atoms.AsyncImage
@@ -104,8 +106,10 @@ fun ProjectsScreen(
     onDownloadCleanupSelected: () -> Unit,
     onLogoutSelected: () -> Unit,
     onUpdateSelected: () -> Unit,
+    onCompleteUpdate: () -> Unit,
     toggleFilterProjectType: (String) -> Unit,
-    updateState: com.davidmedenjak.indiana.app.InAppUpdateManager.UpdateState,
+    updateAvailability: UpdateAvailability,
+    installStatus: InstallStatus,
     hasUpdateForMoreThanThreeDays: Boolean,
 ) {
     val projects = projects.collectAsLazyPagingItems()
@@ -171,12 +175,17 @@ fun ProjectsScreen(
                                     onDownloadCleanupSelected()
                                 },
                             )
-                            if (updateState == com.davidmedenjak.indiana.app.InAppUpdateManager.UpdateState.AVAILABLE ||
-                                updateState == com.davidmedenjak.indiana.app.InAppUpdateManager.UpdateState.DOWNLOADED) {
+                            val updateDownloaded = installStatus == InstallStatus.Downloaded
+                            if (updateAvailability == UpdateAvailability.Available || updateDownloaded) {
                                 DropdownMenuItem(
-                                    text = { 
+                                    text = {
                                         Row {
-                                            Text(stringResource(R.string.projects_menu_update))
+                                            Text(
+                                                stringResource(
+                                                    if (updateDownloaded) R.string.projects_menu_restart_update
+                                                    else R.string.projects_menu_update
+                                                )
+                                            )
                                             if (hasUpdateForMoreThanThreeDays) {
                                                 Box(
                                                     modifier = Modifier
@@ -192,7 +201,7 @@ fun ProjectsScreen(
                                     },
                                     onClick = {
                                         expanded = false
-                                        onUpdateSelected()
+                                        if (updateDownloaded) onCompleteUpdate() else onUpdateSelected()
                                     },
                                 )
                             }

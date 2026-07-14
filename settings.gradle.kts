@@ -26,6 +26,7 @@ dependencyResolutionManagement {
 rootProject.name = "Indiana"
 include(":app")
 include(":api")
+include(":appupdate")
 include(":theme")
 include(":lint")
 include(":apidoc-annotations")

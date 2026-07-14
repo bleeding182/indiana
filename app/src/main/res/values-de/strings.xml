@@ -25,6 +25,7 @@
     <string name="projects_menu_privacy">Datenschutz</string>
     <string name="projects_menu_download_settings">Download-Einstellungen</string>
     <string name="projects_menu_update">App aktualisieren</string>
+    <string name="projects_menu_restart_update">Zum Aktualisieren neu starten</string>
     <string name="projects_menu_logout">Abmelden</string>
     <string name="projects_section_recents">Zuletzt verwendet</string>
     <string name="projects_section_all">Alle Projekte</string>

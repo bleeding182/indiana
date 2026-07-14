@@ -26,6 +26,7 @@
     <string name="projects_menu_privacy">Privacy Policy</string>
     <string name="projects_menu_download_settings">Download Settings</string>
     <string name="projects_menu_update">Update app</string>
+    <string name="projects_menu_restart_update">Restart to update</string>
     <string name="projects_menu_logout">Logout</string>
     <string name="projects_section_recents">Recents</string>
     <string name="projects_section_all">All Projects</string>

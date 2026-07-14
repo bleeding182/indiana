@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
@@ -27,13 +28,23 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
  *     showInfoPanelForUpdate(state)
  * }
  * ```
+ *
+ * @param onUpdateFlowResult optional one-shot callback invoked once per update dialog with its
+ *   [UpdateFlowResult] (accepted / canceled / failed). Use it for transient reactions (e.g. a
+ *   snackbar) that the observable [AppUpdateState.installStatus] can't model cleanly. The latest
+ *   lambda passed is always used.
  */
 @Composable
-fun rememberAppUpdateState(): AppUpdateState {
+fun rememberAppUpdateState(
+    onUpdateFlowResult: ((UpdateFlowResult) -> Unit)? = null,
+): AppUpdateState {
     val context = LocalContext.current.applicationContext
 
     // Filled once the holder is created; the launcher callback reads it after composition.
     var holderRef by remember { mutableStateOf<AppUpdateStateHolder?>(null) }
+
+    // Read the newest callback at invocation time without recreating the holder.
+    val currentOnResult = rememberUpdatedState(onUpdateFlowResult)
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
@@ -44,6 +55,7 @@ fun rememberAppUpdateState(): AppUpdateState {
     val holder = remember(launcher) {
         AppUpdateStateHolder(
             appUpdateManager = AppUpdateManagerFactory.create(context),
+            onFlowResult = { result -> currentOnResult.value?.invoke(result) },
             launchIntentSender = { request -> launcher.launch(request) },
         ).also { holderRef = it }
     }

@@ -28,6 +28,7 @@ import com.google.android.play.core.install.model.UpdateAvailability as PlayUpda
  */
 internal class AppUpdateStateHolder(
     private val appUpdateManager: AppUpdateManager,
+    private val onFlowResult: (UpdateFlowResult) -> Unit = {},
     private val launchIntentSender: (IntentSenderRequest) -> Unit,
 ) : AppUpdateState {
 
@@ -116,14 +117,19 @@ internal class AppUpdateStateHolder(
 
     /** Maps the result of the Play update dialog launched through [resultLauncher]. */
     fun onUpdateFlowResult(resultCode: Int) {
-        when (resultCode) {
-            Activity.RESULT_OK -> Unit
-            Activity.RESULT_CANCELED -> installStatus = InstallStatus.Canceled
+        val result = when (resultCode) {
+            Activity.RESULT_OK -> UpdateFlowResult.Accepted
+            Activity.RESULT_CANCELED -> {
+                installStatus = InstallStatus.Canceled
+                UpdateFlowResult.Canceled
+            }
             else -> {
                 installStatus = InstallStatus.Failed
                 lastError = RuntimeException("Update flow failed with resultCode $resultCode")
+                UpdateFlowResult.Failed(resultCode)
             }
         }
+        onFlowResult(result)
     }
 
     override fun hasNewVersionAvailableForMoreThan(duration: Duration): Boolean {

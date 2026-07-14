@@ -30,6 +30,22 @@ if (state.installStatus == InstallStatus.Downloaded) {
 auto-resumes an interrupted immediate update, and cleans up its listener automatically. No `Activity`
 is retained.
 
+### Reacting to the dialog outcome
+
+`installStatus` reflects the download/install lifecycle, but a dialog dismissal is a one-shot event.
+For transient reactions (e.g. a snackbar) pass an `onUpdateFlowResult` callback — it fires once per
+flow with `Accepted` / `Canceled` / `Failed`:
+
+```kotlin
+val state = rememberAppUpdateState { result ->
+    when (result) {
+        UpdateFlowResult.Canceled -> snackbar("Update canceled")
+        is UpdateFlowResult.Failed -> snackbar("Update failed")
+        UpdateFlowResult.Accepted -> Unit
+    }
+}
+```
+
 ## State
 
 `AppUpdateState` exposes (all Compose-`State`-backed):

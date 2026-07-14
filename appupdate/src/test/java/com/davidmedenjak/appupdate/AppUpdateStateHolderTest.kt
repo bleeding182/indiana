@@ -188,6 +188,25 @@ class AppUpdateStateHolderTest {
     }
 
     @Test
+    fun flowResultCallbackFiresForEachOutcome() {
+        val results = mutableListOf<UpdateFlowResult>()
+        holder = AppUpdateStateHolder(fake, onFlowResult = { results += it }) { launched += it }
+
+        holder.onUpdateFlowResult(Activity.RESULT_OK)
+        holder.onUpdateFlowResult(Activity.RESULT_CANCELED)
+        holder.onUpdateFlowResult(Activity.RESULT_FIRST_USER)
+
+        assertEquals(
+            listOf(
+                UpdateFlowResult.Accepted,
+                UpdateFlowResult.Canceled,
+                UpdateFlowResult.Failed(Activity.RESULT_FIRST_USER),
+            ),
+            results,
+        )
+    }
+
+    @Test
     fun failedFlowResultSurvivesRoutineRecheck() {
         fake.setUpdateAvailable(1)
         holder.checkForUpdate()
